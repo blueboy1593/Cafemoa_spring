@@ -18,7 +18,9 @@ class Visitor extends Component{
           <Route path='/visitor/story' component={Story}/>
           <Route path='/visitor/lookAround' component={LookAround}/>
           <Route path='/visitor/customerCenter' component={CustomerCenter}/>
-          <Route path='/visitor/login' component={Login}/>
+          <center>
+            <Route path='/visitor/login' component={Login}/>
+          </center>
           <Route path='/visitor/signup' component={Signup}/>
         </div>
       );
