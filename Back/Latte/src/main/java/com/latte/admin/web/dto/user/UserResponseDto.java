@@ -15,6 +15,7 @@ public class UserResponseDto {
     private String uemail;
     private String unickname;
     private Role role;
+    private String upic;
 
     public UserResponseDto(User entity) {
         this.uuid = entity.getUuid();
@@ -25,5 +26,6 @@ public class UserResponseDto {
         this.uemail = entity.getUemail();
         this.unickname = entity.getUnickname();
         this.role = entity.getRole();
+        this.upic=entity.getUpic();
     }
 }

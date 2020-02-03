@@ -2,6 +2,7 @@ package com.latte.admin.domain.order;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.latte.admin.domain.BaseTimeEntity;
 import com.latte.admin.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +15,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Ordered {
+public class Ordered extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

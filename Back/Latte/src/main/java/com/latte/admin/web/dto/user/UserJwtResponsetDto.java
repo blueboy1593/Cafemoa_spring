@@ -12,6 +12,7 @@ public class UserJwtResponsetDto {
     private String uemail;
     private String unickname;
     private Role role;
+    private String upic;
 
     public UserJwtResponsetDto(User entity) {
         this.uid = entity.getUid();
@@ -20,5 +21,6 @@ public class UserJwtResponsetDto {
         this.uemail = entity.getUemail();
         this.unickname = entity.getUnickname();
         this.role = entity.getRole();
+        this.upic=entity.getUpic();
     }
 }
