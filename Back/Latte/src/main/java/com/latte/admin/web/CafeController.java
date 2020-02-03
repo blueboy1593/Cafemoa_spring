@@ -2,10 +2,7 @@ package com.latte.admin.web;
 
 import com.latte.admin.domain.cafe.Cafe;
 import com.latte.admin.service.CafeService;
-import com.latte.admin.web.dto.cafe.CafeListResponseDto;
-import com.latte.admin.web.dto.cafe.CafeSaveRequestDto;
-import com.latte.admin.web.dto.cafe.CafeUpdateRequestDto;
-import com.latte.admin.web.dto.cafe.ManageCafeRequestDto;
+import com.latte.admin.web.dto.cafe.*;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -79,10 +76,9 @@ public class CafeController {
     /////////////////////ooid가 마지막값을 가지고옴/////////////////////////
     @ApiOperation("[손님 카페Detail페이지]:ccid를 기준으로 하나의 카페 정보 찾기")
     @GetMapping("/{ccid}")
-    public Cafe selectOne(@PathVariable Long ccid){
-        return cafeService.findByCcId(ccid);
+    public CafeDetailForGUEST selectOne(@PathVariable Long ccid) {
+        return new CafeDetailForGUEST(cafeService.findByCcId(ccid));
     }
-
 //
 //    // 카페 삭제 = 탈퇴
 //    @ApiOperation("[사장님 카페 정보 관리페이지]:특정 카페 삭제")
