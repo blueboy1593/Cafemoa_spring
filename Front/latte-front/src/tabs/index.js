@@ -8,3 +8,4 @@ export { default as RegisterCafe } from './RegisterCafe';
 export { default as RegisterMenu } from './RegisterMenu';
 export { default as LookAround } from './LookAround';
 export { default as Story } from './Story';
+export { default as ShoppingList } from './ShoppingList';
