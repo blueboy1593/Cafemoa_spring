@@ -1,6 +1,5 @@
 package com.latte.admin.domain.menu;
 
-import com.latte.admin.domain.cafe.Cafe;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

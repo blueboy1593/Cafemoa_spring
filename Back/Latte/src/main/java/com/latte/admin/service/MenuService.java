@@ -20,6 +20,12 @@ import java.util.stream.Collectors;
 public class MenuService {
     private final MenuRepository menuRepository;
 
+    // 카페기준 저장
+    @Transactional
+    public Long save(MenuSaveRequestDto menuSaveRequestDto,Long ccid) {
+        return menuRepository.save(menuSaveRequestDto.toEntity(ccid)).getMmid();
+    }
+
     // 카페 기준 모든 메뉴 선택
     @Transactional
     public List<MenuResponseDto> selectAll(Long ccid){
@@ -42,12 +48,6 @@ public class MenuService {
         return new MenuResponseDto(menuRepository.findByMmid(mmid));
     }
 
-
-    // 카페기준 저장
-    @Transactional
-    public Long save(MenuSaveRequestDto menuSaveRequestDto,Long ccid) {
-        return menuRepository.save(menuSaveRequestDto.toEntity(ccid)).getMmid();
-    }
 
     // 메뉴 업데이트
     @Transactional
