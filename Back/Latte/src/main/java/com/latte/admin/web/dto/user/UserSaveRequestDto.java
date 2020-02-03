@@ -17,9 +17,10 @@ public class UserSaveRequestDto {
     private String uemail;
     private String unickname;
     private Role role;
+    private  String upic;
 
     @Builder
-    public UserSaveRequestDto(String uid, String upass, String uname, String uphone, String uemail, String unickname, Role role) {
+    public UserSaveRequestDto(String uid, String upass, String uname, String uphone, String uemail, String unickname, Role role, String upic) {
         this.uid = uid;
         this.upass = upass;
         this.uname = uname;
@@ -27,6 +28,7 @@ public class UserSaveRequestDto {
         this.uemail = uemail;
         this.unickname = unickname;
         this.role = role;
+        this.upic=upic;
     }
 
     public User toEntity() {
@@ -38,6 +40,7 @@ public class UserSaveRequestDto {
                 .uemail(uemail)
                 .unickname(unickname)
                 .role(role)
+                .upic(upic)
                 .build();
     }
 }

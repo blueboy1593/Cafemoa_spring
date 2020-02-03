@@ -26,7 +26,7 @@ public class UserService {
         if (!checkEmail(userSaveRequestDto.getUemail()))
             return false;
 
-        // 이메일 인증 추가 필요~!~!~!~! 1.회원가입완료하면 이메일로 보내준다. OR 2.유효한 이메일인지 확인
+        // 회원가입완료하면 이메일로 ghld 보내준다.
         // 2번일 경우 테이블에 승인 상태 추가해야 됨
         MailService mailService = new MailService();
         mailService.setJavaMailSender(javaMailSender);
@@ -36,6 +36,8 @@ public class UserService {
         return true;
     }
 
+
+    // 회원가입시 이메일 중복 확인
     @Transactional
     public boolean checkEmail(String uemail) {
         if(userRepository.findByEmail(uemail) == null) {
@@ -49,7 +51,7 @@ public class UserService {
     // 아이디 중복 확인
     @Transactional
     public void checkId(String uid) {
-        User user = userRepository.findByUid(uid).orElseThrow(()
+        User user = userRepository.checkByUid(uid).orElseThrow(()
                 -> new IllegalArgumentException("사용 가능한 아이디입니다."));
 
         new IllegalArgumentException("사용 불가능한 아이디입니다.");
@@ -67,7 +69,7 @@ public class UserService {
     // 비밀번호 찾기
     @Transactional
     public String findPass(String uuid, String uemail) {
-        User user = userRepository.findByUid(uuid).orElseThrow(()
+        User user = userRepository.checkByUid(uuid).orElseThrow(()
                 -> new IllegalArgumentException("존재하지 않는 ID입니다."));
 
         if (user.getUemail().equals(uemail)) {
@@ -110,7 +112,7 @@ public class UserService {
     // 회원 정보 수정
     @Transactional
     public String update(String uid, UserUpdateRequestDto userUpdateRequestDto) {
-        User user = userRepository.findByUid(uid).orElseThrow(()
+        User user = userRepository.checkByUid(uid).orElseThrow(()
                 -> new IllegalArgumentException("해당 사용자가 없습니다."));
 
         user.update(userUpdateRequestDto.getUpass(), userUpdateRequestDto.getUphone(), userUpdateRequestDto.getUnickname());
@@ -121,7 +123,7 @@ public class UserService {
     // 탈퇴(삭제)
     @Transactional
     public void delete(String uid) {
-        User user = userRepository.findByUid(uid)
+        User user = userRepository.checkByUid(uid)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
 
         userRepository.delete(user);
@@ -130,7 +132,7 @@ public class UserService {
     // 로그인
     @Transactional
     public UserJwtResponsetDto signIn(String uid, String upass) {
-        User user = userRepository.findByUid(uid).orElseThrow(() -> new IllegalArgumentException("아이디/비밀번호가 일치하지 않습니다."));
+        User user = userRepository.checkByUid(uid).orElseThrow(() -> new IllegalArgumentException("아이디/비밀번호가 일치하지 않습니다."));
         if (user.getUpass().equals(upass)) {
             return new UserJwtResponsetDto(user);
         } else {

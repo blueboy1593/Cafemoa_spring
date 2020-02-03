@@ -16,10 +16,12 @@ public class CafeSaveRequestDto {
     private String copen;
     private String cclose;
     private String cdesc;
-    private String cstatus;
+    private int cstatus;
+    private int coperation;
 
     @Builder
-    public CafeSaveRequestDto(String cname, String cloc, String cphone, String cpic, String copen, String cclose, String cdesc, String cstatus) {
+    public CafeSaveRequestDto(String cname, String cloc, String cphone, String cpic,String copen,
+                              String cclose, String cdesc, int cstatus,int coperation) {
         this.cname = cname;
         this.cloc = cloc;
         this.cphone = cphone;
@@ -28,6 +30,7 @@ public class CafeSaveRequestDto {
         this.cclose=cclose;
         this.cdesc=cdesc;
         this.cstatus = cstatus;
+        this.coperation=coperation;
     }
 
     public Cafe toEntity(Long uuid) {
@@ -40,6 +43,7 @@ public class CafeSaveRequestDto {
                 .cclose(cclose)
                 .cdesc(cdesc)
                 .cstatus(cstatus)
+                .coperation(coperation)
                 .user(new User(uuid))
                 .build();
     }

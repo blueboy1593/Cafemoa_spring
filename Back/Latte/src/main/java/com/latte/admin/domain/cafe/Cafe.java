@@ -44,7 +44,10 @@ public class Cafe extends BaseTimeEntity {
     private String cdesc;
 
     @Column(nullable = false)
-    private String cstatus;  // -1:승인X, 0:대기, 1:승인
+    private int cstatus;  // -1:승인X, 0:대기, 1:승인
+
+    @Column
+    private int coperation;  // 1:운영중, 0:끝
 
     // fk -> 1:N = cafe:menu
     @OneToMany(cascade=CascadeType.ALL, mappedBy = "cafemenu")
@@ -56,7 +59,7 @@ public class Cafe extends BaseTimeEntity {
     }
 
     @Builder
-    public Cafe(User user,String cname, String cloc, String cphone, String cpic, String copen, String cdesc, String cclose, String cstatus) {
+    public Cafe(User user,String cname, String cloc, String cphone, String cpic, String copen, String cdesc, String cclose, int cstatus,int coperation) {
         this.cname = cname;
         this.cloc = cloc;
         this.cphone = cphone;
@@ -65,20 +68,23 @@ public class Cafe extends BaseTimeEntity {
         this.cclose = cclose;
         this.cdesc=cdesc;
         this.cstatus = cstatus;
+        this.coperation=coperation;
     }
 
-    public void CafeUpdate(String cphone,String cpic,String copen,String cclose,String cdesc,String cstatus) {
+    public void CafeUpdate(String cphone,String cpic,String copen,String cclose,String cdesc,int cstatus,int coperation) {
         this.cphone = cphone;
         this.cpic = cpic;
         this.copen = copen;
         this.cclose = cclose;
         this.cdesc=cdesc;
         this.cstatus = cstatus;
+        this.coperation=coperation;
     }
 
-    public void addMenu(Menu m){
-        Collection<Menu> menus=getMenus();
-        menus.add(m);
+
+    public void statusSet(int cstatus){
+        this.cstatus=cstatus;
     }
+
 
 }
