@@ -19,16 +19,28 @@ public class CafeService {
 
     // cafe정보 저장
     @Transactional
-    public Long save(Long uuid, CafeSaveRequestDto cafeSaveRequestDto){
-        return cafeRepository.save(cafeSaveRequestDto.toEntity(uuid)).getCcid();
+    public Long save(String uid, CafeSaveRequestDto cafeSaveRequestDto){
+        return cafeRepository.save(cafeSaveRequestDto.toEntity(uid)).getCcid();
     }
 
-   // 승인 카페 리스트(대기, 승인, 거절) -> 관리자페이지
+    // 카페 대기/승인/거절 상태 변경
+    @Transactional
+    public void setStatus(Long ccid,int cstatus){
+        cafeRepository.setStatus(ccid,cstatus);
+    }
+
+    // 승인 카페 리스트(대기, 승인, 거절) -> 관리자페이지
     @Transactional
     public List<CafeListResponseDto> cafeStatus(int cstatus) {
         return cafeRepository.cafeStatus(cstatus).stream()
                 .map(CafeListResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    // 카페 대기/승인/거절 상태 변경
+    @Transactional
+    public void setOperation(Long ccid,int coperation){
+        cafeRepository.setOperation(ccid,coperation);
     }
 
     // 카페 리스트 다 보여주기 -> 손님: 운영중인 카페
@@ -52,7 +64,7 @@ public class CafeService {
                 -> new IllegalArgumentException("해당 사용자가 없습니다."));
 
         cafe.CafeUpdate(cafeUpdateRequestDto.getCphone(),cafeUpdateRequestDto.getCpic(),cafeUpdateRequestDto.getCopen(),
-                cafeUpdateRequestDto.getCclose(),cafeUpdateRequestDto.getCdesc(),cafeUpdateRequestDto.getCstatus(),cafeUpdateRequestDto.getCoperation());
+                cafeUpdateRequestDto.getCclose(),cafeUpdateRequestDto.getCdesc(),cafeUpdateRequestDto.getCoperation());
 
         return ccid;
     }

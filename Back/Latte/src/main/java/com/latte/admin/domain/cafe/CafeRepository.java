@@ -1,6 +1,7 @@
 package com.latte.admin.domain.cafe;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -20,4 +21,13 @@ public interface CafeRepository extends JpaRepository<Cafe,Long> {
     @Query("select c from Cafe c where c.ccid=:ccid")
     Cafe findByCcid(@Param("ccid") Long ccid);
 
+    // cstatus변경
+    @Modifying
+    @Query("update Cafe c set c.cstatus=:cstatus where c.ccid=:ccid")
+    void setStatus(@Param("ccid") Long ccid,@Param("cstatus") int cstatus);
+
+    // coperation변경
+    @Modifying
+    @Query("update Cafe c set c.coperation=:coperation where c.ccid=:ccid")
+    void setOperation(@Param("ccid") Long ccid,@Param("coperation") int coperation);
 }

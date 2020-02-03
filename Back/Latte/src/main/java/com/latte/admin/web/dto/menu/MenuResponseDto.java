@@ -17,6 +17,6 @@ public class MenuResponseDto {
         this.mname=entity.getMname();
         this.mprice=entity.getMprice();
         this.mpic=entity.getMpic();
-}
+    }
 
 }

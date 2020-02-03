@@ -64,8 +64,8 @@ public class MenuService {
     // 메뉴 삭제
     @Transactional
     public void delete(Long mmid){
-         Menu menu = menuRepository.findById(mmid).orElseThrow(()
+        Menu menu = menuRepository.findById(mmid).orElseThrow(()
                 -> new IllegalArgumentException("해당 사용자가 없습니다."));
-         menuRepository.delete(menu);
+        menuRepository.delete(menu);
     }
 }

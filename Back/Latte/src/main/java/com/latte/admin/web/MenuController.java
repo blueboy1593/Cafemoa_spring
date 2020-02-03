@@ -58,7 +58,7 @@ public class MenuController {
     @ApiOperation("선택된 메뉴를 삭제하는 기능")
     @DeleteMapping("/delete/{mmid}")
     public void delete(@PathVariable Long mmid){
-       menuService.delete(mmid);
+        menuService.delete(mmid);
     }
 
 }
