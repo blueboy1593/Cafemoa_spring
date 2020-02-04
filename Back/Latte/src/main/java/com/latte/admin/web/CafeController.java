@@ -66,10 +66,18 @@ public class CafeController {
 
     // 카페 실제로 열었는지에 대한 상태 변경
     @ApiOperation("[사장님 카페 관리페이지]: 카페 운영중/운영마감 변경")
-    @PostMapping("/opeartion/{ccid}")
-    public int cafeOpeartion(@PathVariable Long ccid, @RequestBody CafeOpenRequestDto cafeOpenRequestDto) {
-        int coperation = cafeOpenRequestDto.getCoperation();
-        return cafeService.findByCcId(ccid).getCoperation();
+    @PostMapping("/opeartion")
+    public void cafeOpeartion(HttpServletRequest httpServletRequest,@RequestBody CafeOpenRequestDto cafeOpenRequestDto) {
+        String jwt = httpServletRequest.getCookies()[0].getValue();
+        //유효성 검사
+        if (!jwtService.isUsable(jwt))
+            return;
+        //파싱 - > 내 정보 가져와
+        Map<String, Object> map = jwtService.get(jwt);
+        UserJwtResponsetDto user = (UserJwtResponsetDto) map.get("UserJwtResponseDto");
+
+//        int coperation=cafeOpenRequestDto.getCoperation();
+        cafeService.setOperation(cafeService.findByUid(user.getUid()).getCoperation());
     }
 
 
@@ -80,15 +88,22 @@ public class CafeController {
         return cafeService.findByOperation();
     }
 
+
     // 카페 정보 수정
     @ApiOperation("[사장님 카페 정보 관리페이지]:특정 카페 정보 수정")
-    @PutMapping("/update/{ccid}")
-    public Map cafeUpdate(@PathVariable Long ccid, @RequestBody CafeUpdateRequestDto cafeUpdateRequestDto) {
-        Map<String, Long> map = new HashMap<>();
-        map.put("cafe", cafeService.cafeUpdate(ccid, cafeUpdateRequestDto));
-
-        return map;
+    @PutMapping("/update")
+    public void cafeUpdate(HttpServletRequest httpServletRequest, @RequestBody CafeUpdateRequestDto cafeUpdateRequestDto) {
+        String jwt = httpServletRequest.getCookies()[0].getValue();
+        //유효성 검사
+        if (!jwtService.isUsable(jwt))
+            return;
+        //파싱 - > 내 정보 가져와
+        Map<String, Object> map = jwtService.get(jwt);
+        //여기서 uid 넣으면서 쭉쭉
+        UserJwtResponsetDto user = (UserJwtResponsetDto) map.get("UserJwtResponseDto");
+        cafeService.cafeUpdate(cafeService.findByUid(user.getUid()).getCcid(), cafeUpdateRequestDto);
     }
+
 
     // ccid로 카페 하나 찾기 -> cafe + menu
     @ApiOperation("[손님 카페Detail페이지]:ccid를 기준으로 하나의 카페 정보 찾기")
@@ -96,7 +111,7 @@ public class CafeController {
     public CafeDetailForGUEST selectOne(@PathVariable Long ccid) {
         return new CafeDetailForGUEST(cafeService.findByCcId(ccid));
     }
-//
+
 //    // 카페 삭제 = 탈퇴
 //    @ApiOperation("[사장님 카페 정보 관리페이지]:특정 카페 삭제")
 //    @DeleteMapping("/delete/{ccid}")
