@@ -47,7 +47,7 @@ public class Cafe extends BaseTimeEntity {
     @Column(nullable = false)
     private int cstatus;  // -1:승인X, 0:대기, 1:승인
 
-    @Column
+    @Column(nullable = false)
     private int coperation;  // 1:운영중, 0:끝
 
     // fk -> 1:N = cafe:menu

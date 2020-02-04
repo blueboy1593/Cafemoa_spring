@@ -48,6 +48,7 @@ public class CafeController {
     @PostMapping("/opeartion/{ccid}")
     public int cafeOpeartion(@PathVariable Long ccid,@RequestBody CafeOpenRequestDto cafeOpenRequestDto) {
         int coperation=cafeOpenRequestDto.getCoperation();
+        cafeService.setOperation(coperation);
         return cafeService.findByCcId(ccid).getCoperation();
     }
 
@@ -75,7 +76,7 @@ public class CafeController {
     public CafeDetailForGUEST selectOne(@PathVariable Long ccid) {
         return new CafeDetailForGUEST(cafeService.findByCcId(ccid));
     }
-//
+
 //    // 카페 삭제 = 탈퇴
 //    @ApiOperation("[사장님 카페 정보 관리페이지]:특정 카페 삭제")
 //    @DeleteMapping("/delete/{ccid}")
