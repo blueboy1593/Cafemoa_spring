@@ -20,6 +20,8 @@ public class OrderedService {
     public Ordered findById(Long ooid){
         return orderedRepository.findById(ooid).get();
     }
+
+
     // 저장
     @Transactional
     public Long save(Long uuid) {
@@ -27,4 +29,11 @@ public class OrderedService {
         OrderedRequestDto orderedRequestDto=new OrderedRequestDto();
         return orderedRepository.save(orderedRequestDto.toEntity(orderuser)).getOoid();
     }
+
+    // 주문~메뉴나올때까지 상태 변경
+    @Transactional
+    public void setStatus(int ostatus){
+        orderedRepository.setStatus(ostatus);
+    }
+
 }

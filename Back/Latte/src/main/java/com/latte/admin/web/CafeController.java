@@ -78,6 +78,7 @@ public class CafeController {
 
 //        int coperation=cafeOpenRequestDto.getCoperation();
         cafeService.setOperation(cafeService.findByUid(user.getUid()).getCoperation());
+
     }
 
 

@@ -23,15 +23,6 @@ public class UserController {
     private final UserService userService;
     private final JwtService jwtService;
 
-    // 현재 회원 모두 보여주기
-
-
-
-
-
-
-
-
 
     // 회원 가입
     @PostMapping("/signup")
