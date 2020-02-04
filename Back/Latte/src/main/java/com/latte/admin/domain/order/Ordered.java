@@ -21,7 +21,7 @@ public class Ordered extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ooid;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private int ostatus;  // 주문상태: -1=취소, 0=대기, 1=사장님확인, 2=완료
 
     // fk -> 1:N = order:orderDetail (받는 쪽 표시)

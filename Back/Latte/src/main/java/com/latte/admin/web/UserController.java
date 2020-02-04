@@ -67,7 +67,7 @@ public class UserController {
         userService.update(user.getUid(), userUpdateRequestDto);
 
         // 토큰 재발행
-        User u = userService.
+        //User u = userService.
     }
 
     // 삭제

@@ -77,7 +77,7 @@ public class CafeController {
         UserJwtResponsetDto user = (UserJwtResponsetDto) map.get("UserJwtResponseDto");
 
 //        int coperation=cafeOpenRequestDto.getCoperation();
-        cafeService.setOperation(cafeService.findCcidByUid(user.getUid());
+        //cafeService.setOperation(cafeService.findCcidByUid(user.getUid());
 
     }
 
