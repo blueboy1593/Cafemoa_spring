@@ -48,6 +48,7 @@ public class CafeController {
     @PostMapping("/opeartion/{ccid}")
     public int cafeOpeartion(@PathVariable Long ccid,@RequestBody CafeOpenRequestDto cafeOpenRequestDto) {
         int coperation=cafeOpenRequestDto.getCoperation();
+        cafeService.setOperation(coperation);
         return cafeService.findByCcId(ccid).getCoperation();
     }
 

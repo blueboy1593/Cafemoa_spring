@@ -28,13 +28,16 @@ public class OrderController {
     private final MenuService menuService;
 
     // 주문메뉴 리스트 보여주기
-    @ApiOperation("주문 메뉴 리스트를 보여줍니다.")
+    @ApiOperation("[손님 장바구니]:주문 메뉴 리스트를 보여줍니다.")
     @GetMapping("/latte/orderdetail/{ooid}")
     public List<OrderDetailResponseDto> selectAll(@PathVariable Long ooid) {
         return orderDetailService.findAllDesc(ooid);
     }
 
-
+    // ordered table을 보여주는 이유
+    // 1. 손님: 마이페이지에서 history보여줌
+    // 2. 사장: 판매내역 확인 가능
+    // if 손님이 한번에 여러개 카페에서 주문한다면, 그 카페마다 주문이 들어왔다고 알려야함.
     @ApiOperation("현재는 uuid를 pathvariable로 달았지만, 추후 업데이트시 token으로 대체")
     @PostMapping("/latte/ordersave/{uuid}")
     public Map save(@PathVariable Long uuid, @RequestBody List<OrderDetailRequestDto> orderDetailRequestDtos){
