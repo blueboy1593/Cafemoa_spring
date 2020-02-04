@@ -13,6 +13,7 @@ class HeaderCustomer extends Component {
                 <div id="logo" className="logo" style={logo_style}><Link to='/'><img src="/img/logo.png" width="120px" alt="라떼는말이야" /></Link>
                     <ul className="icon-list" style={{float: "right"}}>
                         <Link to='/customer'><img src="/img/cafeinfo.png" alt="카페정보" /></Link>
+                        <Link to='/customer/order'><img src="/img/order.png" alt="주문하기" /></Link>
                         <Link to='/customer/shoppinglist'><img src="/img/shoppinglist.png" alt="장바구니" /></Link>
                         <Link to='/customer/mypage'><img src="/img/mypage.png" alt="마이페이지" /></Link>
                     </ul>
