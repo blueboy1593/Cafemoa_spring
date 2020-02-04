@@ -23,6 +23,16 @@ public class UserController {
     private final UserService userService;
     private final JwtService jwtService;
 
+    // 현재 회원 모두 보여주기
+
+
+
+
+
+
+
+
+
     // 회원 가입
     @PostMapping("/signup")
     public void signUp(@RequestBody UserSaveRequestDto userSaveRequestDto) {
@@ -106,7 +116,7 @@ public class UserController {
 
     @GetMapping("/logout")
     public void logOut(HttpServletResponse response,HttpServletRequest request) {
-//       Cookie cookie = new Cookie("userCookie", "");
+        // Cookie cookie = new Cookie("userCookie", "");
         Cookie cookie=request.getCookies()[0];
         cookie.setValue(null);
         cookie.setPath("/"); // <- 여기 잘 모르겠음

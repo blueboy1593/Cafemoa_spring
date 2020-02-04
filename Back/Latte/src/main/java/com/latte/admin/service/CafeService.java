@@ -37,7 +37,7 @@ public class CafeService {
                 .collect(Collectors.toList());
     }
 
-    // 카페 대기/승인/거절 상태 변경
+    // 카페 오픈 상태 변경
     @Transactional
     public void setOperation(int coperation){
         cafeRepository.setOperation(coperation);
@@ -67,6 +67,12 @@ public class CafeService {
                 cafeUpdateRequestDto.getCclose(),cafeUpdateRequestDto.getCdesc(),cafeUpdateRequestDto.getCoperation());
 
         return ccid;
+    }
+
+    // 사장님 아이디로 카페 불러오기
+    @Transactional
+    public Cafe findByUid(String uid) {
+        return cafeRepository.findByUid(uid);
     }
 
 //    // 탈퇴 = 카페 삭제

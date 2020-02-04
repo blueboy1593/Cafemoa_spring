@@ -30,4 +30,7 @@ public interface CafeRepository extends JpaRepository<Cafe,Long> {
     @Modifying
     @Query("update Cafe c set c.coperation=:coperation")
     void setOperation(@Param("coperation") int coperation);
+
+    @Query("select c from Cafe c where c.uid=:uid")
+    Cafe findByUid(@Param("uid") String uid);
 }
