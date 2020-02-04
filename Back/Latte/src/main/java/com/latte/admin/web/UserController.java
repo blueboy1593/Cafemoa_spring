@@ -72,7 +72,7 @@ public class UserController {
     // 로그인
     @ApiOperation("로그인하면서 토큰을 발행")
     @PostMapping("/signin")
-    public void signIn(@RequestBody UserJwtRequestDto userJwtRequestDto, HttpServletResponse response, HttpServletRequest request) {
+    public String signIn(@RequestBody UserJwtRequestDto userJwtRequestDto, HttpServletResponse response, HttpServletRequest request) {
         UserJwtResponsetDto userJwtResponsetDto = userService.signIn(userJwtRequestDto.getUid(), userJwtRequestDto.getUpass());
         if (userJwtResponsetDto != null && request.getCookies() == null) {
             String token = jwtService.create("member", userJwtResponsetDto);
@@ -82,7 +82,9 @@ public class UserController {
             // HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
             response.addCookie(cookie);
             System.out.println("발행된 토큰 : "+cookie.getValue());
+            return cookie.getValue();
         }
+        return  request.getCookies()[0].getValue();
     }
 
     @ApiOperation("토큰을 디코딩하는 함수 => 디코딩시 유저정보(id,email,role 등) 가지고 있음")

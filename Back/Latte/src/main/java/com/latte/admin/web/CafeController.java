@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,10 +19,18 @@ public class CafeController {
 
     // 사장님 기준으로 카페 내용저장 = 추가
     @ApiOperation("[사장님 회원가입페이지]: 회원가입 시 카페 내용 저장")
-    @PostMapping("/{uid}")
-    public Map save(@PathVariable String uid, @RequestBody CafeSaveRequestDto cafeSaveRequestDto){
+    @PostMapping("/")
+    public Map save(HttpServletRequest httpServletRequest, @RequestBody CafeSaveRequestDto cafeSaveRequestDto){
+        String jwt=httpServletRequest.getCookies()[0].getValue();
+        //유효성 검사
+        // 통과
+
+        //파싱 - > 내 정보 가져와ㅣ
+        //여기서 uid 넣으면서 쭉쭉
+
+
         Map<String,Long> map=new HashMap<>();
-        map.put("result",cafeService.save(uid, cafeSaveRequestDto));
+        //map.put("result",cafeService.save(uid, cafeSaveRequestDto));
         return map;
     }
 
