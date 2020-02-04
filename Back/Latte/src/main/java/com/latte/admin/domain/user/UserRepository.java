@@ -26,4 +26,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query("UPDATE User u set u.upass = :upass where u.uid = :uid")
     void updatePass(@Param("uid") String uid, @Param("upass") String upass);
 
+    @Query("select u from User u where u.uid=:uid")
+    User selectByUid(@Param("uid") String uid);
 }

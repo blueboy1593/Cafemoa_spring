@@ -1,5 +1,6 @@
 package com.latte.admin.web;
 
+import com.latte.admin.domain.user.User;
 import com.latte.admin.service.UserService;
 import com.latte.admin.service.jwt.JwtService;
 import com.latte.admin.web.dto.user.UserJwtRequestDto;
@@ -57,13 +58,16 @@ public class UserController {
 
     // 회원 정보 수정 -> mypage에서 pass, nickname, phone 변경 가능
     @PutMapping("/update")
-    public void update(HttpServletRequest request, @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
+    public void update(HttpServletResponse response, HttpServletRequest request, @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
         String jwt = request.getCookies()[0].getValue();
         if (!jwtService.isUsable(jwt))
             return;
         Map<String, Object> map = jwtService.get(jwt);
         UserJwtResponsetDto user = (UserJwtResponsetDto) map.get("UserJwtResponseDto");
         userService.update(user.getUid(), userUpdateRequestDto);
+
+        // 토큰 재발행
+        User u = userService.
     }
 
     // 삭제

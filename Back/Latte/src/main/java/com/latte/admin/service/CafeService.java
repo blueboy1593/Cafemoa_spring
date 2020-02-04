@@ -71,8 +71,8 @@ public class CafeService {
 
     // 사장님 아이디로 카페 불러오기
     @Transactional
-    public Cafe findByUid(String uid) {
-        return cafeRepository.findByUid(uid);
+    public Long findCcidByUid(String uid) {
+        return cafeRepository.findCcidByUid(uid);
     }
 
 //    // 탈퇴 = 카페 삭제

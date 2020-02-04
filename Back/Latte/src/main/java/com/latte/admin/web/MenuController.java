@@ -19,6 +19,7 @@ public class MenuController {
 
     private final MenuService menuService;
 
+    // jwt 필요
     // 메뉴 저장
     @ApiOperation("[사장님 페이지]:카페에서 메뉴 추가시 저장하는 기능")
     @PostMapping("/{ccid}")
@@ -43,6 +44,7 @@ public class MenuController {
         return menuService.selectOne(mmid);
     }
 
+    // jwt 필요
     // menu update
     @ApiOperation("[사장님페이지]: 메뉴를 업데이트 하는 기능")
     @PutMapping("/update/{mmid}")
