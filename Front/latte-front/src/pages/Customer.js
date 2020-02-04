@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import HeaderCustomer from '../headers/HeaderCustomer'
-import { Main, ShoppingList, Mypage } from '../tabs';
+import { CafeList, ShoppingList, Mypage } from '../tabs';
 
 class Customer extends Component{
     render(){
@@ -9,7 +9,7 @@ class Customer extends Component{
         <Router>
           <div className="Customer">
             <HeaderCustomer></HeaderCustomer>
-            <Route exact path='/customer' component={Main}/>
+            <Route exact path='/customer' component={CafeList}/>
             <Route path='/customer/shoppingList' component={ShoppingList}/>
             <Route path='/customer/mypage' component={Mypage}/>
           </div>

@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import CafeInfo from '../components/CafeInfo';
-import './Main.css';
+import './CafeList.css';
 // import axios from 'axios';
 // import axios_url from '../axios_url';
 
 
-export default class Main extends Component {
+export default class CafeList extends Component {
     state = {
         cafes: [
             // 이부분은 axios로 받아오더라도 굳이 지우지 말고 주석으로 남겨놓자.!!
@@ -42,6 +42,8 @@ export default class Main extends Component {
         ]
     }
 
+  
+    // axios.post(gsdakla,askldjasjkl,headers)
     // componentDidMount(){
     //     axios.get('http://70.12.246.69:8080/latte/cafe/all')
     //         .then(response =>{
@@ -68,15 +70,15 @@ export default class Main extends Component {
             <div>
                 <br></br>
                 <div className="cafes">
-                {cafes.map(cafe => (
-                    <CafeInfo
-                        key={cafe.ccid}
-                        id={cafe.ccid}
-                        name={cafe.cname}
-                        picture={cafe.cpic}
-                        />
-                ))}
-            </div>
+                    {cafes.map(cafe => (
+                        <CafeInfo
+                            key={cafe.ccid}
+                            id={cafe.ccid}
+                            name={cafe.cname}
+                            picture={cafe.cpic}
+                            />
+                    ))}
+                </div>
             </div>
         )
     }

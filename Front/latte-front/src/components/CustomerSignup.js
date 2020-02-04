@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import store from '../store';
-import './CustomerSignup.css';
 
 class CustomerSignup extends Component {
   state = {
