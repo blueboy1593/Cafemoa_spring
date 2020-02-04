@@ -39,8 +39,8 @@ public class CafeService {
 
     // 카페 대기/승인/거절 상태 변경
     @Transactional
-    public void setOperation(Long ccid,int coperation){
-        cafeRepository.setOperation(ccid,coperation);
+    public void setOperation(int coperation){
+        cafeRepository.setOperation(coperation);
     }
 
     // 카페 리스트 다 보여주기 -> 손님: 운영중인 카페

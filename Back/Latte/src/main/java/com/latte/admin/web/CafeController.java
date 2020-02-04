@@ -1,6 +1,5 @@
 package com.latte.admin.web;
 
-import com.latte.admin.domain.cafe.Cafe;
 import com.latte.admin.service.CafeService;
 import com.latte.admin.web.dto.cafe.*;
 import io.swagger.annotations.ApiOperation;
@@ -45,13 +44,12 @@ public class CafeController {
 
 
     // 카페 실제로 열었는지에 대한 상태 변경
-//    @ApiOperation("[사장님 카페 관리페이지]: 카페 운영중/운영마감 변경")
-//    @PostMapping("/opeartion/{ccid}")
-//    public int cafeOpeartion(@PathVariable Long ccid, @RequestBody ManageCafeRequestDto manageCafeRequestDto) {
-//        Cafe cafe=cafeService.findByCcId(manageCafeRequestDto.getCcid());
-//        cafe.statusSet(manageCafeRequestDto.getCstatus());
-//        return cafe.getCstatus();
-//    }
+    @ApiOperation("[사장님 카페 관리페이지]: 카페 운영중/운영마감 변경")
+    @PostMapping("/opeartion/{ccid}")
+    public int cafeOpeartion(@PathVariable Long ccid,@RequestBody CafeOpenRequestDto cafeOpenRequestDto) {
+        int coperation=cafeOpenRequestDto.getCoperation();
+        return cafeService.findByCcId(ccid).getCoperation();
+    }
 
 
     // 카페 리스트 보여주기
@@ -71,9 +69,7 @@ public class CafeController {
         return map;
     }
 
-    // ccid로 카페 하나 찾기
-    /////////////////////menu에 따라서 odid도 보여주는데,
-    /////////////////////ooid가 마지막값을 가지고옴/////////////////////////
+    // ccid로 카페 하나 찾기 -> cafe + menu
     @ApiOperation("[손님 카페Detail페이지]:ccid를 기준으로 하나의 카페 정보 찾기")
     @GetMapping("/{ccid}")
     public CafeDetailForGUEST selectOne(@PathVariable Long ccid) {
