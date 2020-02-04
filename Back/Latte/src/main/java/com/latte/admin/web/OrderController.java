@@ -37,6 +37,7 @@ public class OrderController {
     }
 
 
+    // jwt 필요
     // 주문 상황 변경 -> 주문상태: -1=취소, 0=대기, 1=사장님확인, 2=완료  // 취소했다고 db에서 삭제하지는 않음
     @ApiOperation("[사장/손님 주문상태 확인페이지]: -1=취소(1이 되기전 0일때는 취소가능), 0=대기, 1=사장님확인, 2=완료")
     @PostMapping("/latte/order/setStatus/{ooid}")

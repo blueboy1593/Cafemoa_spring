@@ -1,5 +1,6 @@
 package com.latte.admin.web;
 
+import com.latte.admin.domain.user.User;
 import com.latte.admin.service.UserService;
 import com.latte.admin.service.jwt.JwtService;
 import com.latte.admin.web.dto.user.UserJwtRequestDto;
@@ -22,11 +23,6 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
     private final JwtService jwtService;
-
-    // 모든 회원 정보 한번에 보여주기
-
-
-
 
 
     // 회원 가입
@@ -59,26 +55,37 @@ public class UserController {
 
     // 비밀번호 확인 -> login로직에서 있으면 안하고, 없으면 한다!!!!!!!!!!
 
-    // 회원 정보 수정 -> mypage에서 pass, nickname, phone 변경 가능
-    @PutMapping("/update/{uid}")
-    public Map update(@PathVariable String uid, @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
-        Map<String, String> map = new HashMap<>();
-        map.put("id", userService.update(uid, userUpdateRequestDto));
 
-        return map;
+    // 회원 정보 수정 -> mypage에서 pass, nickname, phone 변경 가능
+    @PutMapping("/update")
+    public void update(HttpServletResponse response, HttpServletRequest request, @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
+        String jwt = request.getCookies()[0].getValue();
+        if (!jwtService.isUsable(jwt))
+            return;
+        Map<String, Object> map = jwtService.get(jwt);
+        UserJwtResponsetDto user = (UserJwtResponsetDto) map.get("UserJwtResponseDto");
+        userService.update(user.getUid(), userUpdateRequestDto);
+
+        // 토큰 재발행
+        User u = userService.
     }
 
     // 삭제
-    @DeleteMapping("/delete/{uid}")
-    public void delete(@PathVariable String uid) {
-        // 세션 해제 추가~!~!~
-        userService.delete(uid);
+    @DeleteMapping("/delete")
+    public void delete(HttpServletResponse response, HttpServletRequest request) {
+        // x
+        String jwt = request.getCookies()[0].getValue();
+        if (!jwtService.isUsable(jwt))
+            return;
+        Map<String, Object> map = jwtService.get(jwt);
+        UserJwtResponsetDto user = (UserJwtResponsetDto) map.get("UserJwtResponseDto");
+        userService.delete(user.getUid());
     }
 
     // 로그인
     @ApiOperation("로그인하면서 토큰을 발행")
     @PostMapping("/signin")
-    public void signIn(@RequestBody UserJwtRequestDto userJwtRequestDto, HttpServletResponse response, HttpServletRequest request) {
+    public String signIn(@RequestBody UserJwtRequestDto userJwtRequestDto, HttpServletResponse response, HttpServletRequest request) {
         UserJwtResponsetDto userJwtResponsetDto = userService.signIn(userJwtRequestDto.getUid(), userJwtRequestDto.getUpass());
         if (userJwtResponsetDto != null && request.getCookies() == null) {
             String token = jwtService.create("member", userJwtResponsetDto);
@@ -87,8 +94,10 @@ public class UserController {
             cookie.setMaxAge(Integer.MAX_VALUE);
             // HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
             response.addCookie(cookie);
-            System.out.println("발행된 토큰 : "+cookie.getValue());
+            System.out.println("발행된 토큰 : " + cookie.getValue());
+            return cookie.getValue();
         }
+        return request.getCookies()[0].getValue();
     }
 
     @ApiOperation("토큰을 디코딩하는 함수 => 디코딩시 유저정보(id,email,role 등) 가지고 있음")
@@ -109,16 +118,16 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public void logOut(HttpServletResponse response,HttpServletRequest request) {
+    public void logOut(HttpServletResponse response, HttpServletRequest request) {
 //       Cookie cookie = new Cookie("userCookie", "");
-        Cookie cookie=request.getCookies()[0];
+        Cookie cookie = request.getCookies()[0];
         cookie.setValue(null);
         cookie.setPath("/"); // <- 여기 잘 모르겠음
         cookie.setMaxAge(0);//나이 0살 - 죽은거야
         response.addCookie(cookie);
         System.out.println("".equals(null));
         System.out.println("로그아웃 되었습니다.");
-        System.out.println("현재 쿠키수 :"+request.getCookies().length);
-        System.out.println("현재 쿠키 :"+request.getCookies()[0].getValue());
+        System.out.println("현재 쿠키수 :" + request.getCookies().length);
+        System.out.println("현재 쿠키 :" + request.getCookies()[0].getValue());
     }
 }
