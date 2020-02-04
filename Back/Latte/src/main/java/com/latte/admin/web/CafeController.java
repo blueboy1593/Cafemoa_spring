@@ -38,6 +38,7 @@ public class CafeController {
 //        //map.put("result",cafeService.save(uid, cafeSaveRequestDto));
 //        return map;
 //    }
+
     @ApiOperation("[사장님 회원가입페이지]: 회원가입 시 카페 내용 저장")
     @PostMapping("/{uid}")
     public Map save(@PathVariable String uid, @RequestBody CafeSaveRequestDto cafeSaveRequestDto){
@@ -77,7 +78,7 @@ public class CafeController {
         UserJwtResponsetDto user = (UserJwtResponsetDto) map.get("UserJwtResponseDto");
 
 //        int coperation=cafeOpenRequestDto.getCoperation();
-        cafeService.setOperation(cafeService.findCcidByUid(user.getUid());
+        cafeService.setOperation(cafeService.findCcidByUid(user.getUid()));
 
     }
 

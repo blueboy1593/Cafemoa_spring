@@ -30,6 +30,7 @@ public class MenuController {
         return map;
     }
 
+
     // 한 카페가 보유하고있는 모든 메뉴 출력
     @ApiOperation("[주문페이지/카페소개도?]:한 카페가 보유하고있는 모든 메뉴 출력")
     @GetMapping("/all/{ccid}")
