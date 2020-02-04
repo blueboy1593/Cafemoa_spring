@@ -30,7 +30,6 @@ public class OrderDetailService {
     //들어오는 input들(주문번호,메뉴) 저장하기
     @Transactional
     public void save(List<Menu> orderMenus, Ordered ordered){
-
         for(Menu orderMenu:orderMenus){
             orderDetailRepository.save(new OrderDetail(orderMenu,ordered));
         }

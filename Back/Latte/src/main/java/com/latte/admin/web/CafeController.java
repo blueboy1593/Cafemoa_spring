@@ -40,8 +40,8 @@ public class CafeController {
 //    }
 
     @ApiOperation("[사장님 회원가입페이지]: 회원가입 시 카페 내용 저장")
-    @PostMapping("/{uid}")
-    public Map save(@PathVariable String uid, @RequestBody CafeSaveRequestDto cafeSaveRequestDto){
+    @PostMapping("/savecafe/{uid}")
+    public Map save(@PathVariable String uid,@RequestBody CafeSaveRequestDto cafeSaveRequestDto){
         Map<String,Long> map=new HashMap<>();
         map.put("result",cafeService.save(uid, cafeSaveRequestDto));
         return map;
