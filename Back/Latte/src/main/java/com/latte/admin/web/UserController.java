@@ -100,12 +100,12 @@ public class UserController {
         return request.getCookies()[0].getValue();
     }
 
+
     @ApiOperation("토큰을 디코딩하는 함수 => 디코딩시 유저정보(id,email,role 등) 가지고 있음")
     @GetMapping("/getUser/{jwt}")
     public Map getData(@PathVariable String jwt) {
         return jwtService.get(jwt);
     }
-
 
     @ApiOperation("토큰을 검증하는 함수 => 이 토큰이 유효한 것인지 확인")
     @GetMapping("/isTrueToken/{jwt}")
