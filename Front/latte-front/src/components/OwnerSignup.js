@@ -5,6 +5,7 @@ class OwnerSignup extends Component {
   state = {
     id: '',
     pass: '',
+    name:'',
     sajang: true
   }
   handleChange = (e) => {
@@ -13,13 +14,15 @@ class OwnerSignup extends Component {
     })
   }
   handleSubmit = (e) => {
+    // console.log(this.state.user_id ,this.state.password)
     // 페이지 리로딩 방지
     e.preventDefault();
     store.dispatch({type:'SIGNUP', info:this.state});
     // 상태 초기화
     this.setState({
       id: '',
-      pass: ''
+      pass: '',
+      name:''
     })
   }
   render() {
@@ -45,8 +48,8 @@ class OwnerSignup extends Component {
             <br></br>
             <input
             placeholder="이름"
-            // value={this.state.name}
-            // onChange={this.handleChange}
+            value={this.state.name}
+            onChange={this.handleChange}
             name="name"
             />
             <br></br>
