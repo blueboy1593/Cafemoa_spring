@@ -19,7 +19,7 @@ public class CafeController {
 
     // 사장님 기준으로 카페 내용저장 = 추가
     @ApiOperation("[사장님 회원가입페이지]: 회원가입 시 카페 내용 저장")
-    @PostMapping("/")
+    @PostMapping("/savecafe")
     public Map save(HttpServletRequest httpServletRequest, @RequestBody CafeSaveRequestDto cafeSaveRequestDto){
         String jwt=httpServletRequest.getCookies()[0].getValue();
         //유효성 검사
