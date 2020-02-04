@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
 import store from '../store';
+import { Button, notification } from 'antd';
+import 'antd/dist/antd.css';
+
 
 class CustomerSignup extends Component {
   state = {
     id: '',
     pass: '',
-    sajang: false
+    role:'',
+    name:'',
+    email:'',
+    nickname:'',
+    phone:''
   }
   handleChange = (e) => {
     this.setState({
@@ -23,11 +30,29 @@ class CustomerSignup extends Component {
       pass: ''
     })
   }
+  
+  
+
   render() {
+    // 알림
+    const openNotification = () => {
+      notification.open({
+        id : this.state.id,
+        message: this.state.id,
+        description: "회원가입 축하합니다~",
+      });
+      // setTimeout(() => {
+      //   notification.open({
+      //     key,
+      //     message: 'New Title',
+      //     description: 'New description.',
+      //   });
+      // }, 1000);
+    };
     return (
       <div>
       <h1>손님 회원가입 페이지</h1>
-      <form onSubmit={this.handleSubmit}>
+      <form onSubmit={this.handleSubmit} >
         <input
           placeholder="아이디"
           value={this.state.id}
@@ -44,7 +69,10 @@ class CustomerSignup extends Component {
         />
         <br></br>
         <input
+         type="name"
           placeholder="이름"
+          value={this.state.name}
+          onChange={this.handleChange}
           name="name"
         />
         <br></br>
@@ -63,7 +91,7 @@ class CustomerSignup extends Component {
           name="email"
         />
         <br></br>
-        <button type="submit">회원가입</button>
+        <Button type="submit" onClick={openNotification} >회원가입</Button>
         {/* <div>{this.state.user_id} {this.state.password}</div> */}
     </form>
     </div>

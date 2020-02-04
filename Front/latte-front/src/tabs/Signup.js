@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 // import SignupSelect from '../components/SignupSelect';
 
 // 이 코드는 index.js를 통해서 위의 코드와 같은 동작을 하는 코드!!!
-import { OwnerSignup, CustomerSignup, SignupSelect } from '../components';
+import { OwnerSignup, CustomerSignup, SignupSelect, Signup2 } from '../components';
 
 export default class Signup extends Component {
     render() {
@@ -16,6 +16,7 @@ export default class Signup extends Component {
                     <SignupSelect />
                     <Route path="/OwnerSignup" component={OwnerSignup} />
                     <Route path="/CustomerSignup" component={CustomerSignup} />
+                    <Route path="/Signup2" component={Signup2} />
                 </Router>
             </div>
         )
