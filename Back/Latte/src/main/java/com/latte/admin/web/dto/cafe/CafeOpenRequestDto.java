@@ -1,7 +1,11 @@
 package com.latte.admin.web.dto.cafe;
 
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor
 public class CafeOpenRequestDto {
     private Long ccid;
     private int coperation;
