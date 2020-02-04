@@ -69,19 +69,13 @@ public class CafeController {
     @ApiOperation("[사장님 카페 관리페이지]: 카페 운영중/운영마감 변경")
     @PostMapping("/opeartion")
     public void cafeOpeartion(HttpServletRequest httpServletRequest,@RequestBody CafeOpenRequestDto cafeOpenRequestDto) {
-        String jwt = httpServletRequest.getCookies()[0].getValue();
-        //유효성 검사
-        if (!jwtService.isUsable(jwt))
-            return;
-        //파싱 - > 내 정보 가져와
-        Map<String, Object> map = jwtService.get(jwt);
-        UserJwtResponsetDto user = (UserJwtResponsetDto) map.get("UserJwtResponseDto");
-
-//        int coperation=cafeOpenRequestDto.getCoperation();
-
-        //cafeService.setOperation(cafeService.findCcidByUid(user.getUid());
-
-        //cafeService.setOperation(cafeService.findCcidByUid(user.getUid()));
+//        String jwt = httpServletRequest.getCookies()[0].getValue();
+//        //유효성 검사
+//        if (!jwtService.isUsable(jwt))  return;
+//        //파싱 - > 내 정보 가져와
+//        Map<String, Object> map = jwtService.get(jwt);
+//        UserJwtResponsetDto user = (UserJwtResponsetDto) map.get("UserJwtResponseDto");
+           cafeService.findByCcId(cafeOpenRequestDto.getCcid());
 
     }
 
@@ -106,6 +100,10 @@ public class CafeController {
         Map<String, Object> map = jwtService.get(jwt);
         //여기서 uid 넣으면서 쭉쭉
         UserJwtResponsetDto user = (UserJwtResponsetDto) map.get("UserJwtResponseDto");
+
+
+
+
         cafeService.cafeUpdate(cafeService.findCcidByUid(user.getUid()), cafeUpdateRequestDto);
     }
 
