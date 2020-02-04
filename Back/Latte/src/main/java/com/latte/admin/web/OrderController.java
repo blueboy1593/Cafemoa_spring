@@ -5,8 +5,10 @@ import com.latte.admin.domain.order.Ordered;
 import com.latte.admin.service.MenuService;
 import com.latte.admin.service.OrderDetailService;
 import com.latte.admin.service.OrderedService;
+import com.latte.admin.web.dto.cafe.ManageCafeRequestDto;
 import com.latte.admin.web.dto.order.OrderDetailRequestDto;
 import com.latte.admin.web.dto.order.OrderDetailResponseDto;
+import com.latte.admin.web.dto.order.OrderStatusRequestDto;
 import com.latte.admin.web.dto.order.OrderedResponseDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,11 +30,25 @@ public class OrderController {
     private final MenuService menuService;
 
     // 주문메뉴 리스트 보여주기
-    @ApiOperation("[손님 장바구니]:주문 메뉴 리스트를 보여줍니다.")
+    @ApiOperation("[손님 장바구니]:주문 메뉴 리스트를 보여주기")
     @GetMapping("/latte/orderdetail/{ooid}")
     public List<OrderDetailResponseDto> selectAll(@PathVariable Long ooid) {
         return orderDetailService.findAllDesc(ooid);
     }
+
+
+    // 주문 상황 변경 -> 주문상태: -1=취소, 0=대기, 1=사장님확인, 2=완료  // 취소했다고 db에서 삭제하지는 않음
+    @ApiOperation("[사장/손님 주문상태 확인페이지]: -1=취소(1이 되기전 0일때는 취소가능), 0=대기, 1=사장님확인, 2=완료")
+    @PostMapping("/latte/order/setStatus/{ooid}")
+    public int cafeStatusSet(@PathVariable Long ooid, @RequestBody OrderStatusRequestDto orderStatusRequestDto) {
+        Long ccid= orderStatusRequestDto.getOoid();
+        int ostatus= orderStatusRequestDto.getOstatus();
+        orderedService.setStatus(ostatus);
+        return orderedService.findById(ooid).getOstatus();
+    }
+
+
+
 
     // ordered table을 보여주는 이유
     // 1. 손님: 마이페이지에서 history보여줌
