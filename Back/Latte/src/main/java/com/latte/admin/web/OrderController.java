@@ -7,8 +7,6 @@ import com.latte.admin.service.OrderDetailService;
 import com.latte.admin.service.OrderedService;
 import com.latte.admin.web.dto.order.OrderDetailRequestDto;
 import com.latte.admin.web.dto.order.OrderDetailResponseDto;
-import com.latte.admin.web.dto.order.OrderedResponseDto;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
