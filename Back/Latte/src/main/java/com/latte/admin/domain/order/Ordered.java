@@ -21,6 +21,9 @@ public class Ordered extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ooid;
 
+    @Column(nullable = false)
+    private int ostatus;  // 주문상태: -1=취소, 0=대기, 1=사장님확인, 2=완료
+
     // fk -> 1:N = order:orderDetail (받는 쪽 표시)
     //ordered-orderdetail 관계에서 ordered가 연관관계의 대상이므로 mappedby로 표시해주자.
     @OneToMany(cascade=CascadeType.ALL, mappedBy = "ordered")
