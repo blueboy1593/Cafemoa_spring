@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import store from '../store';
 
-
 class CustomerSignup extends Component {
   state = {
     id: '',
