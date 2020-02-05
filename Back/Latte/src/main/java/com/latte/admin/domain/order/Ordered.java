@@ -32,7 +32,7 @@ public class Ordered extends BaseTimeEntity {
 
     // fk -> 1:N = user:order -> if role=1(손님)
     //user-ordered의 관계는 ordered가 연관관계의 주인
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     @JsonBackReference
     private User orderuser;
 
