@@ -70,7 +70,7 @@ public class User extends BaseTimeEntity {
     }
 
     // 수정
-    public void update(String upass, String uphone, String unickname) {
+    public void update(String upass, String uphone, String unickname,String upic) {
         this.upass = upass;
         this.uphone = uphone;
         this.unickname = unickname;

@@ -74,16 +74,15 @@ public class Cafe extends BaseTimeEntity {
         this.coperation=coperation;
     }
 
-    public void CafeUpdate(String cphone,String cpic,String copen,String cclose,String cdesc,int coperation) {
-        this.cphone = cphone;
-        this.cpic = cpic;
-        this.copen = copen;
-        this.cclose = cclose;
+    public void CafeUpdate(String cname,String cloc,String cphone,String cpic,String copen, String cclose,String cdesc) {
+        this.cname=cname;
+        this.cloc=cloc;
+        this.cphone=cphone;
+        this.cpic=cpic;
+        this.copen=copen;
+        this.cclose=cclose;
         this.cdesc=cdesc;
-        this.coperation=coperation;
     }
-
-
     public void setStatus(int cstatus){
         this.cstatus=cstatus;
     }

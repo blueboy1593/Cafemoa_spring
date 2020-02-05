@@ -106,8 +106,14 @@ public class UserService {
         return sb.toString();
     }
 
+    //바뀐 유저 데이터에 대해서 토큰을 재발행 할 때
+    //JwtUserRequest를 만들기 위한 작업으로 필요함.
+    //DB까지 가지않고 서비스를 이용하여 끌고옴
+    @Transactional
+    public User findByuid(String uid){
+        return userRepository.findByuid(uid);
+    }
 
-    // 비밀번호 확인 -> login로직에서 있으면 안하고, 없으면 한다!!!!!!!!!!
 
     // 회원 정보 수정
     @Transactional
@@ -115,7 +121,7 @@ public class UserService {
         User user = userRepository.checkByUid(uid).orElseThrow(()
                 -> new IllegalArgumentException("해당 사용자가 없습니다."));
 
-        user.update(userUpdateRequestDto.getUpass(), userUpdateRequestDto.getUphone(), userUpdateRequestDto.getUnickname());
+        user.update(userUpdateRequestDto.getUpass(), userUpdateRequestDto.getUphone(), userUpdateRequestDto.getUnickname(),userUpdateRequestDto.getUpic());
 
         return uid;
     }

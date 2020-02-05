@@ -28,7 +28,11 @@ public class MenuController {
     @ApiOperation("[사장님 페이지]:카페에서 메뉴 추가시 저장하는 기능")
     @PostMapping("/{ccid}")
     public Map save(@PathVariable Long ccid, @RequestBody MenuSaveRequestDto menuSaveRequestDto) {
-
+        /* String jwt = httpServletRequest.getCookies()[0].getValue();
+        //유효성 검사
+        if (!jwtService.isUsable(jwt)) throw new UnauthorizedException(); // 예외
+        UserJwtResponsetDto user=jwtService.getUser(jwt);
+        */
         Map<String,Long> map=new HashMap<>();
         map.put("Result",menuService.save(menuSaveRequestDto,ccid));
 

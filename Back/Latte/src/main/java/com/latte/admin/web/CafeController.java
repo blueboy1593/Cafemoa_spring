@@ -1,14 +1,23 @@
 package com.latte.admin.web;
 
+import io.jsonwebtoken.Jwts;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import com.latte.admin.domain.cafe.Cafe;
 import com.latte.admin.service.CafeService;
 import com.latte.admin.service.jwt.JwtService;
+import com.latte.admin.service.jwt.UnauthorizedException;
 import com.latte.admin.web.dto.cafe.*;
 import com.latte.admin.web.dto.user.UserJwtResponsetDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Key;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +50,7 @@ public class CafeController {
 
     @ApiOperation("[사장님 회원가입페이지]: 회원가입 시 카페 내용 저장")
     @PostMapping("/savecafe/{uid}")
-    public Map save(@PathVariable String uid,@RequestBody CafeSaveRequestDto cafeSaveRequestDto){
+    public Map save(@PathVariable String uid, @RequestBody CafeSaveRequestDto cafeSaveRequestDto){
         Map<String,Long> map=new HashMap<>();
         map.put("result",cafeService.save(uid, cafeSaveRequestDto));
         return map;
@@ -68,17 +77,24 @@ public class CafeController {
     // 카페 실제로 열었는지에 대한 상태 변경
     @ApiOperation("[사장님 카페 관리페이지]: 카페 운영중/운영마감 변경")
     @PostMapping("/opeartion")
-    public void cafeOpeartion(HttpServletRequest httpServletRequest,@RequestBody CafeOpenRequestDto cafeOpenRequestDto) {
-//        String jwt = httpServletRequest.getCookies()[0].getValue();
-//        //유효성 검사
-//        if (!jwtService.isUsable(jwt))  return;
-//        //파싱 - > 내 정보 가져와
-//        Map<String, Object> map = jwtService.get(jwt);
-//        UserJwtResponsetDto user = (UserJwtResponsetDto) map.get("UserJwtResponseDto");
-           cafeService.findByCcId(cafeOpenRequestDto.getCcid());
+    public Map cafeOpeartion(HttpServletRequest httpServletRequest, @RequestBody CafeOpenRequestDto cafeOpenRequestDto) {
+        String jwt = httpServletRequest.getCookies()[0].getValue();
+        //유효성 검사
+        if (!jwtService.isUsable(jwt)) throw new UnauthorizedException(); // 예외
+        UserJwtResponsetDto user=jwtService.getUser(jwt);
 
-    }
 
+        Long ccid=cafeOpenRequestDto.getCcid();
+        int coperation=cafeOpenRequestDto.getCoperation();
+        Cafe curCafe=cafeService.findByCcId(ccid);
+
+        if(user.getUid().equals(curCafe.getUid())){
+            curCafe.setCoperation(coperation);
+            Map<String,Integer> map=new HashMap<>();
+            map.put("변경 후 상태",cafeService.findByCcId(ccid).getCoperation());
+            return map;
+        }else throw new UnauthorizedException(); // 예외
+}
 
     // 카페 리스트 보여주기
     @ApiOperation("[손님 카페소개페이지]:카페 리스트를 손님들에게 보여줌-> 실제로 영업중인 것들을 우선적으로 보여줌")
@@ -90,21 +106,20 @@ public class CafeController {
 
     // 카페 정보 수정
     @ApiOperation("[사장님 카페 정보 관리페이지]:특정 카페 정보 수정")
-    @PutMapping("/update")
-    public void cafeUpdate(HttpServletRequest httpServletRequest, @RequestBody CafeUpdateRequestDto cafeUpdateRequestDto) {
+    @PutMapping("/update/{ccid}")
+    public void cafeUpdate(HttpServletRequest httpServletRequest,@PathVariable Long ccid, @RequestBody CafeUpdateRequestDto cafeUpdateRequestDto) {
         String jwt = httpServletRequest.getCookies()[0].getValue();
+
+//        System.out.println("현재 토큰 : "+jwt);
+//        System.out.println("유효성 : "+ jwtService.isUsable(jwt));
         //유효성 검사
-        if (!jwtService.isUsable(jwt))
-            return;
-        //파싱 - > 내 정보 가져와
-        Map<String, Object> map = jwtService.get(jwt);
-        //여기서 uid 넣으면서 쭉쭉
-        UserJwtResponsetDto user = (UserJwtResponsetDto) map.get("UserJwtResponseDto");
+        if (!jwtService.isUsable(jwt)) throw new UnauthorizedException(); // 예외
 
+        UserJwtResponsetDto user=jwtService.getUser(jwt);
 
-
-
-        cafeService.cafeUpdate(cafeService.findCcidByUid(user.getUid()), cafeUpdateRequestDto);
+       if(cafeUpdateRequestDto.getUid().equals(user.getUid())){ //수정할 권한이 있으면
+           cafeService.cafeUpdate(ccid,cafeUpdateRequestDto);
+       }else throw new UnauthorizedException(); // 예외
     }
 
     // ccid로 카페 하나 찾기 -> cafe + menu
