@@ -49,9 +49,9 @@ public class User extends BaseTimeEntity {
 
     // fk -> 1:N = user:order -> if role=1(손님)
     //user-order의 관계는 user가 연관관계의 대상.
-    @OneToOne(cascade=CascadeType.ALL, mappedBy = "orderuser")
+    @OneToMany(cascade=CascadeType.ALL, mappedBy = "orderuser")
     @JsonManagedReference
-    private Ordered ordered;
+    private List<Ordered> ordered;
 
     public User(Long uuid) {
         this.uuid=uuid;
@@ -70,7 +70,7 @@ public class User extends BaseTimeEntity {
     }
 
     // 수정
-    public void update(String upass, String uphone, String unickname) {
+    public void update(String upass, String uphone, String unickname,String upic) {
         this.upass = upass;
         this.uphone = uphone;
         this.unickname = unickname;

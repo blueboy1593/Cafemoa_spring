@@ -20,7 +20,7 @@ public class OrderDetail extends BaseTimeEntity {
 
     // fk -> 1:1 = orderDetail:menu
     //orderdetail-menu 의 관계는 orderdetail이 연관관계의 주인
-    @OneToOne
+    @ManyToOne
     @JsonBackReference
     private Menu ordermenu;
 

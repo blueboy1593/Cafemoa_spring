@@ -21,7 +21,7 @@ public class Ordered extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ooid;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private int ostatus;  // 주문상태: -1=취소, 0=대기, 1=사장님확인, 2=완료
 
     // fk -> 1:N = order:orderDetail (받는 쪽 표시)
@@ -32,7 +32,7 @@ public class Ordered extends BaseTimeEntity {
 
     // fk -> 1:N = user:order -> if role=1(손님)
     //user-ordered의 관계는 ordered가 연관관계의 주인
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     @JsonBackReference
     private User orderuser;
 

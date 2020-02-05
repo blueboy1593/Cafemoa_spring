@@ -20,11 +20,11 @@ public class SwaggerConfig {
     private ApiInfo metadata() {
         return new ApiInfoBuilder().title("Latte Project").description("Latte Swagger")
                 .version("2.0").build();
-    }
+}
     @Bean
     public Docket api() {
         ParameterBuilder aParameterBuilder = new ParameterBuilder();
-        aParameterBuilder.name("jwt-auth-token")
+        aParameterBuilder.name("Authorization")
                 .description("JWT Token")
                 .modelRef(new ModelRef("string"))
                 .parameterType("header")

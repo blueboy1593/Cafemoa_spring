@@ -3,7 +3,9 @@ package com.latte.admin.web.dto.user;
 import com.latte.admin.domain.user.Role;
 import com.latte.admin.domain.user.User;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Getter
 public class UserJwtResponsetDto {
     private String uid;
@@ -13,6 +15,7 @@ public class UserJwtResponsetDto {
     private String unickname;
     private Role role;
     private String upic;
+
 
     public UserJwtResponsetDto(User entity) {
         this.uid = entity.getUid();
