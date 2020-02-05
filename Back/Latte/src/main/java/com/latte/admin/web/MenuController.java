@@ -21,7 +21,6 @@ import java.util.Map;
 public class MenuController {
 
     private final MenuService menuService;
-    private final JwtService jwtService;
 
     // jwt 필요?
     // 메뉴 저장
@@ -64,6 +63,7 @@ public class MenuController {
         return map;
     }
 
+    // jwt 필요?
     // menu delete
     @ApiOperation("[사장님페이지]:선택된 메뉴를 삭제하는 기능")
     @DeleteMapping("/delete/{mmid}")

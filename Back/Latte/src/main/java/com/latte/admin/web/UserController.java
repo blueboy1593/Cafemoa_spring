@@ -32,8 +32,8 @@ public class UserController {
 
     // 아이디 중복 확인(회원가입시)
     @PostMapping("/checkid/{uid}")
-    public void checkId(@PathVariable String uid) {
-        userService.checkId(uid);
+    public boolean checkId(@PathVariable String uid) {
+        return userService.checkId(uid);
     }
 
     // 아이디 찾기
