@@ -2,7 +2,7 @@ package com.latte.admin.service;
 
 import com.latte.admin.domain.user.User;
 import com.latte.admin.domain.user.UserRepository;
-import com.latte.admin.web.dto.user.UserJwtResponsetDto;
+import com.latte.admin.web.dto.user.UserJwtResponseDto;
 import com.latte.admin.web.dto.user.UserSaveRequestDto;
 import com.latte.admin.web.dto.user.UserUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -131,14 +131,19 @@ public class UserService {
 
     // 로그인
     @Transactional
-    public UserJwtResponsetDto signIn(String uid, String upass) {
+    public UserJwtResponseDto signIn(String uid, String upass) {
         User user = userRepository.checkByUid(uid).orElseThrow(() -> new IllegalArgumentException("아이디/비밀번호가 일치하지 않습니다."));
         if (user.getUpass().equals(upass)) {
-            return new UserJwtResponsetDto(user);
+            return new UserJwtResponseDto(user);
         } else {
             new IllegalArgumentException("아이디/비밀번호가 일치하지 않습니다.");
             return null;
         }
+    }
+
+    @Transactional
+    public UserJwtResponseDto selectByUid(String uid) {
+        return new UserJwtResponseDto(userRepository.selectByUid(uid));
     }
 
 }

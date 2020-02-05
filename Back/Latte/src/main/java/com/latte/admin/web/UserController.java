@@ -4,7 +4,7 @@ import com.latte.admin.domain.user.User;
 import com.latte.admin.service.UserService;
 import com.latte.admin.service.jwt.JwtService;
 import com.latte.admin.web.dto.user.UserJwtRequestDto;
-import com.latte.admin.web.dto.user.UserJwtResponsetDto;
+import com.latte.admin.web.dto.user.UserJwtResponseDto;
 import com.latte.admin.web.dto.user.UserSaveRequestDto;
 import com.latte.admin.web.dto.user.UserUpdateRequestDto;
 import io.swagger.annotations.ApiOperation;
@@ -58,16 +58,21 @@ public class UserController {
 
     // 회원 정보 수정 -> mypage에서 pass, nickname, phone 변경 가능
     @PutMapping("/update")
-    public void update(HttpServletResponse response, HttpServletRequest request, @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
+    public String update(HttpServletResponse response, HttpServletRequest request, @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
         String jwt = request.getCookies()[0].getValue();
         if (!jwtService.isUsable(jwt))
-            return;
+            return null;
         Map<String, Object> map = jwtService.get(jwt);
-        UserJwtResponsetDto user = (UserJwtResponsetDto) map.get("UserJwtResponseDto");
-        userService.update(user.getUid(), userUpdateRequestDto);
+        UserJwtResponseDto userJwtResponseDto = (UserJwtResponseDto) map.get("UserJwtResponseDto");
+        userService.update(userJwtResponseDto.getUid(), userUpdateRequestDto);
 
         // 토큰 재발행
-        //User u = userService.
+        String token = jwtService.create("member", userJwtResponseDto);
+        Cookie cookie = new Cookie("userCookie", token);
+        cookie.setPath("/"); // <- 여기 잘 모르겠음
+        cookie.setMaxAge(Integer.MAX_VALUE);
+        response.addCookie(cookie);
+        return cookie.getValue(); // 토큰 반환
     }
 
     // 삭제
@@ -78,7 +83,7 @@ public class UserController {
         if (!jwtService.isUsable(jwt))
             return;
         Map<String, Object> map = jwtService.get(jwt);
-        UserJwtResponsetDto user = (UserJwtResponsetDto) map.get("UserJwtResponseDto");
+        UserJwtResponseDto user = (UserJwtResponseDto) map.get("UserJwtResponseDto");
         userService.delete(user.getUid());
     }
 
@@ -86,9 +91,9 @@ public class UserController {
     @ApiOperation("로그인하면서 토큰을 발행")
     @PostMapping("/signin")
     public String signIn(@RequestBody UserJwtRequestDto userJwtRequestDto, HttpServletResponse response, HttpServletRequest request) {
-        UserJwtResponsetDto userJwtResponsetDto = userService.signIn(userJwtRequestDto.getUid(), userJwtRequestDto.getUpass());
-        if (userJwtResponsetDto != null && request.getCookies() == null) {
-            String token = jwtService.create("member", userJwtResponsetDto);
+        UserJwtResponseDto userJwtResponseDto = userService.signIn(userJwtRequestDto.getUid(), userJwtRequestDto.getUpass());
+        if (userJwtResponseDto != null && request.getCookies() == null) {
+            String token = jwtService.create("member", userJwtResponseDto);
             Cookie cookie = new Cookie("userCookie", token);
             cookie.setPath("/"); // <- 여기 잘 모르겠음
             cookie.setMaxAge(Integer.MAX_VALUE);

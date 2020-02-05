@@ -5,7 +5,7 @@ import com.latte.admin.domain.user.User;
 import lombok.Getter;
 
 @Getter
-public class UserJwtResponsetDto {
+public class UserJwtResponseDto {
     private String uid;
     private String uname;
     private String uphone;
@@ -14,7 +14,7 @@ public class UserJwtResponsetDto {
     private Role role;
     private String upic;
 
-    public UserJwtResponsetDto(User entity) {
+    public UserJwtResponseDto(User entity) {
         this.uid = entity.getUid();
         this.uname = entity.getUname();
         this.uphone = entity.getUphone();
