@@ -5,13 +5,18 @@ import com.latte.admin.domain.order.Ordered;
 import com.latte.admin.service.MenuService;
 import com.latte.admin.service.OrderDetailService;
 import com.latte.admin.service.OrderedService;
+import com.latte.admin.service.UserService;
+import com.latte.admin.service.jwt.JwtService;
+import com.latte.admin.service.jwt.UnauthorizedException;
 import com.latte.admin.web.dto.order.OrderDetailRequestDto;
 import com.latte.admin.web.dto.order.OrderDetailResponseDto;
 import com.latte.admin.web.dto.order.OrderStatusRequestDto;
+import com.latte.admin.web.dto.user.UserJwtResponsetDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +30,8 @@ public class OrderController {
     private final OrderedService orderedService;
     private final OrderDetailService orderDetailService;
     private final MenuService menuService;
+    private final JwtService jwtService;
+    private final UserService userService;
 
     // 주문메뉴 리스트 보여주기
     @ApiOperation("[손님 장바구니]:주문 메뉴 리스트를 보여주기")
@@ -53,12 +60,18 @@ public class OrderController {
     // 2. 사장: 판매내역 확인 가능
     // if 손님이 한번에 여러개 카페에서 주문한다면, 그 카페마다 주문이 들어왔다고 알려야함.
     @ApiOperation("현재는 uuid를 pathvariable로 달았지만, 추후 업데이트시 token으로 대체")
-    @PostMapping("/latte/ordersave/{uuid}")
-    public Map save(@PathVariable Long uuid, @RequestBody List<OrderDetailRequestDto> orderDetailRequestDtos){
+    @PostMapping("/latte/ordersave")
+    public Map save(HttpServletRequest httpServletRequest, @RequestBody List<OrderDetailRequestDto> orderDetailRequestDtos){
+        String jwt = httpServletRequest.getCookies()[0].getValue();
+        //유효성 검사
+        if (!jwtService.isUsable(jwt)) throw new UnauthorizedException(); // 예외
+
+        UserJwtResponsetDto user=jwtService.getUser(jwt);
+
         Map<String,String> map=new HashMap<>();
         //현재 orderDetailRequestDtos에는 메뉴, 옵션 등의 정보가 담겨 있다.
         //현재 초기 코드는 메뉴만 있다고 가정.
-        Ordered ordered=orderedService.findById(orderedService.save(uuid));
+        Ordered ordered=orderedService.findById(orderedService.save(userService.findByuid(user.getUid())));
         //Ordered 테이블에 먼저 만들어지고나서 orderDetail이 존재할 수 있다.
         List<Menu> Menus=new ArrayList<>();
         for(OrderDetailRequestDto odrequset:orderDetailRequestDtos)
