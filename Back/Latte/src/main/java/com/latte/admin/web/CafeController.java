@@ -77,12 +77,6 @@ public class CafeController {
         Map<String, Object> map = jwtService.get(jwt);
         UserJwtResponsetDto user = (UserJwtResponsetDto) map.get("UserJwtResponseDto");
 
-//        int coperation=cafeOpenRequestDto.getCoperation();
-
-        //cafeService.setOperation(cafeService.findCcidByUid(user.getUid());
-
-        //cafeService.setOperation(cafeService.findCcidByUid(user.getUid()));
-
     }
 
 
@@ -108,8 +102,6 @@ public class CafeController {
         UserJwtResponsetDto user = (UserJwtResponsetDto) map.get("UserJwtResponseDto");
         cafeService.cafeUpdate(cafeService.findCcidByUid(user.getUid()), cafeUpdateRequestDto);
     }
-
-
 
     // ccid로 카페 하나 찾기 -> cafe + menu
     @ApiOperation("[손님 카페Detail페이지]:ccid를 기준으로 하나의 카페 정보 찾기")
