@@ -38,7 +38,7 @@ public class MenuService {
     //Entity형태로 하나 가져올때(Order에서 사용)
     @Transactional
     public Menu findById(Long mmid){
-        return menuRepository.findById(mmid).get();
+        return menuRepository.findByMmid(mmid);
     }
 
 

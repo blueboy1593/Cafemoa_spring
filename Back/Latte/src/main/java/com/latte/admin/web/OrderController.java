@@ -2,6 +2,7 @@ package com.latte.admin.web;
 
 import com.latte.admin.domain.menu.Menu;
 import com.latte.admin.domain.order.Ordered;
+import com.latte.admin.domain.user.User;
 import com.latte.admin.service.MenuService;
 import com.latte.admin.service.OrderDetailService;
 import com.latte.admin.service.OrderedService;
@@ -61,8 +62,8 @@ public class OrderController {
     // if 손님이 한번에 여러개 카페에서 주문한다면, 그 카페마다 주문이 들어왔다고 알려야함.
     @ApiOperation("현재는 uuid를 pathvariable로 달았지만, 추후 업데이트시 token으로 대체")
     @PostMapping("/latte/ordersave")
-    public Map save(HttpServletRequest httpServletRequest, @RequestBody List<OrderDetailRequestDto> orderDetailRequestDtos){
-        String jwt = httpServletRequest.getCookies()[0].getValue();
+    public Map save(@RequestBody List<OrderDetailRequestDto> orderDetailRequestDtos,HttpServletRequest httpServletRequest){
+        String jwt = httpServletRequest.getHeader("Authorization");
         //유효성 검사
         if (!jwtService.isUsable(jwt)) throw new UnauthorizedException(); // 예외
 
@@ -71,12 +72,20 @@ public class OrderController {
         Map<String,String> map=new HashMap<>();
         //현재 orderDetailRequestDtos에는 메뉴, 옵션 등의 정보가 담겨 있다.
         //현재 초기 코드는 메뉴만 있다고 가정.
-        Ordered ordered=orderedService.findById(orderedService.save(userService.findByuid(user.getUid())));
+        User orderuser=userService.findByuid(user.getUid());
+        System.out.println("현재 주문하는 유저는 : "+orderuser.getUname()+"님 입니다.");
+        Ordered ordered=orderedService.findById(orderedService.save(orderuser));
         //Ordered 테이블에 먼저 만들어지고나서 orderDetail이 존재할 수 있다.
-        List<Menu> Menus=new ArrayList<>();
-        for(OrderDetailRequestDto odrequset:orderDetailRequestDtos)
-            Menus.add(menuService.findById(odrequset.getMmid()));
-        orderDetailService.save(Menus,ordered);
+
+        for(OrderDetailRequestDto odrequset:orderDetailRequestDtos){
+            Long curmmid=odrequset.getMmid();
+
+            System.out.println("지금 mmid : "+curmmid);
+            System.out.println(curmmid.getClass());
+            Menu ordermenu=menuService.findById(curmmid);
+            System.out.println("지금 ordermenu : "+ordermenu.getMname());
+            orderDetailService.save(odrequset.toEntity(ordermenu,ordered));
+        }
 
         map.put("result","주문이 완료되었습니다 ^^");
         return map;

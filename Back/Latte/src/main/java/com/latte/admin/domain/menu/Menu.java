@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -34,8 +35,9 @@ public class Menu extends BaseTimeEntity {
     private Cafe cafemenu;
 
     // fk -> 1:1 = orderDetail:menu
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "ordermenu")
-    private OrderDetail orderDetail;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ordermenu")
+    @JsonBackReference
+    private List<OrderDetail> orderDetail;
 
     @Builder
     public Menu(Cafe cafemenu,String mname,String mprice,String mpic) {

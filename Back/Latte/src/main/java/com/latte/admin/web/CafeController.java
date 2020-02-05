@@ -1,10 +1,5 @@
 package com.latte.admin.web;
 
-import io.jsonwebtoken.Jwts;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import com.latte.admin.domain.cafe.Cafe;
 import com.latte.admin.service.CafeService;
 import com.latte.admin.service.jwt.JwtService;
@@ -14,10 +9,8 @@ import com.latte.admin.web.dto.user.UserJwtResponsetDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
-import java.security.Key;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,10 +42,14 @@ public class CafeController {
 //    }
 
     @ApiOperation("[사장님 회원가입페이지]: 회원가입 시 카페 내용 저장")
-    @PostMapping("/savecafe/{uid}")
-    public Map save(@PathVariable String uid, @RequestBody CafeSaveRequestDto cafeSaveRequestDto){
+    @PostMapping("/create")
+    public Map save(@RequestBody CafeSaveRequestDto cafeSaveRequestDto,HttpServletRequest httpServletRequest){
+        String jwt = httpServletRequest.getHeader("Authorization");
+        //유효성 검사
+        if (!jwtService.isUsable(jwt)) throw new UnauthorizedException(); // 예외
+        UserJwtResponsetDto user=jwtService.getUser(jwt);
         Map<String,Long> map=new HashMap<>();
-        map.put("result",cafeService.save(uid, cafeSaveRequestDto));
+        map.put("result",cafeService.save(user.getUid(), cafeSaveRequestDto));
         return map;
     }
 
