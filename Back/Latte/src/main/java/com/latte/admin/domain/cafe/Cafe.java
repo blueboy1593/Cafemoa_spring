@@ -84,9 +84,10 @@ public class Cafe extends BaseTimeEntity {
     }
 
 
-    public void statusSet(int cstatus){
+    public void setStatus(int cstatus){
         this.cstatus=cstatus;
     }
 
+    public void setCoperation(int coperation) {this.coperation=coperation;}
 
 }
