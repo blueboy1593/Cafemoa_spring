@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.latte.admin.domain.BaseTimeEntity;
 import com.latte.admin.domain.cafe.Cafe;
 import com.latte.admin.domain.order.Ordered;
+import com.latte.admin.domain.review.Review;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -53,6 +54,8 @@ public class User extends BaseTimeEntity {
     @JsonManagedReference
     private List<Ordered> ordered;
 
+
+
     public User(Long uuid) {
         this.uuid=uuid;
     }
@@ -76,7 +79,6 @@ public class User extends BaseTimeEntity {
         this.uphone = uphone;
         this.unickname = unickname;
        this.upic=upic;
-
     }
 
 }
