@@ -4,7 +4,7 @@ import { Owner, Customer, Visitor } from './pages';
 import './App.css';
 import FullpageWrapper from './pages/FullpageWrapper';
 // import HeaderVisitor from './headers/HeaderVisitor';
-import HeaderLogin from './headers/HeaderLogin'
+// import HeaderLogin from './headers/HeaderLogin'
 
 class App extends Component{
   render(){
