@@ -20,6 +20,12 @@ import java.util.stream.Collectors;
 public class MenuService {
     private final MenuRepository menuRepository;
 
+    // 카페기준 저장
+    @Transactional
+    public Long save(MenuSaveRequestDto menuSaveRequestDto,Long ccid) {
+        return menuRepository.save(menuSaveRequestDto.toEntity(ccid)).getMmid();
+    }
+
     // 카페 기준 모든 메뉴 선택
     @Transactional
     public List<MenuResponseDto> selectAll(Long ccid){
@@ -32,7 +38,7 @@ public class MenuService {
     //Entity형태로 하나 가져올때(Order에서 사용)
     @Transactional
     public Menu findById(Long mmid){
-        return menuRepository.findById(mmid).get();
+        return menuRepository.findByMmid(mmid);
     }
 
 
@@ -42,12 +48,6 @@ public class MenuService {
         return new MenuResponseDto(menuRepository.findByMmid(mmid));
     }
 
-
-    // 카페기준 저장
-    @Transactional
-    public Long save(MenuSaveRequestDto menuSaveRequestDto,Long ccid) {
-        return menuRepository.save(menuSaveRequestDto.toEntity(ccid)).getMmid();
-    }
 
     // 메뉴 업데이트
     @Transactional
@@ -64,8 +64,8 @@ public class MenuService {
     // 메뉴 삭제
     @Transactional
     public void delete(Long mmid){
-         Menu menu = menuRepository.findById(mmid).orElseThrow(()
+        Menu menu = menuRepository.findById(mmid).orElseThrow(()
                 -> new IllegalArgumentException("해당 사용자가 없습니다."));
-         menuRepository.delete(menu);
+        menuRepository.delete(menu);
     }
 }
