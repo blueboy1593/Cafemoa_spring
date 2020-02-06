@@ -6,11 +6,11 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class FindIdRequestDto {
+public class UserFindIdRequestDto {
     String uname;
     String uemail;
 
-    public FindIdRequestDto(String uname,String uemail){
+    public UserFindIdRequestDto(String uname, String uemail){
         this.uname=uname;
         this.uname=uemail;
     }

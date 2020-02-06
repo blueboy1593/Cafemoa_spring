@@ -56,9 +56,9 @@ public class CafeController {
     // 카페 대기/승인/거절 상태 변경
     @ApiOperation("[관리자 카페승인 관리페이지]: 카페 대기/승인/거절 상태 변경")
     @PostMapping("/manage/setStatus")
-    public int cafeStatusSet(@RequestBody ManageCafeRequestDto manageCafeRequestDto) {
-        Long ccid = manageCafeRequestDto.getCcid();
-        int cstatus = manageCafeRequestDto.getCstatus();
+    public int cafeStatusSet(@RequestBody CafeManageRequestDto cafeManageRequestDto) {
+        Long ccid = cafeManageRequestDto.getCcid();
+        int cstatus = cafeManageRequestDto.getCstatus();
         cafeService.setStatus(ccid, cstatus);
         return cafeService.findByCcId(ccid).getCstatus();
     }
