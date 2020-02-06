@@ -1,5 +1,7 @@
 package com.latte.admin.service;
 
+import com.latte.admin.domain.cafe.Cafe;
+import com.latte.admin.domain.cafe.CafeRepository;
 import com.latte.admin.domain.menu.Menu;
 import com.latte.admin.domain.menu.MenuRepository;
 import com.latte.admin.domain.menu.MenuSize;
@@ -20,11 +22,13 @@ public class MenuService {
     private final MenuRepository menuRepository;
     private final MenuSizeRepository menuSizeRepository;
     private final OptionRepository optionRepository;
+    private final CafeRepository cafeRepository;
 
     // 메뉴 저장
     @Transactional
     public Long save(MenuSaveRequestDto menuSaveRequestDto,Long ccid) {
-        return menuRepository.save(menuSaveRequestDto.toEntity(ccid)).getMmid();
+        Cafe cafe=cafeRepository.findByCcid(ccid);
+        return menuRepository.save(menuSaveRequestDto.toEntity(cafe)).getMmid();
     }
 
     //메뉴사이즈를 저장합니다.

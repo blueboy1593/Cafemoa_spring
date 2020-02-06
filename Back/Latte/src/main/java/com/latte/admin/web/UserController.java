@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/latte/user")
 @RequiredArgsConstructor

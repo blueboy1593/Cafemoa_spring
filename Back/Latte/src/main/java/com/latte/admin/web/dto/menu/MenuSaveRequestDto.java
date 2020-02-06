@@ -24,9 +24,9 @@ public class MenuSaveRequestDto {
         this.mpic = mpic;
     }
 
-    public Menu toEntity(Long ccid) {
+    public Menu toEntity(Cafe cafe) {
         return Menu.builder()
-                .cafemenu(new Cafe(ccid)) //조인용
+                .cafemenu(cafe) //조인용
                 .mname(mname)
                 .mpic(mpic)
                 .build();
