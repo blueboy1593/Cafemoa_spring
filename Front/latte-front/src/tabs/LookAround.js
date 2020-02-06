@@ -6,7 +6,6 @@ import {
 //   부트스트랩에서 가져온거 사용!!!
 export default class LookAround extends Component {
     render() {
-
         const items = [
             {
               src: 'https://img1.daumcdn.net/thumb/R720x0.q80/?scode=mtistory2&fname=http%3A%2F%2Fcfile29.uf.tistory.com%2Fimage%2F998A963359CB5D112719D5',
@@ -33,6 +32,7 @@ export default class LookAround extends Component {
         return (
             <div>
                 <UncontrolledCarousel items={items} />
+                <h1>둘러보기 페이지입니다.</h1>
             </div>
         )
     }
