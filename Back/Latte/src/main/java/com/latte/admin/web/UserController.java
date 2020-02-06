@@ -1,6 +1,5 @@
 package com.latte.admin.web;
 
-import com.latte.admin.domain.user.User;
 import com.latte.admin.service.UserService;
 import com.latte.admin.service.jwt.CookieManage;
 import com.latte.admin.service.jwt.JwtService;
@@ -16,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/latte/user")
 @RequiredArgsConstructor
@@ -38,9 +38,9 @@ public class UserController {
 
     // 아이디 찾기
     @PostMapping("/findid")
-    public Map findId(@RequestBody FindIdRequestDto findIdRequestDto) {
+    public Map findId(@RequestBody UserFindIdRequestDto userFindIdRequestDto) {
         Map<String, String> map = new HashMap<>();
-        map.put("id", userService.findId(findIdRequestDto.getUname(), findIdRequestDto.getUemail()));
+        map.put("id", userService.findId(userFindIdRequestDto.getUname(), userFindIdRequestDto.getUemail()));
         return map;
     }
 
