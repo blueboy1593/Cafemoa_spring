@@ -51,7 +51,7 @@ export default class CafeList extends Component {
             this.setState({
                 cafes:response.data
             });
-            console.log(this.state);
+            // console.log(this.state);
             });
         };
         // 일단 이 부분은 해보려다가 실패.

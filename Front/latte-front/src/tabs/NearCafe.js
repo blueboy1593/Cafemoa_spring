@@ -1,35 +1,3 @@
-// import React from 'react'
-
-// export default function NearCafe() {
-//   function success(pos) {
-//     var crd = pos.coords;
-  
-//     console.log('Your current position is:');
-//     console.log('Latitude : ' + crd.latitude);
-//     console.log('Longitude: ' + crd.longitude);
-//     console.log('More or less ' + crd.accuracy + ' meters.');
-//     return crd
-//   };
-
-//   const geolocation = () => {
-//     console.log(navigator.geolocation.getCurrentPosition(success));
-//     return navigator.geolocation.getCurrentPosition(success)
-//   }
-
-
-//   return (
-//     <div>
-//       <h1>주변 매장 찾는 게시판</h1>
-//       {/* {geolocation()} */}
-//       {/* {data} */}
-//     </div>
-//   )
-// }
-
-
-
-
-
 import React, { Component } from 'react'
 
 export default class NearCafe extends Component {
@@ -54,15 +22,15 @@ export default class NearCafe extends Component {
       longitude: crd.longitude
     })
 
-    console.log('Your current position is:');
-    console.log('Latitude : ' + crd.latitude);
-    console.log('Longitude: ' + crd.longitude);
-    console.log('More or less ' + crd.accuracy + ' meters.');
+    // console.log('Your current position is:');
+    // console.log('Latitude : ' + crd.latitude);
+    // console.log('Longitude: ' + crd.longitude);
+    // console.log('More or less ' + crd.accuracy + ' meters.');
     return crd
   }
 
   geolocation = () => {
-    console.log(navigator.geolocation.getCurrentPosition(this.success));
+    navigator.geolocation.getCurrentPosition(this.success);
     return
   }
 
