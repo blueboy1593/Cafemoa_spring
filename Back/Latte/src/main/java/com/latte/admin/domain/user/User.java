@@ -66,7 +66,8 @@ public class User extends BaseTimeEntity {
         this.uemail = uemail;
         this.unickname = unickname;
         this.role = role;
-        this.upic=upic;
+        if(upic!=null) this.upic=upic;
+        else this.upic="./src/userimg/user.jpg";
     }
 
     // 수정
@@ -74,7 +75,8 @@ public class User extends BaseTimeEntity {
         this.upass = upass;
         this.uphone = uphone;
         this.unickname = unickname;
-        this.upic=upic;
+       this.upic=upic;
+
     }
 
 }
