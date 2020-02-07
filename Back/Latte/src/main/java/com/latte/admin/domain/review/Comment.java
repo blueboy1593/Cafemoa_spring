@@ -17,7 +17,10 @@ public class Comment extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long coid;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @Column
+    private String couid;
+
+    @ManyToOne(optional = false)
     @JsonBackReference
     private Review review;
 
@@ -25,7 +28,8 @@ public class Comment extends BaseTimeEntity {
     private String comment;
 
     @Builder
-    public Comment(Review review, String comment) {
+    public Comment(String couid,Review review, String comment) {
+        this.couid=couid;
         this.review=review;
         this.comment=comment;
     }

@@ -13,6 +13,7 @@ public class MenuUpdateRequestDto {
     private String mpic;
     private List<MenuSizeUpdateDto> menuSizeUpdateDtoList;
     private List<MenuOptionUpdateRequestDto> menuOptionUpdateRequestDtoList;
+
     @Builder
     public MenuUpdateRequestDto(String mname,String mpic,List<MenuSizeUpdateDto> menuSizeUpdateDtoList,List<MenuOptionUpdateRequestDto> menuOptionUpdateRequestDtoList) {
         this.mname = mname;

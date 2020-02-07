@@ -42,7 +42,7 @@ public class Review extends BaseTimeEntity {
     @JsonBackReference
     private Cafe cafereview;
 
-    @OneToMany(mappedBy = "review")
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
     @JsonBackReference
     private List<Comment> commentList;
 

@@ -12,6 +12,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class ReviewResponseDto {
+    private Long rvid;
     private String rvuid;
     private String rvcontent;
     private String rvpic;
@@ -20,6 +21,7 @@ public class ReviewResponseDto {
     private List<CommentResponseDto> commentResponseDtoList;
 
     public ReviewResponseDto(Review review) {
+        rvid=review.getRvid();
         rvuid=review.getRvuid();
         rvcontent=review.getRvcontent();
         rvpic=review.getRvpic();
