@@ -6,56 +6,6 @@ import { Link } from 'react-router-dom';
 
 class CafeDetail extends React.Component{
       state = {
-        // cafe: {}
-        // cafe: {
-        //   cname : "Hollys",
-        //   cloc : "yeoksam",
-        //   cphone: 212451153,
-        //   cpic: "https://image.chosun.com/sitedata/image/201706/15/2017061501890_1.jpg",
-        //   copen: '0900',
-        //   cclose: 1800,
-        //   cdesc: "description",
-        //   cstatus: 0,
-        //   coperation: 0,
-        //   menus: [
-        //     {
-        //       "menuSize": [
-        //         {
-        //           "msname": "S",
-        //           "msprice": 3000
-        //         },
-        //      {
-        //           "msname": "M",
-        //           "msprice": 3500
-        //         },
-        //      {
-        //           "msname": "L",
-        //           "msprice": 4000
-        //         }
-        //       ],
-        //       "mname": "오렌지주스",
-        //       "mpic": "https://sc01.alicdn.com/kf/HTB1WPBcklDH8KJjy1zeq6xjepXav/Fruit-juice-production-line-juice-filling-machine.jpg_350x350.jpg"
-        //     },
-            
-        //     {
-        //       "menuSize": [
-        //         {
-        //           "msname": "S",
-        //           "msprice": 2000
-        //         },
-        //      {
-        //           "msname": "M",
-        //           "msprice": 2500
-        //         },
-        //      {
-        //           "msname": "L",
-        //           "msprice": 3000
-        //         }
-        //       ],
-        //       "mname": "카페라떼",
-        //       "mpic": "https://snaptime.edaily.co.kr/wp-content/uploads/2019/07/tyle-hws-01-1562802184-700x700.png"
-        //     }
-        //   ]}
     };
 
     componentDidMount() {
@@ -108,6 +58,7 @@ class CafeDetail extends React.Component{
                   key = {menu.mmid}
                 />
               ))}
+              <hr></hr>
           </div>
           </center>
         );
