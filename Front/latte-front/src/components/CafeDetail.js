@@ -6,32 +6,56 @@ import { Link } from 'react-router-dom';
 
 class CafeDetail extends React.Component{
       state = {
-        cafe: {
-          cname : "Hollys",
-          cloc : "yeoksam",
-          cphone: 212451153,
-          cpic: "https://image.chosun.com/sitedata/image/201706/15/2017061501890_1.jpg",
-          copen: '0900',
-          cclose: 1800,
-          cdesc: "description",
-          cstatus: 0,
-          coperation: 0,
-          menus: [
-            {
-              mmid: 1,
-              ccid: 1,
-              mname: "아메리카노",
-              mprice: "1500",
-              mpic: "https://image.istarbucks.co.kr/upload/store/skuimg/2015/08/[110563]_20150813222100303.jpg"
-            },
-            {
-              mmid: 2,
-              ccid: 1,
-              mname: "아메리카노",
-              mprice: "1500",
-              mpic: "https://image.istarbucks.co.kr/upload/store/skuimg/2015/08/[110563]_20150813222100303.jpg"
-            }
-          ]}
+        // cafe: {}
+        // cafe: {
+        //   cname : "Hollys",
+        //   cloc : "yeoksam",
+        //   cphone: 212451153,
+        //   cpic: "https://image.chosun.com/sitedata/image/201706/15/2017061501890_1.jpg",
+        //   copen: '0900',
+        //   cclose: 1800,
+        //   cdesc: "description",
+        //   cstatus: 0,
+        //   coperation: 0,
+        //   menus: [
+        //     {
+        //       "menuSize": [
+        //         {
+        //           "msname": "S",
+        //           "msprice": 3000
+        //         },
+        //      {
+        //           "msname": "M",
+        //           "msprice": 3500
+        //         },
+        //      {
+        //           "msname": "L",
+        //           "msprice": 4000
+        //         }
+        //       ],
+        //       "mname": "오렌지주스",
+        //       "mpic": "https://sc01.alicdn.com/kf/HTB1WPBcklDH8KJjy1zeq6xjepXav/Fruit-juice-production-line-juice-filling-machine.jpg_350x350.jpg"
+        //     },
+            
+        //     {
+        //       "menuSize": [
+        //         {
+        //           "msname": "S",
+        //           "msprice": 2000
+        //         },
+        //      {
+        //           "msname": "M",
+        //           "msprice": 2500
+        //         },
+        //      {
+        //           "msname": "L",
+        //           "msprice": 3000
+        //         }
+        //       ],
+        //       "mname": "카페라떼",
+        //       "mpic": "https://snaptime.edaily.co.kr/wp-content/uploads/2019/07/tyle-hws-01-1562802184-700x700.png"
+        //     }
+        //   ]}
     };
 
     componentDidMount() {
@@ -54,9 +78,9 @@ class CafeDetail extends React.Component{
     render() {
       const { location } = this.props;
       const cafe = this.state.cafe;
-      const menus = cafe.menus;
-
-      if (location.state) {
+          
+      if (cafe) {
+        const menus = cafe.menus;
         return (
           <center>
           <div >
@@ -78,7 +102,7 @@ class CafeDetail extends React.Component{
                 </div>
               </div>
               <hr></hr>
-              {menus.map(menu => (
+              {menus.map((menu, index) => (
                 <CafeDetailCard
                   menu = {menu}
                   key = {menu.mmid}
@@ -107,7 +131,7 @@ const CafeDetailCard = (props) => {
         <img src={menu.mpic} className="card-img-top" alt="..."/>
         <div className="card-body">
           <p className="card-text">이름: {menu.mname}</p>
-          <p className="card-text">가격: {menu.mprice} 원</p>
+          <p className="card-text">가격: {menu.menuSize[0].msprice} 원</p>
         </div>
       </div>
     </div>
