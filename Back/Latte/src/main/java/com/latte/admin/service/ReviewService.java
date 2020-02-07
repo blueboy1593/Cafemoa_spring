@@ -1,11 +1,15 @@
 package com.latte.admin.service;
 
+import com.latte.admin.domain.cafe.Cafe;
+import com.latte.admin.domain.cafe.CafeRepository;
+import com.latte.admin.domain.review.Comment;
 import com.latte.admin.domain.review.CommentRepository;
 import com.latte.admin.domain.review.Review;
 import com.latte.admin.domain.review.ReviewRepository;
 import com.latte.admin.web.dto.review.CommentRequestDto;
+import com.latte.admin.web.dto.review.CommentUpdateRequestDto;
 import com.latte.admin.web.dto.review.ReviewResponseDto;
-import jdk.jfr.Threshold;
+import com.latte.admin.web.dto.review.ReviewUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,31 +23,99 @@ public class ReviewService {
 
     public final ReviewRepository reviewRepository;
     public final CommentRepository commentRepository;
+    public final CafeRepository cafeRepository;
 
-    // 저장
+    // [[[[[[[[[[[[ 리뷰 ]]]]]]]]]]]]]
+    // 리뷰 저장
     @Transactional
     public void save(Review review) {
         reviewRepository.save(review);
     }
 
-    // 전체보기
+    // 리뷰 전체보기
     @Transactional
     public List<ReviewResponseDto> findByCcid(Long ccid) {
-        List<ReviewResponseDto> list=new ArrayList<>();
+        List<ReviewResponseDto> list = new ArrayList<>();
 
-        List<Review> temp=reviewRepository.findByCcid(ccid);
+        List<Review> temp = reviewRepository.findByCcid(ccid);
 
-        for(Review rv:temp) {
+        for (Review rv : temp) {
             list.add(new ReviewResponseDto(rv));
         }
 
         return list;
     }
 
+    // 리뷰 수정하기
+    @Transactional
+    public boolean reviewUpdate(Long rvid, String curuid, ReviewUpdateRequestDto reviewUpdateRequestDto) {
+        // rvid
+        Review review = reviewRepository.findById(rvid).get(); //엔티티 하나의 레코드를 가져옴
+        String rvuid = review.getRvuid();//현재 리뷰작성자 아이디.
+        if (rvuid.equals(curuid)) { //수정 권한이 있어
+            review.update(reviewUpdateRequestDto.getRvcontent(), reviewUpdateRequestDto.getRvpic());
+            return true;
+        } else { //수정 권한이 없어
+            return false;
+        }
+    }
+
+
+    // 리뷰 삭제하기
+    @Transactional
+    public boolean reviewDelete(Long rvid, String curuid) {
+        // rvid
+        Review review = reviewRepository.findById(rvid).get(); //엔티티 하나의 레코드를 가져옴
+        String rvuid = review.getRvuid();//현재 리뷰작성자 아이디.
+        if (rvuid.equals(curuid)) { //삭제 권한이 있어
+            reviewRepository.delete(review);
+            return true;
+        } else { //삭제 권한이 없어
+            return false;
+        }
+    }
+
+
+    // [[[[[[[[[[[[ 댓글 ]]]]]]]]]]]]]
     // comment저장
     @Transactional
-    public Long saveComment(CommentRequestDto commentRequestDto, Long rvid) {
-        Review review=reviewRepository.findById(rvid).get();
-        return commentRepository.save(commentRequestDto.toEntity(review)).getCoid();
+    public boolean saveComment(CommentRequestDto commentRequestDto, Long rvid, String couid) {
+        Review review = reviewRepository.findById(rvid).get(); //리뷰 객체를 가져왔어요.
+        Cafe cafe=review.getCafereview();
+        boolean flag=false;
+        if(cafe.getUid().equals(couid)){
+            commentRepository.save(commentRequestDto.toEntity(review,couid));
+            flag=true;
+        }
+        return flag;
+    }
+
+    // 사장님 댓글 수정
+    @Transactional
+    public boolean commentUpdate(Long coid, String curuid, CommentUpdateRequestDto commentUpdateRequestDto) {
+        Comment comment=commentRepository.findById(coid).get();  // comment정보 가지고오기
+
+        // 카페 사장확인(현재 가입되어있는사람=카페사장)
+        if (comment.getCouid().equals(curuid)) { //수정 권한이 있어
+            comment.update(commentUpdateRequestDto.getComment());
+            return true;
+        } else { //수정 권한이 없어
+            return false;
+        }
+    }
+
+    // 사장님 댓글 삭제
+    @Transactional
+    public boolean commentDelete(Long coid, String curuid) {
+        Comment comment=commentRepository.findById(coid).get();  // comment정보 가지고오기
+        // 카페 사장확인(현재 가입되어있는사람=카페사장)
+        if (comment.getCouid().equals(curuid)) { //삭제 권한이 있어
+            commentRepository.delete(comment);
+            return true;
+        } else { //삭제 권한이 없어
+            return false;
+        }
     }
 }
+
+

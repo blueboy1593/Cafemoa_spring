@@ -12,14 +12,16 @@ public class CommentRequestDto {
 
     private String comment;
 
+
     @Builder
     public CommentRequestDto(String comment) {
         this.comment=comment;
     }
 
-    public Comment toEntity(Review review) {
+    public Comment toEntity(Review review,String couid) {
         return Comment.builder()
                 .comment(comment)
+                .couid(couid)
                 .review(review)
                 .build();
     }
