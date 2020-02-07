@@ -10,7 +10,7 @@ class HeaderOwner extends Component {
     render() {
         return (
             <div className="top-fixed">
-                <div id="logo" className="logo" style={logo_style}><Link to='/'><img src="/img/logo.png" width="120px" alt="라떼는말이야" /></Link>
+                <div id="logo" className="logo" style={logo_style}><Link to='/'><img style={{float: "left"}} src="/img/logo.png" width="120px" alt="라떼는말이야" /></Link>
                     <ul className="icon-list" style={{float: "right"}}>
                         <Link to='/owner'><img src="/img/cafeinfo.png" alt="카페정보" /></Link>
                         <Link to='/owner/registercafe'><img src="/img/registercafe.png" alt="카페등록" /></Link>

@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import HeaderOwner from '../headers/HeaderOwner'
-import { Main, RegisterCafe, RegisterMenu } from '../tabs';
+import { CafeList, RegisterCafe, RegisterMenu } from '../tabs';
 
-class Customer extends Component{
+class Owner extends Component{
     render(){
       return (
         <Router>
-          <div className="Customer">
+          <div className="Owner">
             <HeaderOwner></HeaderOwner>
-            <Route exact path='/owner' component={Main}/>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <Route exact path='/owner' component={CafeList}/>
             <Route path='/owner/registerCafe' component={RegisterCafe}/>
             <Route path='/owner/registerMenu' component={RegisterMenu}/>
           </div>
@@ -18,5 +23,5 @@ class Customer extends Component{
     }
   }
   
-  export default Customer;
+  export default Owner;
   

@@ -77,7 +77,7 @@ public class CafeController {
     @ApiOperation("[사장님 카페 관리페이지]: 카페 운영중/운영마감 변경")
     @PostMapping("/opeartion")
     public Map cafeOpeartion(HttpServletRequest httpServletRequest, @RequestBody CafeOpenRequestDto cafeOpenRequestDto) {
-        String jwt = httpServletRequest.getCookies()[0].getValue();
+        String jwt = httpServletRequest.getHeader("Authorization");
         //유효성 검사
         if (!jwtService.isUsable(jwt)) throw new UnauthorizedException(); // 예외
         UserJwtResponsetDto user=jwtService.getUser(jwt);
@@ -107,7 +107,7 @@ public class CafeController {
     @ApiOperation("[사장님 카페 정보 관리페이지]:특정 카페 정보 수정")
     @PutMapping("/update/{ccid}")
     public void cafeUpdate(HttpServletRequest httpServletRequest,@PathVariable Long ccid, @RequestBody CafeUpdateRequestDto cafeUpdateRequestDto) {
-        String jwt = httpServletRequest.getCookies()[0].getValue();
+        String jwt = httpServletRequest.getHeader("Authorization");
 
 //        System.out.println("현재 토큰 : "+jwt);
 //        System.out.println("유효성 : "+ jwtService.isUsable(jwt));

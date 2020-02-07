@@ -1,11 +1,29 @@
+.CafeDetail{
+    background-color:white;
+    width:80%;
+    /* display: inline-flex; */
+    /* align-items:flex-start; */
+    flex-wrap:wrap;
+    padding:0 20px;
+    box-shadow: 0 8px 38px rgba(133, 133, 133, 0.3), 0 5px 12px rgba(133, 133, 133,0.22);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size:40px;
+}
+
+.CafeDetail h1{
+    font-size:60px;
+    font-weight: 600;
+}
+
+
 .Cafe{
     background-color:white;
     width:40%;
-    display: flex;
+    display: inline-flex;
     justify-content: space-between;
     align-items:flex-start;
     flex-wrap:wrap;
-    margin-bottom:50px;
+    margin:50px;
     text-overflow: ellipsis;
     padding:0 20px;
     box-shadow: 0 8px 38px rgba(133, 133, 133, 0.3), 0 5px 12px rgba(133, 133, 133,0.22);
