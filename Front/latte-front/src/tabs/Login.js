@@ -18,19 +18,42 @@ export default class Login extends Component{
     handleSubmit = (e) => {
         // 페이지 리로딩 방지
         e.preventDefault();
-        const data = {
+        // const data = {
+        //     headers: '',
+        //     body: {
+        //         userJwtRequestDto:{
+        //             uid: this.state.id,
+        //             upass: this.state.pass
+        //         }
+        //     }
+        //   }
+        
+        // const headers = {
+        //     Authorization: ''
+        // }
+        // const data = {
+        //     uid: this.state.id,
+        //     upass: this.state.pass
+        // }
+        
+        const params = {
             uid: this.state.id,
             upass: this.state.pass
-          }
-        
+        }
+        const headers = {
+            Authorization: 'eyJ0eXBlIjoiSldUIiwicmVnRGF0ZSI6MTU4MTA1MDE5ODEzNSwiYWxnIjoiSFMyNTYifQ.eyJtZW1iZXIiOnsidWlkIjoia2FuZ2h5dW4iLCJ1bmFtZSI6Iuq5gOqwle2YhCIsInVwaG9uZSI6IjAxMDExMTEyMjIyIiwidWVtYWlsIjoia2FuZ2h5dW5AbmF2ZXIuY29tIiwidW5pY2tuYW1lIjoia2FuZ2h5dW4iLCJyb2xlIjoiSE9TVCIsInVwaWMiOiLsl4bslrQifX0.AK8zBBxOWnnjvai02JaQiMGMP11gh5BSI4RtK6fE1YA'
+        }
+        // axios.post(url, params, headers)
+
+
         const url = 'http://54.180.154.140:8080/latte/user/signin'
 
         console.log(url)
-        console.log(data)
-        axios.post(url, data)
+        console.log(params)
+        axios.post(url, params, headers)
         .then(response => {
             console.log('로그인 요청')
-            console.log(response.data)
+            console.log(response)
         }) 
         .catch(error => {
             console.log('error')
@@ -47,7 +70,7 @@ export default class Login extends Component{
       }
     render(){
         return(
-            <body>
+            // <body>
             <div className="login-page">
                 <div className="form">
                     <div className="login">
@@ -78,7 +101,7 @@ export default class Login extends Component{
             </form>
       </div>
     </div>
-        </body>
+        // </body>
             // <div>
             //     <h1>Login Page</h1>
             //     <form onSubmit={this.handleSubmit}>
