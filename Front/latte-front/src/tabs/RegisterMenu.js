@@ -1,39 +1,62 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import axios from 'axios';
 
 export default class RegisterMenu extends Component {
     state = {
         mname: '',
-        mprice: '',
-        cphone: '',
         mpic: '',
-        copen: '',
-        cclose: '',
-        cdesc: '',
+        msname: '',
+        msprice: ''
       }
     handleChange = (e) => {
-    this.setState({
-        [e.target.name]: e.target.value
-    })
+        this.setState({
+            [e.target.name]: e.target.value
+        })
     }
     handleSubmit = (e) => {
-    // 페이지 리로딩 방지
-    e.preventDefault();
-    console.log(this.state)
-    // 상태 초기화
-    this.setState({
-        mname: '',
-        mprice: '',
-        cphone: '',
-        mpic: '',
-        copen: '',
-        cclose: '',
-        cdesc: '',
-    })
+        // 페이지 리로딩 방지
+        e.preventDefault();
+        
+        // const data = this.state
+        // 도전 해보자
+        const data = this.state
+        const new_data = {
+            mname: data.mname,
+            mpic: data.mpic,
+            menuSizeRequestDtos: [
+                {
+                    msname: data.msname,
+                    msprice: data.msprice
+                }
+            ]
+        }
+        console.log(new_data)
+
+        // axios 요청
+        const url = 'http://i02a301.p.ssafy.io:8080/latte/menu/4'
+        axios.post(url, new_data)
+          .then(response => {
+            console.log('post됐니??')
+            console.log(response)
+            // history.push('/') // vue-router로 특정 페이지로 이동 즉 세션이 끝난 뒤에는 홈으로 보내겠다.
+          }) 
+          .catch(error => {
+            console.error(error)
+        })
+
+        // 상태 초기화
+        this.setState({
+            mname: '',
+            mpic: '',
+            msname: '',
+            msprice: ''
+        })
     }
 
     render() {
         return (
             <div>
+                <center>
                 <h1>여기는 메뉴등록 사장전용!!!</h1>
                 <form onSubmit={this.handleSubmit}>
                     <input
@@ -44,21 +67,7 @@ export default class RegisterMenu extends Component {
                     name="mname"
                     />
                     <br></br>
-                    <input
-                    type="name"
-                    placeholder="메뉴 가격"
-                    value={this.state.mprice}
-                    onChange={this.handleChange}
-                    name="mprice"
-                    />
-                    <br></br>
-                    <input
-                    placeholder="카페 번호"
-                    value={this.state.cphone}
-                    onChange={this.handleChange}
-                    name="cphone"
-                    />
-                    <br></br>
+                    
                     <input
                     placeholder="메뉴 사진"
                     value={this.state.mpic}
@@ -66,29 +75,28 @@ export default class RegisterMenu extends Component {
                     name="mpic"
                     />
                     <br></br>
+
                     <input
-                    placeholder="카페 오픈 시간"
-                    value={this.state.copen}
+                    type="text"
+                    placeholder="메뉴 옵션"
+                    value={this.state.msname}
                     onChange={this.handleChange}
-                    name="copen"
+                    name="msname"
                     />
                     <br></br>
+
                     <input
-                    placeholder="카페 닫는 시간"
-                    value={this.state.cclose}
+                    type="number"
+                    placeholder="옵션 메뉴 가격"
+                    value={this.state.msprice}
                     onChange={this.handleChange}
-                    name="cclose"
+                    name="msprice"
                     />
                     <br></br>
-                    <input
-                    placeholder="카페 간략 설명"
-                    value={this.state.cdesc}
-                    onChange={this.handleChange}
-                    name="cdesc"
-                    />
-                    <br></br>
-                    <button type="submit">카페 등록</button>
+
+                    <button type="submit">메뉴 등록</button>
                 </form>
+                </center>
             </div>
         )
     }

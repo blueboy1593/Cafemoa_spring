@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import store from '../store';
 import { Link } from 'react-router-dom';
 import "./Login.css";
+import axios from 'axios';
 
 export default class Login extends Component{
     state = {isLoggedIn: store.getState().isLoggedIn,
@@ -17,15 +18,34 @@ export default class Login extends Component{
     handleSubmit = (e) => {
         // 페이지 리로딩 방지
         e.preventDefault();
-        store.dispatch({type:'LOGIN', info:this.state});
-        const new_state = store.getState()
-        console.log(new_state)
+        const data = {
+            uid: this.state.id,
+            upass: this.state.pass
+          }
+        
+        const url = 'http://54.180.154.140:8080/latte/user/signin'
+
+        console.log(url)
+        console.log(data)
+        axios.post(url, data)
+        .then(response => {
+            console.log('로그인 요청')
+            console.log(response.data)
+        }) 
+        .catch(error => {
+            console.log('error')
+            console.error(error)
+        })
+        
+        // 일단 여기 버리고!
+        // store.dispatch({type:'LOGIN', info:this.state});
+        // const new_state = store.getState()
+        // console.log(new_state)
         // if (new_state) {
         //     return <Link to="/">그러게</Link>
         // }
       }
     render(){
-        // console.log(this.state)
         return(
             <body>
             <div className="login-page">

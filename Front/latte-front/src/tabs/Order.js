@@ -33,7 +33,7 @@ const CafeDetailCard = (props) => {
         <img src={menu.mpic} className="card-img-top" alt="..."/>
         <div className="card-body">
           <p className="card-text">이름: {menu.mname}</p>
-          <p className="card-text">가격: {menu.mprice} 원</p>
+          <p className="card-text">기본 옵션 가격: {menu.menuSize[0].msprice} 원</p>
           <Button onClick={handleShow} variant="outline-info">옵션 선택</Button>
         </div>
       </div>
