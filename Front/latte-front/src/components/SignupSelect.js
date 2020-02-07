@@ -12,6 +12,9 @@ export default class extends Component{
                     <button>
                         <Link to="/CustomerSignup">손님으로 회원가입</Link>
                     </button>
+                    <button>
+                        <Link to="/Signup2">회원가입</Link>
+                    </button>
                 </ul>
             </div>
         )

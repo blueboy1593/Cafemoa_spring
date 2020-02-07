@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from "react-router-dom";
-import './CafeInfo.css';
+import './Cafe.css';
 import { Button } from 'reactstrap';
 import { MdExtension } from "react-icons/md";
 
@@ -16,7 +16,6 @@ function CafeInfo({ id , name,  picture}){
             <div className="Cafe__Column">
                 <h1>{name}</h1>
             </div>
-            
             <Link to ={{
                 pathname: '/visitor/cafedetail',
                 state:{

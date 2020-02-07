@@ -7,6 +7,7 @@ export default createStore(function(state, action){
         return {isLoggedIn: false,
             id: '',
             pass: '',
+            name:'',
             sajang: false
         }
     }
@@ -36,7 +37,7 @@ export default createStore(function(state, action){
             return {...state, id: action.info.id, pass: action.info.pass, sajang: true}        
         }
         console.log('손님! 회원가입된 아이디와 비번은', action.info, '입니다')
-        return {...state, id: action.info.id, pass: action.info.pass, sajang:false}
+        return {...state, id: action.info.id, pass: action.info.pass, name: action.info.name, sajang:false}
     }
     return state;
 }, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
