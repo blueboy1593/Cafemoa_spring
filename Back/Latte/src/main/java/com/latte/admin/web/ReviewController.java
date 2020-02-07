@@ -1,25 +1,17 @@
 package com.latte.admin.web;
 
 import com.latte.admin.domain.cafe.Cafe;
-import com.latte.admin.domain.menu.Menu;
 import com.latte.admin.service.CafeService;
 import com.latte.admin.service.ReviewService;
 import com.latte.admin.service.jwt.JwtService;
 import com.latte.admin.service.jwt.UnauthorizedException;
-import com.latte.admin.web.dto.menu.MenuOptionUpdateRequestDto;
-import com.latte.admin.web.dto.menu.MenuSizeUpdateDto;
-import com.latte.admin.web.dto.menu.MenuUpdateRequestDto;
 import com.latte.admin.web.dto.review.*;
-import com.latte.admin.web.dto.user.UserDeleteRequestDto;
 import com.latte.admin.web.dto.user.UserJwtResponsetDto;
-import com.latte.admin.web.dto.user.UserUpdateRequestDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +32,7 @@ public class ReviewController {
     @ApiOperation("카페마다 손님들의 리뷰를 저장하는 기능")
     @PostMapping("/latte/review/create/{ccid}")
     public Map save(@PathVariable Long ccid, HttpServletRequest httpServletRequest, @RequestBody ReviewSaveRequestDto reviewSaveRequestDto) {
-        String jwt = httpServletRequest.getCookies()[0].getValue();
+        String jwt = httpServletRequest.getHeader("Authorization");
         //유효성 검사
         if (!jwtService.isUsable(jwt)) throw new UnauthorizedException(); // 예외
         UserJwtResponsetDto user=jwtService.getUser(jwt);
@@ -66,7 +58,7 @@ public class ReviewController {
     @ApiOperation("리뷰 수정 하기")
     @PutMapping("/latte/review/update/{rvid}")  // rvuid
     public Map reviewUpdate(HttpServletRequest httpServletRequest, @RequestBody ReviewUpdateRequestDto reviewUpdateRequestDto, @PathVariable Long rvid) {
-        String jwt = httpServletRequest.getCookies()[0].getValue();
+        String jwt = httpServletRequest.getHeader("Authorization");
         //유효성 검사
         if (!jwtService.isUsable(jwt)) throw new UnauthorizedException(); // 예외
         UserJwtResponsetDto user=jwtService.getUser(jwt);
@@ -85,7 +77,7 @@ public class ReviewController {
     @ApiOperation("리뷰 삭제 하기")
     @DeleteMapping("/latte/review/delete/{rvid}")
     public Map reviewDelete(HttpServletRequest httpServletRequest,@PathVariable Long rvid) {
-        String jwt = httpServletRequest.getCookies()[0].getValue();
+        String jwt = httpServletRequest.getHeader("Authorization");
         //유효성 검사
         if (!jwtService.isUsable(jwt)) throw new UnauthorizedException(); // 예외
         UserJwtResponsetDto user=jwtService.getUser(jwt);

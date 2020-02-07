@@ -78,7 +78,7 @@ public class UserController {
     // 삭제
     @DeleteMapping("/delete")
     public void delete(@RequestBody UserDeleteRequestDto userDeleteRequestDto, HttpServletResponse response, HttpServletRequest request) {
-        String jwt = request.getCookies()[0].getValue();
+        String jwt = request.getHeader("Authorization");
         //유효성 검사
         if (!jwtService.isUsable(jwt)) throw new UnauthorizedException(); // 예외
         UserJwtResponsetDto user=jwtService.getUser(jwt);
