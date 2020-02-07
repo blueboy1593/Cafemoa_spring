@@ -3,36 +3,38 @@ package com.latte.admin;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Parameter;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
-@Configuration
+import java.util.ArrayList;
+import java.util.List;
 @EnableSwagger2
+@Configuration
 public class SwaggerConfig {
+    private ApiInfo metadata() {
+        return new ApiInfoBuilder().title("Latte Project").description("Latte Swagger")
+                .version("2.0").build();
+}
     @Bean
     public Docket api() {
+        ParameterBuilder aParameterBuilder = new ParameterBuilder();
+        aParameterBuilder.name("Authorization")
+                .description("JWT Token")
+                .modelRef(new ModelRef("string"))
+                .parameterType("header")
+                .required(false)
+                .build();
+        List<Parameter> headerParams = new ArrayList<>();
+        headerParams.add(aParameterBuilder.build());
         return new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo()) //기본정보
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.latte.admin.web"))  //주소접근 옵션
-                .paths(PathSelectors.any())
-                .build();
+                .globalOperationParameters(headerParams)
+                .select().apis(RequestHandlerSelectors.basePackage("com.latte.admin.web"))
+                .paths(PathSelectors.any()).build().apiInfo(metadata());
     }
-
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .title("Spring Boot REST Sample with Swagger")
-                .description("스웨거 테스트")
-                .termsOfServiceUrl("http://www-03.ibm.com/software/sla/sladb.nsf/sla/bm?Open")
-                .contact("adamdoha@naver.com")
-                .license("Apache License Version 2.0")
-                .licenseUrl("https://www.github.com/adamdoha")
-                .version("2.0")
-                .build();
-    }
-
 }

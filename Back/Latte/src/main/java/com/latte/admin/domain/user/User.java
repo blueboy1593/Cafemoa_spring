@@ -1,6 +1,7 @@
 package com.latte.admin.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.latte.admin.domain.BaseTimeEntity;
 import com.latte.admin.domain.cafe.Cafe;
 import com.latte.admin.domain.order.Ordered;
 import lombok.Builder;
@@ -15,7 +16,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Entity
-public class User {
+public class User extends BaseTimeEntity {
 
     @Id // pk
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 오토 인크리먼트
@@ -43,21 +44,21 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
-    // 사진 처음에 입력하지 말고, 로그인 이후에 mypage에서 넣을 수 있도록 하기!!
-    /* 프사!!!!!!!!!!!!!!!! */
+    @Column
+    private String upic;
 
     // fk -> 1:N = user:order -> if role=1(손님)
     //user-order의 관계는 user가 연관관계의 대상.
-    @OneToOne(cascade=CascadeType.ALL, mappedBy = "orderuser")
+    @OneToMany(cascade=CascadeType.ALL, mappedBy = "orderuser")
     @JsonManagedReference
-    private Ordered ordered;
+    private List<Ordered> ordered;
 
     public User(Long uuid) {
         this.uuid=uuid;
     }
 
     @Builder
-    public User(String uid, String upass, String uname, String uphone, String uemail, String unickname, Role role, Cafe cafe) {
+    public User(String uid, String upass, String uname, String uphone, String uemail, String unickname, Role role, String upic) {
         this.uid = uid;
         this.upass = upass;
         this.uname = uname;
@@ -65,13 +66,17 @@ public class User {
         this.uemail = uemail;
         this.unickname = unickname;
         this.role = role;
+        if(upic!=null) this.upic=upic;
+        else this.upic="./src/userimg/user.jpg";
     }
 
     // 수정
-    public void update(String upass, String uphone, String unickname) {
+    public void update(String upass, String uphone, String unickname,String upic) {
         this.upass = upass;
         this.uphone = uphone;
         this.unickname = unickname;
+       this.upic=upic;
+
     }
 
 }
