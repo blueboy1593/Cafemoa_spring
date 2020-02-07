@@ -18,23 +18,6 @@ export default class Login extends Component{
     handleSubmit = (e) => {
         // 페이지 리로딩 방지
         e.preventDefault();
-        // const data = {
-        //     headers: '',
-        //     body: {
-        //         userJwtRequestDto:{
-        //             uid: this.state.id,
-        //             upass: this.state.pass
-        //         }
-        //     }
-        //   }
-        
-        // const headers = {
-        //     Authorization: ''
-        // }
-        // const data = {
-        //     uid: this.state.id,
-        //     upass: this.state.pass
-        // }
         
         const params = {
             uid: this.state.id,
@@ -43,13 +26,9 @@ export default class Login extends Component{
         const headers = {
             Authorization: 'eyJ0eXBlIjoiSldUIiwicmVnRGF0ZSI6MTU4MTA1MDE5ODEzNSwiYWxnIjoiSFMyNTYifQ.eyJtZW1iZXIiOnsidWlkIjoia2FuZ2h5dW4iLCJ1bmFtZSI6Iuq5gOqwle2YhCIsInVwaG9uZSI6IjAxMDExMTEyMjIyIiwidWVtYWlsIjoia2FuZ2h5dW5AbmF2ZXIuY29tIiwidW5pY2tuYW1lIjoia2FuZ2h5dW4iLCJyb2xlIjoiSE9TVCIsInVwaWMiOiLsl4bslrQifX0.AK8zBBxOWnnjvai02JaQiMGMP11gh5BSI4RtK6fE1YA'
         }
-        // axios.post(url, params, headers)
-
 
         const url = 'http://54.180.154.140:8080/latte/user/signin'
 
-        console.log(url)
-        console.log(params)
         axios.post(url, params, headers)
         .then(response => {
             console.log('로그인 요청')
