@@ -3,6 +3,7 @@ package com.latte.admin.domain.options;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.latte.admin.domain.menu.Menu;
+import com.latte.admin.domain.order.OrderDetail;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,11 @@ public class Option {
     @ManyToOne
     @JsonBackReference
     Menu optionmenu;
+
+
+    @JsonBackReference
+    @ManyToOne
+    OrderDetail optionorder;
 
     @Builder
     public Option(String OptionName,int OptionPrice,Menu optionmenu){

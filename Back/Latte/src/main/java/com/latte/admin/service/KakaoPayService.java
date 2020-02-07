@@ -4,14 +4,14 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import com.latte.admin.domain.order.Ordered;
+import com.latte.admin.web.dto.kakaoPay.KakaoPayApprovalRequestDto;
 import com.latte.admin.web.dto.kakaoPay.KakaoPayReadyVO;
 import lombok.RequiredArgsConstructor;
-import org.salem.domain.KakaoPayApprovalVO;
-import org.salem.domain.KakaoPayReadyVO;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
@@ -24,8 +24,12 @@ import lombok.extern.java.Log;
 @Log
 public class KakaoPayService {
 
+    private KakaoPayReadyVO kakaoPayReadyVO;
+    private KakaoPayApprovalRequestDto kakaoPayApprovalRequestDto;
     private static final String HOST = "https://kapi.kakao.com";
 
+
+    @Transactional
     public String kakaoPayReady(Ordered ordered, int TotalPay) {
 
         RestTemplate restTemplate = new RestTemplate();
@@ -50,7 +54,7 @@ public class KakaoPayService {
         HttpEntity<MultiValueMap<String, Object>> body = new HttpEntity<>(params, headers);
 
         try {
-            KakaoPayReadyVO kakaoPayReadyVO = restTemplate.postForObject(new URI(HOST + "/v1/payment/ready"), body, KakaoPayReadyVO.class);
+            kakaoPayReadyVO = restTemplate.postForObject(new URI(HOST + "/v1/payment/ready"), body, KakaoPayReadyVO.class);
 
             log.info("" + kakaoPayReadyVO);
 
@@ -65,7 +69,7 @@ public class KakaoPayService {
     }
 
 
-    public KakaoPayApprovalVO kakaoPayInfo(String pg_token) {
+    public KakaoPayApprovalRequestDto kakaoPayInfo(String pg_token) {
 
         log.info("KakaoPayInfoVO............................................");
         log.info("-----------------------------");
@@ -74,7 +78,7 @@ public class KakaoPayService {
 
         // 서버로 요청할 Header
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "KakaoAK " + "admin key를 넣어주세요~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~!");
+        headers.add("Authorization", "KakaoAK " + "1484a35f7612f9d9034e284849f3e71f");
         headers.add("Accept", MediaType.APPLICATION_JSON_UTF8_VALUE);
         headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
 
@@ -90,10 +94,10 @@ public class KakaoPayService {
         HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<MultiValueMap<String, String>>(params, headers);
 
         try {
-            kakaoPayApprovalVO = restTemplate.postForObject(new URI(HOST + "/v1/payment/approve"), body, KakaoPayApprovalVO.class);
-            log.info("" + kakaoPayApprovalVO);
+            kakaoPayApprovalRequestDto = restTemplate.postForObject(new URI(HOST + "/v1/payment/approve"), body, KakaoPayApprovalRequestDto.class);
+            log.info("" + kakaoPayApprovalRequestDto);
 
-            return kakaoPayApprovalVO;
+            return kakaoPayApprovalRequestDto;
 
         } catch (RestClientException e) {
             // TODO Auto-generated catch block
@@ -105,7 +109,6 @@ public class KakaoPayService {
 
         return null;
     }
-
 
 
 }

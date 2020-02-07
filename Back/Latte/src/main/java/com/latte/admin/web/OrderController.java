@@ -19,8 +19,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.java.Log;
 
 
+@Log
 @CrossOrigin("*")
 @RequiredArgsConstructor
 @RestController
@@ -77,39 +79,29 @@ public class OrderController {
         System.out.println("현재 주문하는 유저는 : "+orderuser.getUname()+"님 입니다.");
         Ordered ordered=orderedService.findById(orderedService.save(orderuser));
         //Ordered 테이블에 먼저 만들어지고나서 orderDetail이 존재할 수 있다.
-
+        int TotalPay=0;
         for(OrderDetailRequestDto odrequset:orderDetailRequestDtos){
             Long curmmid=odrequset.getMmid();
-            System.out.println("지금 mmid : "+curmmid);
-            System.out.println(curmmid.getClass());
             Menu ordermenu=menuService.findById(curmmid);
-            System.out.println("지금 ordermenu : "+ordermenu.getMname());
             orderDetailService.save(odrequset.toEntity(ordermenu,ordered));
+            TotalPay+=odrequset.getPay();
         }
        kakaoPayService.kakaoPayReady(ordered,TotalPay);
-
         map.put("result","주문이 완료되었습니다 ^^");
         return map;
     }
-
-
 
     @GetMapping("/kakaoPay")
     public void kakaoPayGet() {
 
     }
 
-
-    public String kakaoPay(@RequestBody Total) {
-
-
-    }
-
     @GetMapping("/kakaoPaySuccess")
-    public void kakaoPaySuccess(@RequestParam("pg_token") String pg_token, Model model) {
+    public void kakaoPaySuccess(@RequestParam("pg_token") String pg_token) {
         log.info("kakaoPaySuccess get............................................");
         log.info("kakaoPaySuccess pg_token : " + pg_token);
-
+        //프론트에서 이 상태를 봐야함.
+        kakaoPayService.kakaoPayInfo(pg_token);
     }
 
 
