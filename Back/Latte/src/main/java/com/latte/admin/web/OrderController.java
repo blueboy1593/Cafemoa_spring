@@ -3,10 +3,7 @@ package com.latte.admin.web;
 import com.latte.admin.domain.menu.Menu;
 import com.latte.admin.domain.order.Ordered;
 import com.latte.admin.domain.user.User;
-import com.latte.admin.service.MenuService;
-import com.latte.admin.service.OrderDetailService;
-import com.latte.admin.service.OrderedService;
-import com.latte.admin.service.UserService;
+import com.latte.admin.service.*;
 import com.latte.admin.service.jwt.JwtService;
 import com.latte.admin.service.jwt.UnauthorizedException;
 import com.latte.admin.web.dto.order.OrderDetailRequestDto;
@@ -15,6 +12,7 @@ import com.latte.admin.web.dto.order.OrderStatusRequestDto;
 import com.latte.admin.web.dto.user.UserJwtResponsetDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +31,7 @@ public class OrderController {
     private final MenuService menuService;
     private final JwtService jwtService;
     private final UserService userService;
+    private final KakaoPayService kakaoPayService;
 
     // 주문 리스트에 잘못넣으면 삭제는 어디서???????????????????????????????????
 
@@ -58,13 +57,11 @@ public class OrderController {
     }
 
 
-
-
     // ordered table을 보여주는 이유
     // 1. 손님: 마이페이지에서 history보여줌
     // 2. 사장: 판매내역 확인 가능
     // if 손님이 한번에 여러개 카페에서 주문한다면, 그 카페마다 주문이 들어왔다고 알려야함.
-    @ApiOperation("현재는 uuid를 pathvariable로 달았지만, 추후 업데이트시 token으로 대체")
+    @ApiOperation("카페에서 메뉴를 주문하는 기능입니다.")
     @PostMapping("/latte/ordersave")
     public Map save(@RequestBody List<OrderDetailRequestDto> orderDetailRequestDtos,HttpServletRequest httpServletRequest){
         String jwt = httpServletRequest.getHeader("Authorization");
@@ -83,15 +80,37 @@ public class OrderController {
 
         for(OrderDetailRequestDto odrequset:orderDetailRequestDtos){
             Long curmmid=odrequset.getMmid();
-
             System.out.println("지금 mmid : "+curmmid);
             System.out.println(curmmid.getClass());
             Menu ordermenu=menuService.findById(curmmid);
             System.out.println("지금 ordermenu : "+ordermenu.getMname());
             orderDetailService.save(odrequset.toEntity(ordermenu,ordered));
         }
+       kakaoPayService.kakaoPayReady(ordered,TotalPay);
 
         map.put("result","주문이 완료되었습니다 ^^");
         return map;
     }
+
+
+
+    @GetMapping("/kakaoPay")
+    public void kakaoPayGet() {
+
+    }
+
+
+    public String kakaoPay(@RequestBody Total) {
+
+
+    }
+
+    @GetMapping("/kakaoPaySuccess")
+    public void kakaoPaySuccess(@RequestParam("pg_token") String pg_token, Model model) {
+        log.info("kakaoPaySuccess get............................................");
+        log.info("kakaoPaySuccess pg_token : " + pg_token);
+
+    }
+
+
 }
