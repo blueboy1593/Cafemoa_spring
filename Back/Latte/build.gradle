@@ -59,4 +59,13 @@ dependencies {
 //    compile('org.springframework.security:spring-security-oauth2-jose')
 //    compile('org.springframework.boot:spring-boot-starter-security')
 //    compile('org.springframework.boot:spring-boot-starter-oauth2-client') //스프링 시큐리티 관련 의존성 주입
+
+
+    //카카오 로그인을 위한 의존성 주입
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    compile 'org.apache.httpcomponents:httpcore:4.4.1'
+    compile 'org.apache.httpcomponents:httpclient:4.5'
+    implementation 'com.google.code.gson:gson'
 }

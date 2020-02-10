@@ -1,5 +1,7 @@
 package com.latte.admin.web;
 
+import com.latte.admin.domain.user.User;
+import com.latte.admin.service.KakaoAPI;
 import com.latte.admin.service.UserService;
 import com.latte.admin.service.jwt.CookieManage;
 import com.latte.admin.service.jwt.JwtService;
@@ -7,7 +9,9 @@ import com.latte.admin.service.jwt.UnauthorizedException;
 import com.latte.admin.web.dto.user.*;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +27,10 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
     private final JwtService jwtService;
+
+    @Autowired
+    private final KakaoAPI kakaoAPI;
+
     private CookieManage cm=new CookieManage();
 
     // 회원 가입
@@ -99,15 +107,18 @@ public class UserController {
     // 로그인
     @ApiOperation("로그인하면서 토큰을 발행")
     @PostMapping("/signin")
-    public String signIn(@RequestBody UserJwtRequestDto userJwtRequestDto, HttpServletResponse response, HttpServletRequest request) {
+    public Map signIn(@RequestBody UserJwtRequestDto userJwtRequestDto, HttpServletResponse response, HttpServletRequest request) {
+        Map<String,String> map=new HashMap<>();
         String secPass=encrypt(userJwtRequestDto.getUpass());
         UserJwtResponsetDto userJwtResponsetDto = userService.signIn(userJwtRequestDto.getUid(),secPass);
         if (userJwtResponsetDto != null && request.getCookies() == null) {
             String token = jwtService.create(userJwtResponsetDto);
             cm.CookieMake(request,response,token);
-            return token;
+            map.put("token",token);
+            return map;
         }
-        return request.getCookies()[0].getValue();
+        map.put("token",request.getCookies()[0].getValue());
+        return map;
     }
 
 //
@@ -157,4 +168,60 @@ public class UserController {
         }
     }
 
+    static String Static_access_Token=null;
+    @GetMapping(value = "/kakaologin")
+    public Map login(@RequestParam("code") String code,HttpServletRequest request,HttpServletResponse response) {
+        Map<String,String> map=new HashMap<>();
+        String access_Token = kakaoAPI.getAccessToken(code);
+        Static_access_Token=access_Token;
+        HashMap<String, String> userInfo = kakaoAPI.getUserInfo(access_Token);
+        if(userInfo.get("email")==null){
+            map.put("email",null); //동의를 구하는 Component
+            System.out.println(map);
+            return map;
+        }
+//        System.out.println("login Controller : " + userInfo);
+        //여기서는 값얻어옴
+        String curEmail=userInfo.get("email");
+        if(!userService.checkEmail(curEmail)){ //이메일 가능함
+            System.out.println("가능합니다!!!!!!!!!!!회원가입시키세요!!!!!!!!!!!!!!");
+            System.out.println(userInfo);
+            return userInfo;
+        }else{ //이미 존재하는 이메일이면
+            User user=userService.findByEmail(curEmail);
+            if(user.getUpass().equals(userInfo.get("Id"))){
+                //이미 카카오톡으로 회원가입을 한 사람.
+                String secPass=encrypt(userInfo.get("Id"));
+                UserJwtResponsetDto userJwtResponsetDto = userService.signIn(user.getUid(),secPass);
+                if (userJwtResponsetDto != null && request.getCookies() == null) {
+                    String token = jwtService.create(userJwtResponsetDto);
+                    cm.CookieMake(request,response,token);
+                    map.put("token",token);
+                    System.out.println(map);
+                    return map;
+                }
+                map.put("token",request.getCookies()[0].getValue());
+                System.out.println(map);
+                return map;
+            }else{
+                map.put("email","false");
+                System.out.println(map);
+                return map;
+            }
+        }
+        //프론트는 가입 요청을 보낸다음에 (KakaoLogin이나 , NaverLogin이나)
+        //그런다음 돌아오는 return 값을 get("email")로 확인하여 null이면 이메일 동의가 필요하다는 Component로
+        //get("email")이 false이면 이메일이 이미 존재한다는 Component로
+        //get("token")이 null이 아니면 이미 이 이메일로 가입했기에 우리의 JWT를 주고 로그인 다음 화면으로 넘김
+        //token을 받으려면 get("token")으로 받으시면 됨.
+        //셋다 아니라면 회원가입 페이지에 우리가 보내준 정보들을 readOnly로 뿌리고 회원가입을 시키면 된다.
+    }
+
+    @GetMapping(value="/kakaologout")
+    public String logout() {
+        System.out.println("카카오톡 로그아웃!!!!!!!!!!!");
+        kakaoAPI.kakaoLogout(Static_access_Token);
+        Static_access_Token=null;
+        return "카카오톡 로그아웃~아웃~ 아웃~ 아~ 아웃이에요 어차피 안써요";
+    }
 }
