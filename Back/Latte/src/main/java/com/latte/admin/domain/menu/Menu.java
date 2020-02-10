@@ -5,7 +5,6 @@ import com.latte.admin.domain.BaseTimeEntity;
 import com.latte.admin.domain.cafe.Cafe;
 import com.latte.admin.domain.options.Option;
 import com.latte.admin.domain.order.OrderDetail;
-import jdk.jfr.internal.Options;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +31,9 @@ public class Menu extends BaseTimeEntity {
     @Column(nullable = false)
     private String mpic;
 
+    @Column
+    private boolean isMain;
+
     // fk -> 1:N = cafe:menu
     @ManyToOne(optional = false)
     @JsonBackReference
@@ -51,10 +53,15 @@ public class Menu extends BaseTimeEntity {
         this.cafemenu=cafemenu;
         this.mname=mname;
         this.mpic=mpic;
+        this.isMain=false;
     }
 
     public void update(String mname,String mpic) {
         this.mname=mname;
         this.mpic=mpic;
+    }
+
+    public void toggleMainMenu(){
+        this.isMain=!isMain;
     }
 }

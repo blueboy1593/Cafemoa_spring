@@ -26,7 +26,7 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private String uid;
 
-    @Column(nullable = false)
+    @Column
     private String upass;
 
     @Column(nullable = false)
