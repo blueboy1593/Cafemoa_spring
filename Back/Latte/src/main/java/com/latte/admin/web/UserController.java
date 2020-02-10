@@ -1,17 +1,22 @@
 package com.latte.admin.web;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.latte.admin.service.KakaoService;
 import com.latte.admin.service.UserService;
 import com.latte.admin.service.jwt.CookieManage;
 import com.latte.admin.service.jwt.JwtService;
 import com.latte.admin.service.jwt.UnauthorizedException;
 import com.latte.admin.web.dto.user.*;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +28,8 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
     private final JwtService jwtService;
+    private final KakaoService kakaoService;
+
     private CookieManage cm=new CookieManage();
 
     // 회원 가입
@@ -133,6 +140,8 @@ public class UserController {
     }
 
 
+
+
     public static String encrypt(String rawpass) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -156,5 +165,54 @@ public class UserController {
             throw new RuntimeException();
         }
     }
+
+
+    @ApiOperation(value = "소셜 로그인", notes = "소셜 회원 로그인을 한다.")
+    @PostMapping(value = "/signin/{provider}")
+    public SingleResult<String> signinByProvider(
+            @ApiParam(value = "서비스 제공자 provider", required = true, defaultValue = "kakao") @PathVariable String provider,
+            @ApiParam(value = "소셜 access_token", required = true) @RequestParam String accessToken) {
+
+        KakaoProfile profile = kakaoService.getKakaoProfile(accessToken);
+        User user = userJpaRepo.findByUidAndProvider(String.valueOf(profile.getId()), provider).orElseThrow(CUserNotFoundException::new);
+        return responseService.getSingleResult(jwtTokenProvider.createToken(String.valueOf(user.getMsrl()), user.getRoles()));
+    }
+
+
+
+
+
+
+
+    @RequestMapping(value = "/kakaologin", produces = "application/json", method = { RequestMethod.GET, RequestMethod.POST })
+    public Map kakaoLogin(@RequestParam("code") String code, HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception {
+        System.out.println("카카오톡 code :"+code);
+
+
+        JsonNode node = UserService.getAccessToken(code); // accessToken에 사용자의 로그인한 모든 정보가 들어있음
+        System.out.println("AccessToken : "+ node.get("access_token"));
+
+        JsonNode accessToken = node.get("access_token"); // 사용자의 정보
+        JsonNode userInfo = UserService.getKakaoUserInfo(accessToken);
+        String kemail = null;
+        String kname = null;
+        String kimage = null; // 유저정보 카카오에서 가져오기 Get properties
+
+        JsonNode properties = userInfo.path("properties");
+        JsonNode kakao_account = userInfo.path("kakao_account");
+        kemail = kakao_account.path("email").asText();
+        kname = properties.path("nickname").asText();
+        kimage = properties.path("profile_image").asText();
+        Map<String,String> map=new HashMap<>();
+        map.put("uemail",kemail);
+        map.put("uname",kname);
+        map.put("upic",kimage);
+        return map;
+    }// end kakaoLogin()
+
+
+
+
+
 
 }
