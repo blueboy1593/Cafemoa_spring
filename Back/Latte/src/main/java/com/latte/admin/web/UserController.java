@@ -1,14 +1,14 @@
 package com.latte.admin.web;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.latte.admin.service.KakaoService;
+//import com.latte.admin.service.KakaoService;
 import com.latte.admin.service.UserService;
 import com.latte.admin.service.jwt.CookieManage;
 import com.latte.admin.service.jwt.JwtService;
 import com.latte.admin.service.jwt.UnauthorizedException;
 import com.latte.admin.web.dto.user.*;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+//import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +28,7 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
     private final JwtService jwtService;
-    private final KakaoService kakaoService;
+//    private final KakaoService kakaoService;
 
     private CookieManage cm=new CookieManage();
 
@@ -167,21 +167,16 @@ public class UserController {
     }
 
 
-    @ApiOperation(value = "소셜 로그인", notes = "소셜 회원 로그인을 한다.")
-    @PostMapping(value = "/signin/{provider}")
-    public SingleResult<String> signinByProvider(
-            @ApiParam(value = "서비스 제공자 provider", required = true, defaultValue = "kakao") @PathVariable String provider,
-            @ApiParam(value = "소셜 access_token", required = true) @RequestParam String accessToken) {
-
-        KakaoProfile profile = kakaoService.getKakaoProfile(accessToken);
-        User user = userJpaRepo.findByUidAndProvider(String.valueOf(profile.getId()), provider).orElseThrow(CUserNotFoundException::new);
-        return responseService.getSingleResult(jwtTokenProvider.createToken(String.valueOf(user.getMsrl()), user.getRoles()));
-    }
-
-
-
-
-
+//    @ApiOperation(value = "소셜 로그인", notes = "소셜 회원 로그인을 한다.")
+//    @PostMapping(value = "/signin/{provider}")
+//    public SingleResult<String> signinByProvider(
+//            @ApiParam(value = "서비스 제공자 provider", required = true, defaultValue = "kakao") @PathVariable String provider,
+//            @ApiParam(value = "소셜 access_token", required = true) @RequestParam String accessToken) {
+//
+//        KakaoProfile profile = kakaoService.getKakaoProfile(accessToken);
+//        User user = userJpaRepo.findByUidAndProvider(String.valueOf(profile.getId()), provider).orElseThrow(CUserNotFoundException::new);
+//        return responseService.getSingleResult(jwtTokenProvider.createToken(String.valueOf(user.getMsrl()), user.getRoles()));
+//    }
 
 
     @RequestMapping(value = "/kakaologin", produces = "application/json", method = { RequestMethod.GET, RequestMethod.POST })

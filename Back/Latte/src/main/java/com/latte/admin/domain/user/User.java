@@ -23,7 +23,7 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 오토 인크리먼트
     private Long uuid; // 1, 2, 3, ...
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String uid;
 
     @Column
@@ -32,13 +32,13 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private String uname;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String uphone;
 
     @Column(nullable = false)
     private String uemail;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String unickname;
 
     @Enumerated(EnumType.STRING)
@@ -79,6 +79,11 @@ public class User extends BaseTimeEntity {
         this.uphone = uphone;
         this.unickname = unickname;
        this.upic=upic;
+    }
+
+    public void saveOrUpdate(String uemail,String unickname) {
+        this.uemail=uemail;
+        this.unickname=unickname;
     }
 
 }
