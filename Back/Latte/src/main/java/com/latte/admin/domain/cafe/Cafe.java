@@ -94,5 +94,4 @@ public class Cafe extends BaseTimeEntity {
     }
 
     public void setCoperation(int coperation) {this.coperation=coperation;}
-
 }

@@ -92,12 +92,19 @@ public class MenuController {
         return map;
     }
 
-    // jwt 필요?
     // menu delete
     @ApiOperation("[사장님페이지]:선택된 메뉴를 삭제하는 기능")
     @DeleteMapping("/delete/{mmid}")
     public void delete(@PathVariable Long mmid){
         menuService.delete(mmid);
+    }
+
+
+    @ApiOperation("메인메뉴 설정/취소(버튼으로 토글)")
+    @PutMapping("/toggleMain/{mmid}")
+    public void toggleMain(@PathVariable Long mmid){
+        Menu menu=menuService.findById(mmid);
+        menu.toggleMainMenu();
     }
 
 }

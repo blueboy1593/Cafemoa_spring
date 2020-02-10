@@ -31,6 +31,9 @@ public class Menu extends BaseTimeEntity {
     @Column(nullable = false)
     private String mpic;
 
+    @Column
+    private boolean isMain;
+
     // fk -> 1:N = cafe:menu
     @ManyToOne(optional = false)
     @JsonBackReference
@@ -50,10 +53,15 @@ public class Menu extends BaseTimeEntity {
         this.cafemenu=cafemenu;
         this.mname=mname;
         this.mpic=mpic;
+        this.isMain=false;
     }
 
     public void update(String mname,String mpic) {
         this.mname=mname;
         this.mpic=mpic;
+    }
+
+    public void toggleMainMenu(){
+        this.isMain=!isMain;
     }
 }
