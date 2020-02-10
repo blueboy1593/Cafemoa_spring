@@ -23,25 +23,32 @@ export default class Login extends Component{
             uid: this.state.id,
             upass: this.state.pass
         }
-        const headers = {
-            Authorization: 'eyJ0eXBlIjoiSldUIiwicmVnRGF0ZSI6MTU4MTA1MDE5ODEzNSwiYWxnIjoiSFMyNTYifQ.eyJtZW1iZXIiOnsidWlkIjoia2FuZ2h5dW4iLCJ1bmFtZSI6Iuq5gOqwle2YhCIsInVwaG9uZSI6IjAxMDExMTEyMjIyIiwidWVtYWlsIjoia2FuZ2h5dW5AbmF2ZXIuY29tIiwidW5pY2tuYW1lIjoia2FuZ2h5dW4iLCJyb2xlIjoiSE9TVCIsInVwaWMiOiLsl4bslrQifX0.AK8zBBxOWnnjvai02JaQiMGMP11gh5BSI4RtK6fE1YA'
-        }
-
+        // const headers = {
+        //     Authorization: 'eyJ0eXBlIjoiSldUIiwicmVnRGF0ZSI6MTU4MTA1MDE5ODEzNSwiYWxnIjoiSFMyNTYifQ.eyJtZW1iZXIiOnsidWlkIjoia2FuZ2h5dW4iLCJ1bmFtZSI6Iuq5gOqwle2YhCIsInVwaG9uZSI6IjAxMDExMTEyMjIyIiwidWVtYWlsIjoia2FuZ2h5dW5AbmF2ZXIuY29tIiwidW5pY2tuYW1lIjoia2FuZ2h5dW4iLCJyb2xlIjoiSE9TVCIsInVwaWMiOiLsl4bslrQifX0.AK8zBBxOWnnjvai02JaQiMGMP11gh5BSI4RtK6fE1YA'
+        // }
+        // console.log(params)
         const url = 'http://54.180.154.140:8080/latte/user/signin'
 
-        axios.post(url, params, headers)
+        axios.post(url, params)
         .then(response => {
             console.log('로그인 요청')
-            console.log(response)
+            // console.log(response)
+            store.dispatch({type:'LOGIN', token:response})
+            const user_state = store.getState().user_info
+            console.log(user_state)
+            this.props.history.push('/');
+            // history.push("/");
         }) 
         .catch(error => {
             console.log('error')
             console.error(error)
         })
         
+        //     console.log(new_state)
+
         // 일단 여기 버리고!
         // store.dispatch({type:'LOGIN', info:this.state});
-        // const new_state = store.getState()
+        // const new_state = store.getState() 
         // console.log(new_state)
         // if (new_state) {
         //     return <Link to="/">그러게</Link>
