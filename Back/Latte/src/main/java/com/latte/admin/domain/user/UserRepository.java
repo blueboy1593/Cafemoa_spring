@@ -9,10 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User,Long> {
-
-    //uid 및 provider 정보로 소셜 회원정보를 조회하는 메소드
-    Optional<User> findByUidAndProvider(String uid,String provider);
-
     @Query("select u from User u where u.uid=:uid")
     User findByuid(@Param("uid") String uid);
 

@@ -35,6 +35,14 @@ public class UserService {
     @Autowired
     JavaMailSender javaMailSender;
 
+    //이메일로 엔티티 가져오기
+    @Transactional
+    public User findByEmail(String email){
+        return userRepository.findByEmail(email).get(0);
+    }
+
+
+
     // 회원 가입
     @Transactional
     public boolean signUp(UserSaveRequestDto userSaveRequestDto) {
@@ -57,8 +65,8 @@ public class UserService {
     @Transactional
     public boolean checkEmail(String uemail) {
         List<User> user = userRepository.findByEmail(uemail);
-        if(user.size()>0) return false;
-        else return true;
+        if(user.size()>0) return true; //있으면 1
+        else return false; //없으면 0
     }
 
     // 아이디 중복 확인 (있으면 true, 없으면 false)
@@ -168,65 +176,65 @@ public class UserService {
         }
     }
 
-    private final static String K_CLIENT_ID = "f19ae1c386503f9082e85e5431870f4f"; //이런식으로 REDIRECT_URI를 써넣는다.// //
-    private final static String K_REDIRECT_URI = "http://70.12.246.69:8080/latte/user/kakaologin";
-    public static String getAuthorizationUrl(HttpSession session) {
-        String kakaoUrl = "https://kauth.kakao.com/oauth/authorize?" + "client_id=" + K_CLIENT_ID + "&redirect_uri=" + K_REDIRECT_URI + "&response_type=code";
-        return kakaoUrl;
-    }
-
-    public static JsonNode getAccessToken(String authorize_code) {
-        final String RequestUrl = "https://kauth.kakao.com/oauth/token";
-        final List<NameValuePair> postParams = new ArrayList<>();
-        postParams.add(new BasicNameValuePair("grant_type", "authorization_code"));
-        postParams.add(new BasicNameValuePair("client_id",K_CLIENT_ID));// REST API KEY
-        postParams.add(new BasicNameValuePair("redirect_uri", K_REDIRECT_URI)); // 리다이렉트 URI
-        postParams.add(new BasicNameValuePair("code", authorize_code)); // 로그인 과정중 얻은 code 값
-        final HttpClient client = HttpClientBuilder.create().build();
-        final HttpPost post = new HttpPost(RequestUrl);
-        JsonNode returnNode = null;
-        try {
-            post.setEntity(new UrlEncodedFormEntity(postParams));
-            final HttpResponse response = client.execute(post); // JSON 형태 반환값 처리
-            ObjectMapper mapper = new ObjectMapper();
-            returnNode = mapper.readTree(response.getEntity().getContent());
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally { // clear resources
-        }
-
-        System.out.println("KaKaoLogin returnNode : "+returnNode);
-
-        return returnNode;
-
-    }
-
-    public static JsonNode getKakaoUserInfo(JsonNode accessToken) {
-        final String RequestUrl = "https://kapi.kakao.com/v2/user/me";
-        final HttpClient client = HttpClientBuilder.create().build();
-        final HttpPost post = new HttpPost(RequestUrl); // add header
-        post.addHeader("Authorization", "Bearer " + accessToken);
-        JsonNode returnNode = null;
-        try {
-            final HttpResponse response = client.execute(post);
-            // JSON 형태 반환값 처리
-            ObjectMapper mapper = new ObjectMapper();
-            returnNode = mapper.readTree(response.getEntity().getContent());
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally { // clear resources
-        }
-
-        System.out.println("Token을 이용한 사용자 정보를 얻는 함수 내 출력입니다.");
-        System.out.println("returnNode : "+returnNode);
-
-        return returnNode;
-    }
+//    private final static String K_CLIENT_ID = "f19ae1c386503f9082e85e5431870f4f"; //이런식으로 REDIRECT_URI를 써넣는다.// //
+//    private final static String K_REDIRECT_URI = "http://70.12.246.69:8080/latte/user/kakaologin";
+//    public static String getAuthorizationUrl(HttpSession session) {
+//        String kakaoUrl = "https://kauth.kakao.com/oauth/authorize?" + "client_id=" + K_CLIENT_ID + "&redirect_uri=" + K_REDIRECT_URI + "&response_type=code";
+//        return kakaoUrl;
+//    }
+//
+//    public static JsonNode getAccessToken(String authorize_code) {
+//        final String RequestUrl = "https://kauth.kakao.com/oauth/token";
+//        final List<NameValuePair> postParams = new ArrayList<>();
+//        postParams.add(new BasicNameValuePair("grant_type", "authorization_code"));
+//        postParams.add(new BasicNameValuePair("client_id",K_CLIENT_ID));// REST API KEY
+//        postParams.add(new BasicNameValuePair("redirect_uri", K_REDIRECT_URI)); // 리다이렉트 URI
+//        postParams.add(new BasicNameValuePair("code", authorize_code)); // 로그인 과정중 얻은 code 값
+//        final HttpClient client = HttpClientBuilder.create().build();
+//        final HttpPost post = new HttpPost(RequestUrl);
+//        JsonNode returnNode = null;
+//        try {
+//            post.setEntity(new UrlEncodedFormEntity(postParams));
+//            final HttpResponse response = client.execute(post); // JSON 형태 반환값 처리
+//            ObjectMapper mapper = new ObjectMapper();
+//            returnNode = mapper.readTree(response.getEntity().getContent());
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        } catch (ClientProtocolException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } finally { // clear resources
+//        }
+//
+//        System.out.println("KaKaoLogin returnNode : "+returnNode);
+//
+//        return returnNode;
+//
+//    }
+//
+//    public static JsonNode getKakaoUserInfo(JsonNode accessToken) {
+//        final String RequestUrl = "https://kapi.kakao.com/v2/user/me";
+//        final HttpClient client = HttpClientBuilder.create().build();
+//        final HttpPost post = new HttpPost(RequestUrl); // add header
+//        post.addHeader("Authorization", "Bearer " + accessToken);
+//        JsonNode returnNode = null;
+//        try {
+//            final HttpResponse response = client.execute(post);
+//            // JSON 형태 반환값 처리
+//            ObjectMapper mapper = new ObjectMapper();
+//            returnNode = mapper.readTree(response.getEntity().getContent());
+//        } catch (ClientProtocolException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } finally { // clear resources
+//        }
+//
+//        System.out.println("Token을 이용한 사용자 정보를 얻는 함수 내 출력입니다.");
+//        System.out.println("returnNode : "+returnNode);
+//
+//        return returnNode;
+//    }
 
 }
