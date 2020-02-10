@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +28,8 @@ public class UserController {
     // 회원 가입
     @PostMapping("/signup")
     public void signUp(@RequestBody UserSaveRequestDto userSaveRequestDto) {
+        String secPass = encrypt(userSaveRequestDto.getUpass());
+        userSaveRequestDto.setUpass(secPass);
         userService.signUp(userSaveRequestDto);
     }
 
@@ -97,7 +100,8 @@ public class UserController {
     @ApiOperation("로그인하면서 토큰을 발행")
     @PostMapping("/signin")
     public String signIn(@RequestBody UserJwtRequestDto userJwtRequestDto, HttpServletResponse response, HttpServletRequest request) {
-        UserJwtResponsetDto userJwtResponsetDto = userService.signIn(userJwtRequestDto.getUid(), userJwtRequestDto.getUpass());
+        String secPass=encrypt(userJwtRequestDto.getUpass());
+        UserJwtResponsetDto userJwtResponsetDto = userService.signIn(userJwtRequestDto.getUid(),secPass);
         if (userJwtResponsetDto != null && request.getCookies() == null) {
             String token = jwtService.create(userJwtResponsetDto);
             cm.CookieMake(request,response,token);
@@ -127,4 +131,30 @@ public class UserController {
     public void logOut(HttpServletResponse response, HttpServletRequest request) {
             cm.CookieDelete(request,response);
     }
+
+
+    public static String encrypt(String rawpass) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(rawpass.getBytes());
+            byte byteData[] = md.digest();
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < byteData.length; i++) {
+                sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+            }
+            StringBuffer hexString = new StringBuffer();
+            for (int i = 0; i < byteData.length; i++) {
+                String hex = Integer.toHexString(0xff & byteData[i]);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException();
+        }
+    }
+
 }

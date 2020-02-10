@@ -6,22 +6,26 @@ import com.latte.admin.domain.order.Ordered;
 import com.latte.admin.domain.order.OrderDetail;
 import com.latte.admin.web.dto.menu.MenuOptionRequestDto;
 import com.latte.admin.web.dto.menu.MenuSizeRequestDto;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
 public class OrderDetailRequestDto {
 
     private Long mmid; //메뉴가져오고
-    private MenuSizeRequestDto menuSizeRequestDto; //사이즈 가져오고
-    private MenuOptionRequestDto menuOptionRequestDto; //옵션 가져오고
+    private int msid; //사이즈 번호(메뉴 하나당 사이즈는 1개)
+    private List<Integer> opid; //옵션번호 가져오고(여러개 가능)
     private int pay; //가격 가져와(프론트에서 옵션,사이즈,수량 계산해서 보낸 가격)
 
-    public OrderDetailRequestDto(Long mmid,MenuSizeRequestDto menuSizeRequestDto,MenuOptionRequestDto menuOptionRequestDto,int pay) {
+    @Builder
+    public OrderDetailRequestDto(Long mmid,int msid,List<Integer> opid,int pay) {
         this.mmid=mmid;
-        this.menuSizeRequestDto=menuSizeRequestDto;
-        this.menuOptionRequestDto=menuOptionRequestDto;
+        this.msid=msid;
+        this.opid=opid;
         this.pay=pay;
     }
 

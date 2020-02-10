@@ -19,9 +19,9 @@ import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.java.Log;
 
+@Log
 @RequiredArgsConstructor
 @Service
-@Log
 public class KakaoPayService {
 
     private KakaoPayReadyVO kakaoPayReadyVO;
@@ -30,33 +30,39 @@ public class KakaoPayService {
 
 
     @Transactional
-    public String kakaoPayReady(Ordered ordered, int TotalPay) {
-
+    public String kakaoPayReady(Long ooid,String orderuser,String mainMenu,int Totalcnt, int TotalPay) {
+        System.out.println("카카오 페이 결제를 위한 준비 단계입니다.");
         RestTemplate restTemplate = new RestTemplate();
         // 서버로 요청할 Header
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "KakaoAK " + "1484a35f7612f9d9034e284849f3e71f");
         headers.add("Accept", MediaType.APPLICATION_JSON_UTF8_VALUE);
         headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
-
+        System.out.println("요청 헤더 : "+headers);
         // 서버로 요청할 Body
-        MultiValueMap<String, Object> params = new LinkedMultiValueMap<String, Object>();
+        String item_name=mainMenu;
+        if(Totalcnt-1>0) item_name=item_name+"외 "+(Totalcnt-1)+"건";
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
         params.add("cid", "TC0ONETIME");
-        params.add("partner_order_id", ordered.getOoid());
-        params.add("partner_user_id", ordered.getOrderuser().getUid());
-        params.add("item_name",ordered.getOrderDetails().get(0).getOrdermenu().getCafemenu().getCname()); //맨 위에거 기준으로만 결제로 넘김
-        params.add("quantity",1);
-        params.add("total_amount", TotalPay);
+        params.add("partner_order_id", ooid+"");
+        params.add("partner_user_id", orderuser);
+        params.add("item_name",item_name); //맨 위에거 기준으로만 결제로 넘김
+        params.add("quantity",Totalcnt+"");
+        params.add("total_amount", TotalPay+"");
+        params.add("tax_free_amount", "100");
         params.add("approval_url", "http://localhost:8080/kakaoPaySuccess");
         params.add("cancel_url", "http://localhost:8080/kakaoPayCancel");
         params.add("fail_url", "http://localhost:8080/kakaoPaySuccessFail");
 
-        HttpEntity<MultiValueMap<String, Object>> body = new HttpEntity<>(params, headers);
+        System.out.println("요청 Payload : "+params);
+        HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(params, headers);
 
         try {
             kakaoPayReadyVO = restTemplate.postForObject(new URI(HOST + "/v1/payment/ready"), body, KakaoPayReadyVO.class);
 
-            log.info("" + kakaoPayReadyVO);
+            System.out.println("" + kakaoPayReadyVO);
+
 
             return kakaoPayReadyVO.getNext_redirect_pc_url();
 
@@ -69,7 +75,7 @@ public class KakaoPayService {
     }
 
 
-    public KakaoPayApprovalRequestDto kakaoPayInfo(String pg_token) {
+    public KakaoPayApprovalRequestDto kakaoPayInfo(String pg_token, Long ooid,String orderuser,int TotalPay) {
 
         log.info("KakaoPayInfoVO............................................");
         log.info("-----------------------------");
@@ -86,10 +92,10 @@ public class KakaoPayService {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
         params.add("cid", "TC0ONETIME");
         params.add("tid", kakaoPayReadyVO.getTid());
-        params.add("partner_order_id", "1001");
-        params.add("partner_user_id", "gorany");
+        params.add("partner_order_id", ooid+"");
+        params.add("partner_user_id", orderuser);
         params.add("pg_token", pg_token);
-        params.add("total_amount", "2100");
+        params.add("total_amount", TotalPay+"");
 
         HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<MultiValueMap<String, String>>(params, headers);
 

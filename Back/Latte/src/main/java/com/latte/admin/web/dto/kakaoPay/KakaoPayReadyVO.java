@@ -16,5 +16,4 @@ public class KakaoPayReadyVO {
     private String android_app_scheme;
     private String ios_app_scheme;
     private Date created_at;
-
 }

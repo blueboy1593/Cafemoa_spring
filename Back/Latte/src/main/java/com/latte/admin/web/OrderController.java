@@ -12,7 +12,6 @@ import com.latte.admin.web.dto.order.OrderStatusRequestDto;
 import com.latte.admin.web.dto.user.UserJwtResponsetDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,9 +33,17 @@ public class OrderController {
     private final JwtService jwtService;
     private final UserService userService;
     private final KakaoPayService kakaoPayService;
+    private static int TotalPayMoney;
+    private static String mainMenuName;
+    private static String orderuserID;
+    private static Long ooid;
 
-    // 주문 리스트에 잘못넣으면 삭제는 어디서???????????????????????????????????
-
+    static void init(){
+        TotalPayMoney=0;
+        mainMenuName=null;
+        orderuserID=null;
+        ooid=0L;
+    }
 
 
     // 주문메뉴 리스트 보여주기
@@ -63,9 +70,10 @@ public class OrderController {
     // 1. 손님: 마이페이지에서 history보여줌
     // 2. 사장: 판매내역 확인 가능
     // if 손님이 한번에 여러개 카페에서 주문한다면, 그 카페마다 주문이 들어왔다고 알려야함.
-    @ApiOperation("카페에서 메뉴를 주문하는 기능입니다.")
-    @PostMapping("/latte/ordersave")
+    @ApiOperation("유저가 카페에서 메뉴를 주문하는 기능입니다.")
+    @PostMapping("/latte/order")
     public Map save(@RequestBody List<OrderDetailRequestDto> orderDetailRequestDtos,HttpServletRequest httpServletRequest){
+        //요청할 때 들어오는 값 :메뉴번호(1개 필수),사이즈번호(1개 필수),옵션번호들(0개~여러개),총 가격- 이 모든게 리스트형태로 들어옴
         String jwt = httpServletRequest.getHeader("Authorization");
         //유효성 검사
         if (!jwtService.isUsable(jwt)) throw new UnauthorizedException(); // 예외
@@ -80,13 +88,27 @@ public class OrderController {
         Ordered ordered=orderedService.findById(orderedService.save(orderuser));
         //Ordered 테이블에 먼저 만들어지고나서 orderDetail이 존재할 수 있다.
         int TotalPay=0;
+        int Totalcnt=0;
+        String mainMenu=null;
         for(OrderDetailRequestDto odrequset:orderDetailRequestDtos){
             Long curmmid=odrequset.getMmid();
             Menu ordermenu=menuService.findById(curmmid);
             orderDetailService.save(odrequset.toEntity(ordermenu,ordered));
+            System.out.println("orderdetail이 추가되었습니다.");
+            if(mainMenu==null) mainMenu=menuService.findById(odrequset.getMmid()).getMname();
+            //카카오 페이를 위한 준비
             TotalPay+=odrequset.getPay();
+            Totalcnt++;
         }
-       kakaoPayService.kakaoPayReady(ordered,TotalPay);
+        //--------------------------위에서는 기존 orderDetail에 관련된 정보만 썼음---------------------
+        //아직 각 메뉴별 사이즈,옵션 정보 사용하지 않은 상태이다. 활용 가능
+        init();
+        orderuserID=orderuser.getUid();
+        ooid=ordered.getOoid();
+        mainMenuName=mainMenu;
+        TotalPayMoney=TotalPay;
+
+       kakaoPayService.kakaoPayReady(ordered.getOoid(),orderuser.getUid(),mainMenu,Totalcnt,TotalPay);
         map.put("result","주문이 완료되었습니다 ^^");
         return map;
     }
@@ -101,7 +123,7 @@ public class OrderController {
         log.info("kakaoPaySuccess get............................................");
         log.info("kakaoPaySuccess pg_token : " + pg_token);
         //프론트에서 이 상태를 봐야함.
-        kakaoPayService.kakaoPayInfo(pg_token);
+        kakaoPayService.kakaoPayInfo(pg_token,ooid,orderuserID,TotalPayMoney);
     }
 
 

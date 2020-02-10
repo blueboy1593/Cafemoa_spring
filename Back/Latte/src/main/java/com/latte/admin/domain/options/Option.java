@@ -27,11 +27,6 @@ public class Option {
     @JsonBackReference
     Menu optionmenu;
 
-
-    @JsonBackReference
-    @ManyToOne
-    OrderDetail optionorder;
-
     @Builder
     public Option(String OptionName,int OptionPrice,Menu optionmenu){
         this.OptionName=OptionName;
