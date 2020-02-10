@@ -56,8 +56,11 @@ dependencies {
     //JSONParser 추가
     compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
     //소셜 로그인 등 클라이언트 입장에서 소셜 기능 구현 시 필요한 의존성입니다.
-//    compile('org.springframework.security:spring-security-oauth2-jose')
+    compile('org.springframework.security:spring-security-oauth2-jose')
 //    compile('org.springframework.boot:spring-boot-starter-security')
+    
+    //아 .. 아랫놈넣기만하면 겁나묻네 로그인창뜨고 그냥 아주그냥 아주 그냥 아주 그냥
+    //시큐리티 ㅡㅡ
 //    compile('org.springframework.boot:spring-boot-starter-oauth2-client') //스프링 시큐리티 관련 의존성 주입
 
 
