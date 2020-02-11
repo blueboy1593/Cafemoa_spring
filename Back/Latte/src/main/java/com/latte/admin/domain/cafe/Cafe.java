@@ -51,6 +51,13 @@ public class Cafe extends BaseTimeEntity {
     @Column(nullable = false)
     private int coperation;  // 1:운영중, 0:끝
 
+    @Column
+    private String cx;
+
+    @Column
+    private String cy;
+
+
     // fk -> 1:N = cafe:menu
     @OneToMany(cascade=CascadeType.ALL, mappedBy = "cafemenu")
     @JsonManagedReference
@@ -67,7 +74,8 @@ public class Cafe extends BaseTimeEntity {
     }
 
     @Builder
-    public Cafe(String uid,String cname, String cloc, String cphone, String cpic, String copen, String cdesc, String cclose, int cstatus,int coperation) {
+    public Cafe(String uid,String cname, String cloc, String cphone, String cpic, String copen,
+                String cdesc, String cclose, int cstatus,int coperation,String cx,String cy) {
         this.uid=uid;
         this.cname = cname;
         this.cloc = cloc;
@@ -78,6 +86,8 @@ public class Cafe extends BaseTimeEntity {
         this.cdesc=cdesc;
         this.cstatus = cstatus;
         this.coperation=coperation;
+        this.cx=cx;
+        this.cy=cy;
     }
 
     public void CafeUpdate(String cname,String cloc,String cphone,String cpic,String copen, String cclose,String cdesc) {
@@ -89,6 +99,7 @@ public class Cafe extends BaseTimeEntity {
         this.cclose=cclose;
         this.cdesc=cdesc;
     }
+
     public void setStatus(int cstatus){
         this.cstatus=cstatus;
     }
