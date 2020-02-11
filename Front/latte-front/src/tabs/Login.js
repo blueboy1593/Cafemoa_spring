@@ -28,13 +28,13 @@ export default class Login extends Component{
         axios.post(base_url + '/user/signin', params)
         .then(response => {
             console.log('로그인 요청')
-            store.dispatch({type:'LOGIN', token:response.data})
+            store.dispatch({type:'LOGIN', token:response.data.token})
             
             // 로컬스토리지에 저장하자!!
             // 이 코드로 로컬 스토리지에 저장한 상태이고 다른거 할 거 없음!
             localStorage.setItem(
                 "login_token",
-                JSON.stringify(response.data)
+                JSON.stringify(response.data.token)
             );
             // let token = localStorage.getItem("login_token")
             // console.log(token)

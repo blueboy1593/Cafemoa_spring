@@ -12,7 +12,7 @@ export default class LatteNavbar extends Component {
     // const role = this.state.role
     // ㅋㅋㅋ 개고생했네...
     const role = store.getState().user_info.role
-    console.log(role, '여기는 Navbar 지역')
+    // console.log(role, '여기는 Navbar 지역')
     return (
       <div>
         <Navbar bg="fade" expand="lg">
