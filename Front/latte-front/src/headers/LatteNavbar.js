@@ -2,17 +2,44 @@ import React, { Component } from 'react'
 import { Navbar, Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import store from '../store';
+import { Modal, Button} from 'antd';
+import Login from '../tabs/Login';
 
 // Navbar랑 이름이 중복됨.
 export default class LatteNavbar extends Component {
   // state = {
   //   role: store.getState().user_info.role,
   // }  
+  state = { visible: false };
+
+  showModal = () => {
+    this.setState({
+      visible: true,
+    });
+  };
+
+  handleOk = e => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
+
+  handleCancel = e => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
+
+
+
   render() {
+   
     // const role = this.state.role
     // ㅋㅋㅋ 개고생했네...
     const role = store.getState().user_info.role
-    console.log(role, '여기는 Navbar 지역')
+    // console.log(role, '여기는 Navbar 지역')
     return (
       <div>
         <Navbar bg="fade" expand="lg">
@@ -68,11 +95,21 @@ export default class LatteNavbar extends Component {
                 );
                 else return (
                   <>
-                    <Link to='/visitor/login'><img src="/img/login.png" alt="로그인" /></Link>
+                    <div>
+                      <Button type="link" onClick={this.showModal}><img src="/img/login.png" alt="로그인" /></Button>
+                      <Modal
+                        title="로 그 인"
+                        visible={this.state.visible}
+                        onOk={this.handleOk}
+                        onCancel={this.handleCancel}
+                      >
+                        <Login></Login>
+                      </Modal>
+                    </div>                 
                     <Link to='/visitor/signup'><img src="/img/signup.png" alt="회원가입" /></Link>
                   </>
                 );
-              })()
+              }).bind(this)()
             }
           </Nav>
         </Navbar.Collapse>

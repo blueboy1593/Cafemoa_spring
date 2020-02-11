@@ -6,6 +6,7 @@ import * as serviceWorker from './serviceWorker';
 import {Provider} from 'react-redux';
 import store from './store';
 import { BrowserRouter, Route } from 'react-router-dom';
+
 // store에서 직접 router를 써보기 위해서 이런 짓을 해본다.
 // 아래 코드는 부트스트랩을 전체 지역에서 사용하기 위해서 가져온 코드.
 import 'bootstrap/dist/css/bootstrap.min.css';
