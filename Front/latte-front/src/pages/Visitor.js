@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
-import { CafeList, Login, Signup, NearCafe } from '../tabs';
-import { CafeDetail } from '../components';
+import { CafeList, Login, Signup, NearCafe, CafeDetail, Order } from '../tabs';
 import LatteNavbar from '../headers/LatteNavbar';
 import Logout from '../tabs/Logout';
 // import FullpageWrapper from './FullpageWrapper';
@@ -23,6 +22,7 @@ class Visitor extends Component{
           <Route exact path='/visitor' component={CafeList}/>
           <Route path='/visitor/cafedetail' component={CafeDetail}/>
           <Route path='/visitor/nearcafe' component={NearCafe}/>
+          <Route path='/visitor/order' component={Order}/>
           <center>
           <Route path='/visitor/login' component={Login}/>
           </center>
