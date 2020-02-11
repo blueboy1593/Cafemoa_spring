@@ -1,0 +1,11 @@
+social:
+  kakao:
+    client_id: f19ae1c386503f9082e85e5431870f4f
+    redirect : latte/user/kakaologin
+    url :
+      login : https://kauth.kakao.com/oauth/authorize
+      token: https://kauth.kakao.com/oauth/token
+      profile: https://kapi.kakao.com/v2/user/me
+
+url:
+  base: http://localhost:8080

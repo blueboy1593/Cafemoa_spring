@@ -8,7 +8,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 
-//@EnableJpaAuditing
+@EnableJpaAuditing
 @SpringBootApplication
 public class Application {
     public static void main(String[] args) {
