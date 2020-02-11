@@ -39,7 +39,7 @@ public class CafeService {
 
     // 카페 오픈 상태 변경
     @Transactional
-    public void setCoperation(int coperation){
+    public void setOperation(int coperation){
         cafeRepository.setOperation(coperation);
     }
 

@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.MessageDigest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin("*")
@@ -32,6 +33,15 @@ public class UserController {
     private final KakaoAPI kakaoAPI;
 
     private CookieManage cm=new CookieManage();
+
+    //모든 유저의 정보를 드린다.
+    @ApiOperation("모든 유저의 정보를 출력합니다.")
+    @GetMapping("/all")
+    public List<User> selectAll(){
+        return userService.selectAll();
+    }
+
+
 
     // 회원 가입
     @PostMapping("/signup")
@@ -62,6 +72,9 @@ public class UserController {
         map.put("email", userService.findPass(uid, uemail));
         return map;
     }
+
+    // 비밀번호 확인 -> login로직에서 있으면 안하고, 없으면 한다!!!!!!!!!!
+
 
     // 회원 정보 수정 -> mypage에서 pass, nickname, phone 변경 가능
     @PutMapping("/update")
@@ -167,13 +180,16 @@ public class UserController {
 
     static String Static_access_Token=null;
     @GetMapping(value = "/kakaologin")
-    public Map login(@RequestParam("code") String code,HttpServletRequest request,HttpServletResponse response) {
+    public Map login(@RequestBody RequestKakaoCodeDto requestKakaoCodeDto ,HttpServletRequest request,HttpServletResponse response) {
         Map<String,String> map=new HashMap<>();
-        String access_Token = kakaoAPI.getAccessToken(code);
+        String access_Token = kakaoAPI.getAccessToken(requestKakaoCodeDto.getCode());
         Static_access_Token=access_Token;
         HashMap<String, String> userInfo = kakaoAPI.getUserInfo(access_Token);
+
+
         if(userInfo.get("email")==null){
             map.put("email",null); //동의를 구하는 Component
+            map.put("message","이메일 동의가 필요합니다.");
             System.out.println(map);
             return map;
         }
@@ -181,7 +197,7 @@ public class UserController {
         //여기서는 값얻어옴
         String curEmail=userInfo.get("email");
         if(!userService.checkEmail(curEmail)){ //이메일 가능함
-            System.out.println("가능합니다!!!!!!!!!!!회원가입시키세요!!!!!!!!!!!!!!");
+            System.out.println("가능합니다!!!!!!!!!!!당장 회원가입시키세요!!!!!!!!!!!!!!");
             System.out.println(userInfo);
             return userInfo;
         }else{ //이미 존재하는 이메일이면
@@ -194,14 +210,17 @@ public class UserController {
                     String token = jwtService.create(userJwtResponsetDto);
                     cm.CookieMake(request,response,token);
                     map.put("token",token);
+                    map.put("message","이미 카카오로 회원가입이 된 이메일입니다.");
                     System.out.println(map);
                     return map;
                 }
                 map.put("token",request.getCookies()[0].getValue());
+                map.put("message","이미 카카오로 회원가입이 된 이메일입니다.");
                 System.out.println(map);
                 return map;
             }else{
                 map.put("email","false");
+                map.put("message","이미 존재하는 이메일입니다.");
                 System.out.println(map);
                 return map;
             }

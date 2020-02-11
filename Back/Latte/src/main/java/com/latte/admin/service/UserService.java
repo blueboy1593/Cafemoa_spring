@@ -35,6 +35,11 @@ public class UserService {
     @Autowired
     JavaMailSender javaMailSender;
 
+    public List<User> selectAll(){
+        return userRepository.findAll();
+    }
+
+
     //이메일로 엔티티 가져오기
     @Transactional
     public User findByEmail(String email){

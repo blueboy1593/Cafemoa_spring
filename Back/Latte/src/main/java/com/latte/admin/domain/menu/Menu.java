@@ -34,9 +34,6 @@ public class Menu extends BaseTimeEntity {
     @Column
     private int isMain;
 
-    @Column(nullable = false)
-    private int mtype;
-
     // fk -> 1:N = cafe:menu
     @ManyToOne(optional = false)
     @JsonBackReference
@@ -52,12 +49,11 @@ public class Menu extends BaseTimeEntity {
 
 
     @Builder
-    public Menu(Cafe cafemenu,String mname,String mpic, int isMain,int mtype) {
+    public Menu(Cafe cafemenu,String mname,String mpic, int isMain) {
         this.cafemenu=cafemenu;
         this.mname=mname;
         this.mpic=mpic;
         this.isMain=isMain;
-        this.mtype=mtype;
     }
 
 

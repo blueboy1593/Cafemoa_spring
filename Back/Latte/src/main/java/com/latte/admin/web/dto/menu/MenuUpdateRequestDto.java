@@ -13,15 +13,12 @@ public class MenuUpdateRequestDto {
     private String mpic;
     private List<MenuSizeUpdateDto> menuSizeUpdateDtoList;
     private List<MenuOptionUpdateRequestDto> menuOptionUpdateRequestDtoList;
-    private int mtype;
 
     @Builder
-    public MenuUpdateRequestDto(String mname,String mpic,List<MenuSizeUpdateDto> menuSizeUpdateDtoList,
-                                List<MenuOptionUpdateRequestDto> menuOptionUpdateRequestDtoList,int mtype) {
+    public MenuUpdateRequestDto(String mname,String mpic,List<MenuSizeUpdateDto> menuSizeUpdateDtoList,List<MenuOptionUpdateRequestDto> menuOptionUpdateRequestDtoList) {
         this.mname = mname;
         this.mpic = mpic;
         this.menuSizeUpdateDtoList=menuSizeUpdateDtoList;
         this.menuOptionUpdateRequestDtoList=menuOptionUpdateRequestDtoList;
-        this.mtype=mtype;
     }
 }

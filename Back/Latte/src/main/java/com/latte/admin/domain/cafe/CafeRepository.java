@@ -33,5 +33,4 @@ public interface CafeRepository extends JpaRepository<Cafe,Long> {
 
     @Query("select c.ccid from Cafe c where c.uid=:uid")
     Long findCcidByUid(@Param("uid") String uid);
-
 }

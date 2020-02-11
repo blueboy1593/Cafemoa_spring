@@ -53,14 +53,6 @@ public class MenuService {
                 .collect(Collectors.toList());
     }
 
-    // mtype 변화에 따라서 주문페이지에서 메뉴 다르게 보여주기!
-    @Transactional
-    public List<MenuResponseDto> findByMtype(Long ccid, int mtype) {
-        return menuRepository.findByMtype(ccid,mtype).stream()
-                .map(MenuResponseDto::new)
-                .collect(Collectors.toList());
-    }
-
 
     //Entity형태로 하나 가져올때(Order에서 사용)
     @Transactional
