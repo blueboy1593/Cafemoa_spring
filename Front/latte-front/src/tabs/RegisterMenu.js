@@ -33,8 +33,11 @@ export default class RegisterMenu extends Component {
         console.log(new_data)
 
         // axios 요청
-        const url = 'http://i02a301.p.ssafy.io:8080/latte/menu/4'
-        axios.post(url, new_data)
+        // const url = 'http://i02a301.p.ssafy.io:8080/latte/menu/4'
+
+        const base_url = process.env.REACT_APP_SERVER_IP
+
+        axios.post(base_url + `/menu/${data.id}`, new_data)
           .then(response => {
             console.log('post됐니??')
             console.log(response)

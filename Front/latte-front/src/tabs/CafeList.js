@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import CafeInfo from '../components/CafeInfo';
 import './CafeList.css';
 import axios from 'axios';
-// import axios_url from '../axios_url';
 
 
 export default class CafeList extends Component {
@@ -42,20 +41,15 @@ export default class CafeList extends Component {
         ]
     }
 
-  
-    // axios.post(gsdakla,askldjasjkl,headers)
-
     componentDidMount(){
-        axios.get('http://i02a301.p.ssafy.io:8080/latte/cafe/all')
+        const base_url = process.env.REACT_APP_SERVER_IP
+        axios.get(base_url + '/cafe/all')
             .then(response =>{
             this.setState({
                 cafes:response.data
             });
-            // console.log(this.state);
             });
         };
-        // 일단 이 부분은 해보려다가 실패.
-        // axios_url.get('latte/cafe/all')
 
     render() {
         const {cafes} = this.state;
