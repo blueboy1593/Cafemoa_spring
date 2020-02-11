@@ -1,12 +1,18 @@
 package com.latte.admin.domain.menu;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
 public interface MenuRepository extends JpaRepository<Menu, Long> {
+
+    @Modifying
+    @Query("update Menu m set m.isMain=:toggleValue where m.mmid=:mmid")
+    void toggleMain(@Param("mmid") Long mmid,@Param("toggleValue")int toggleValue);
+
     @Query("select m from Menu m where m.mmid=:mmid")
     Menu findByMmid(@Param("mmid") Long mmid);
 

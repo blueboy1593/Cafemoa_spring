@@ -117,4 +117,13 @@ public class MenuService {
         optionRepository.delete(option);
     }
 
+    // Toogle Main Menu
+    @Transactional
+    public void toggleMain(Long mmid){
+        Menu menu=menuRepository.findByMmid(mmid);
+        int toggleValue=0;
+        if(menu.getIsMain()==0) toggleValue=1;
+        menuRepository.toggleMain(mmid,toggleValue);
+    }
+
 }

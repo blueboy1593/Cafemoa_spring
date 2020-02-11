@@ -46,8 +46,11 @@ public class UserService {
     // 회원 가입
     @Transactional
     public boolean signUp(UserSaveRequestDto userSaveRequestDto) {
+        System.out.println(userSaveRequestDto);
         // insert 전에 테이블을 검색해서 중복된 이메일이 있는지 확인한다.
-        if (!checkEmail(userSaveRequestDto.getUemail()))
+
+        //우리 회원가입 로직은 이메일로만 중복검사를 실행합니다.!!!
+        if (checkEmail(userSaveRequestDto.getUemail())) //이미 이메일이 있으면
             return false;
 
         // 회원가입완료하면 이메일로 ghld 보내준다.

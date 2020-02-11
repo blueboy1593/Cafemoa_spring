@@ -32,7 +32,7 @@ public class Menu extends BaseTimeEntity {
     private String mpic;
 
     @Column
-    private boolean isMain;
+    private int isMain;
 
     // fk -> 1:N = cafe:menu
     @ManyToOne(optional = false)
@@ -49,12 +49,13 @@ public class Menu extends BaseTimeEntity {
 
 
     @Builder
-    public Menu(Cafe cafemenu,String mname,String mpic) {
+    public Menu(Cafe cafemenu,String mname,String mpic, int isMain) {
         this.cafemenu=cafemenu;
         this.mname=mname;
         this.mpic=mpic;
-        this.isMain=false;
+        this.isMain=isMain;
     }
+
 
     public void update(String mname,String mpic) {
         this.mname=mname;
@@ -62,6 +63,6 @@ public class Menu extends BaseTimeEntity {
     }
 
     public void toggleMainMenu(){
-        this.isMain=!isMain;
+        this.isMain=1-this.isMain;
     }
 }

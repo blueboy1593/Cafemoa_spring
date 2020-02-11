@@ -29,6 +29,7 @@ public class MenuSaveRequestDto {
                 .cafemenu(cafe) //조인용
                 .mname(mname)
                 .mpic(mpic)
+                .isMain(0)
                 .build();
     }
 

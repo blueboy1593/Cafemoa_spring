@@ -103,8 +103,7 @@ public class MenuController {
     @ApiOperation("메인메뉴 설정/취소(버튼으로 토글)")
     @PutMapping("/toggleMain/{mmid}")
     public void toggleMain(@PathVariable Long mmid){
-        Menu menu=menuService.findById(mmid);
-        menu.toggleMainMenu();
+        menuService.toggleMain(mmid);
     }
 
 }
