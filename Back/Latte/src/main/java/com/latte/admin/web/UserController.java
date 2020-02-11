@@ -63,9 +63,6 @@ public class UserController {
         return map;
     }
 
-    // 비밀번호 확인 -> login로직에서 있으면 안하고, 없으면 한다!!!!!!!!!!
-
-
     // 회원 정보 수정 -> mypage에서 pass, nickname, phone 변경 가능
     @PutMapping("/update")
     public void update(HttpServletResponse response, HttpServletRequest request, @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
