@@ -59,11 +59,11 @@ export default class LatteNavbar extends Component {
               (function() {
                 if (role === 'HOST' || role === 'GUEST') return (
                   <>
-                    <Link to='/visitor/login'><img src="/img/login.png" alt="로그인" /></Link>
+                    {/* <Link to='/visitor/login'><img src="/img/login.png" alt="로그인" /></Link> */}
                     <Link to='/customer/mypage'><img src="/img/mypage.png" alt="마이페이지" /></Link>
                     {/* 여기에는 로그아웃 구현할 것. */}
                     {/* <Link to='/customer/mypage'><img src="/img/logout.png" alt="로그아웃" /></Link> */}
-                    <Link to='/logout'><img src="/img/logout.png" alt="로그아웃" /></Link>
+                    <Link to='/visitor/logout'><img src="/img/logout.png" alt="로그아웃" /></Link>
                   </>
                 );
                 else return (

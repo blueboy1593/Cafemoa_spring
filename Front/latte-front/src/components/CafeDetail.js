@@ -14,8 +14,9 @@ class CafeDetail extends React.Component{
       // if (location.state === undefined) {
       //   history.push("/visitor");
       // }
+      const base_url = process.env.REACT_APP_SERVER_IP
       const ccid = this.props.location.state.id;
-      axios.get(`http://i02a301.p.ssafy.io:8080/latte/cafe/${ccid}`)
+      axios.get(base_url + `/cafe/${ccid}`)
         .then(response =>{
           if (response.data.menus[0]) {
             this.setState({
@@ -67,12 +68,6 @@ class CafeDetail extends React.Component{
       }
     }
 }
-
-// const card_style = {
-//   opacity: 1,
-//   display: 'block',
-//   backgroundColor: 'white',
-// }
 
 const CafeDetailCard = (props) => {
   const menu = props.menu

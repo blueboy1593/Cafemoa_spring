@@ -23,9 +23,9 @@ export default class Login extends Component{
             uid: this.state.id,
             upass: this.state.pass
         }
-        const url = 'http://54.180.154.140:8080/latte/user/signin'
-
-        axios.post(url, params)
+        
+        const base_url = process.env.REACT_APP_SERVER_IP
+        axios.post(base_url + '/user/signin', params)
         .then(response => {
             console.log('로그인 요청')
             store.dispatch({type:'LOGIN', token:response.data})

@@ -3,22 +3,28 @@ import { Button, Modal, Form } from 'react-bootstrap';
 
 export default class Order extends Component {
   render() {
-  const cafe = this.props.location.state.cafe
-  const menus = cafe.menus;
-    return (
-      <div>
-        <center>
-        <h1>{ cafe.cname } 카페의 주문하기 페이지</h1>
-          {menus.map(menu => (
-            <CafeDetailCard
-              menu = {menu}
-              key = {menu.mmid}
-            />
-          ))}
-        </center>
-      </div>
-    )
-  }
+    const cafe = this.props.location.state.cafe
+    if (cafe !== undefined) {
+      const menus = cafe.menus;
+      return (
+        <div>
+          <center>
+          <h1>{ cafe.cname } 카페의 주문하기 페이지</h1>
+            {menus.map(menu => (
+              <CafeDetailCard
+                menu = {menu}
+                key = {menu.mmid}
+              />
+            ))}
+          </center>
+        </div>
+      )
+    }
+    else {
+      this.props.history.push("/");
+      return
+    }
+ }    
 }
 
 const CafeDetailCard = (props) => {
