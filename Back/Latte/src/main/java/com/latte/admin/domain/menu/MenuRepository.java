@@ -19,4 +19,8 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
     @Query("select m from Menu m where m.cafemenu.ccid=:ccid")
     List<Menu> findAllByCcid(@Param("ccid") Long ccid);
     //이 카페에 대한 모든 메뉴들을 가져와라!
+
+    // 카페메뉴를 분류하자!
+    @Query("select m from Menu m where m.cafemenu.ccid=:ccid and m.mtype=:mtype")
+    List<Menu> findByMtype(@Param("ccid") Long ccid,@Param("mtype") int mtype);
 }
