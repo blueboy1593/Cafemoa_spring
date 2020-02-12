@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
-import { CafeList, Login, Signup, NearCafe, CafeDetail, Order } from '../tabs';
+import { CafeList, Login, Signup, NearCafe, CafeDetail, Order, Avatar } from '../tabs';
 import LatteNavbar from '../headers/LatteNavbar';
 import Logout from '../tabs/Logout';
 // import FullpageWrapper from './FullpageWrapper';
@@ -28,6 +28,8 @@ class Visitor extends Component{
           </center>
           <Route path='/visitor/signup' component={Signup}/>
           <Route path='/visitor/logout' component={Logout}/>
+
+          <Route path='/visitor/picture' component={Avatar}/>
         </div>
       );
     }

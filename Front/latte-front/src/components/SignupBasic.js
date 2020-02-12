@@ -36,7 +36,8 @@ class SignUp extends React.Component {
     state = {
         confirmDirty: false,
         autoCompleteResult: [],
-        loading: false
+        loading: false,
+        role: 'GUEST',
     };
 
     // 회원가입 버튼 눌렀을 때
@@ -45,29 +46,39 @@ class SignUp extends React.Component {
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
               console.log('Received values of form: ', values);
-
-
+              const role = this.state.role;
               const data = {
                 uid: values.uid,
                 upass: values.upass,
-                role: "GUEST",
+                role: role,
                 uemail: values.uemail,
                 uname: "아무거나",
                 unickname: "ssafy",
                 uphone: values.uphone,
                 upic: "nop"
               }
+              if (role === "GUEST") {
+                const base_url = process.env.REACT_APP_SERVER_IP
+                axios.post(base_url + '/user/signup', data)
+                .then(response => {
+                    console.log('회원가입')
+                    this.props.history.push('/');
+                })
+                .catch(error => {
+                    console.log('error')
+                    console.error(error)
+                })    
+              } else {
+                const location = {
+                    pathname: '/visitor/signup/host',
+                    state: {
+                        data: data,
+                    }
+                }
+                const history = this.props.history;
+                history.push(location)                
+              }
               
-              const base_url = process.env.REACT_APP_SERVER_IP
-              axios.post(base_url + '/user/signup', data)
-              .then(response => {
-                  console.log('회원가입')
-                  this.props.history.push('/');
-              })
-              .catch(error => {
-                console.log('error')
-                console.error(error)
-              })
             }
         });
     };
@@ -111,6 +122,14 @@ class SignUp extends React.Component {
         }
     };
 
+    onChange = e => {
+        console.log('radio checked', e.target.value);
+        this.setState({
+            role: e.target.value,
+        });
+    };
+    
+
     render() {
         const { getFieldDecorator } = this.props.form;
 
@@ -150,7 +169,7 @@ class SignUp extends React.Component {
                 <Col span={1} />
                 <Col span={22}>
                     <Divider>
-                      <Radio.Group name="role" defaultValue={"GUEST"}>
+                      <Radio.Group onChange={this.onChange} name="role" defaultValue={"GUEST"}>
                           <Radio value={"GUEST"}>손님으로 회원가입</Radio>{' '}
                           <Radio value={"HOST"}>사장님으로 회원가입</Radio>
                       </Radio.Group>
@@ -259,7 +278,16 @@ class SignUp extends React.Component {
 
                         {/* 손님이면 회원가입, 사장님이면 다음으로 바뀌게 수정 */}
                         <Form.Item {...tailFormItemLayout}>
-                            <Button type="primary" htmlType="submit">회원가입</Button>
+                            {/* {this.state.role} */}
+                            <Button type="primary" htmlType="submit">
+                            {function() {
+                                if (this.state.role === "GUEST") return(
+                                    <>회원가입</>
+                                 ); else return(
+                                    <>카페 정보 입력</>
+                                 )
+                            }.bind(this)()}
+                            </Button>
                         </Form.Item>
                     </Form>
                 </Col>
