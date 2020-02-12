@@ -9,4 +9,3 @@ export { default as ShoppingList } from './ShoppingList';
 export { default as Order } from './Order';
 export { default as NearCafe } from './NearCafe';
 export { default as CafeDetail } from './CafeDetail';
-export { default as Test } from './Test';
