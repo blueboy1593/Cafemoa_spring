@@ -54,8 +54,6 @@ public class User extends BaseTimeEntity {
     @JsonManagedReference
     private List<Ordered> ordered;
 
-
-
     public User(Long uuid) {
         this.uuid=uuid;
     }
