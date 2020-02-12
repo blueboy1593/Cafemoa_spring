@@ -65,13 +65,6 @@ public class MenuController {
         return menuService.selectAll(ccid);
     }
 
-    // mtype 변화에 따라서 주문페이지에서 메뉴 다르게 보여주기!
-    @ApiOperation("mtype 변화에 따라서 주문페이지에서 type별로 다르게 보여주기!")
-    @GetMapping("/{ccid}/{mtype}")
-    public List<MenuResponseDto> findByMtype(@PathVariable Long ccid,@PathVariable int mtype){
-        return menuService.findByMtype(ccid,mtype);
-    }
-
     // 메뉴 선택시 해당 메뉴 관련 정보 제공(해당 카페, 가격, 이름 사진 등)
     @ApiOperation("[언제사용..?]: 메뉴 선택시 해당 메뉴 관련 정보 제공(해당 카페, 가격, 이름 사진 등)")
     @GetMapping("/one/{mmid}")
@@ -107,7 +100,6 @@ public class MenuController {
     }
 
 
-    // mainmenu설정
     @ApiOperation("메인메뉴 설정/취소(버튼으로 토글)")
     @PutMapping("/toggleMain/{mmid}")
     public void toggleMain(@PathVariable Long mmid){
