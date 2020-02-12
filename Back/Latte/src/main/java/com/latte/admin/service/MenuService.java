@@ -68,6 +68,15 @@ public class MenuService {
     }
 
 
+    // mtype 변화에 따라서 주문페이지에서 메뉴 다르게 보여주기!
+    @Transactional
+    public List<MenuResponseDto> findByMtype(Long ccid, int mtype) {
+        return menuRepository.findByMtype(ccid, mtype).stream()
+                .map(MenuResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+
     // 메뉴명,메뉴 사진 업데이트
     @Transactional
     public Long update(Long mmid, MenuUpdateRequestDto menuUpdateRequestDto) {
