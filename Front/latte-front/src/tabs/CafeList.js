@@ -13,56 +13,22 @@ import {
 } from 'antd';
 import 'antd/dist/antd.css';
 import { Link } from "react-router-dom";
+import axios from 'axios';
 
 const { Option } = Select;
 
 class CafeList extends React.Component {
-        state = {
-            cafeList: [
-            // 이부분은 axios로 받아오더라도 굳이 지우지 말고 주석으로 남겨놓자.!!
-            {
-                id:1,
-                name: '스타벅스',
-                cloc: '역삼동'
-            },
-            {
-                id:2,
-                name: '이디야',
-                cloc: '강남'
-            },
-            {
-                id:3,
-                name: '커피빈',
-                cloc: '역삼동'
-            },
-            {
-                id:4,
-                name: '스타벅스',
-                cloc: '역삼동'
-            },
-            {
-                id:5,
-                name: '이수민',
-                cloc: '김도하'
-            }, {
-                id:6,
-                name: '김강현',
-                cloc: '김시효'
-            }, {
-                id:7,
-                name: '이수민',
-                cloc: '윤가영'
-            }, {
-                id:8,
-                name: '스타벅스',
-                cloc: '역삼동'
-            }, {
-                id:9,
-                name: '스타벅스',
-                cloc: '역삼동'
-            },
-        ]
-    }
+    state = {}
+    
+    componentDidMount(){
+        const base_url = process.env.REACT_APP_SERVER_IP
+        axios.get(base_url + '/cafe/all')
+            .then(response =>{
+            this.setState({
+                cafeList: response.data
+            });
+            });
+        };
 
     handleSearch = e => {
         e.preventDefault();
@@ -72,26 +38,13 @@ class CafeList extends React.Component {
             }
         });
     };
-        // componentDidMount(){
-        // axios.get('http://i02a301.p.ssafy.io:8080/latte/cafe/all')
-        //     .then(response =>{
-        //     this.setState({
-        //         cafes:response.data
-        //     });
-        //     // console.log(this.state);
-        //     });
-
-
-        // };
-        // 일단 이 부분은 해보려다가 실패.
-        // axios_url.get('latte/cafe/all')
 
     render() {
+        if (this.state.cafeList === undefined) {
+            return null;
+        }
         const {cafeList} = this.state;
-
-        console.log(this.state.cafeList)
         return (
-            
             <Row>
                 <Col span={1} />
                 <Col span={22}>
@@ -125,17 +78,20 @@ class CafeList extends React.Component {
                         dataSource={cafeList}
                         
                         renderItem={ cafe =>(
-                            <Link to='visitor/cafedetail'>
+                            <Link to={{
+                                pathname:'/visitor/cafedetail',
+                                cafe:cafe,
+                            }}>
                             <List.Item
-                                key={cafe.cname}>
+                                key={cafe.ccid}>
                                 <Card cover={
                                     <img
-                                        alt="example"
-                                        src="https://www.jeongdong.or.kr/static/portal/img/HKPU_04_04_pic3.jpg"
+                                        alt={cafe.cname}
+                                        src={cafe.cpic}
                                     />
                                 }>
                                     <List.Item.Meta
-                                        title={cafe.name}
+                                        title={cafe.cname}
                                     />
                                     위치 : {cafe.cloc}
                                     <br/>
@@ -198,15 +154,7 @@ export default CafeList;
 //         ]
 //     }
 
-//     componentDidMount(){
-//         const base_url = process.env.REACT_APP_SERVER_IP
-//         axios.get(base_url + '/cafe/all')
-//             .then(response =>{
-//             this.setState({
-//                 cafes:response.data
-//             });
-//             });
-//         };
+    
 
 //     render() {
 //         const {cafes} = this.state;

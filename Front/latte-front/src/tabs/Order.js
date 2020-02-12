@@ -15,7 +15,7 @@ import {
 import 'antd/dist/antd.css';
 import { Card } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import axios from 'axios';
 
 const { Panel } = Collapse;
 const { Option } = Select;
@@ -49,77 +49,23 @@ class Order extends React.Component {
         });
     };
 
+    componentDidMount(){
+        const base_url = process.env.REACT_APP_SERVER_IP
+        const ccid = this.props.location.ccid
+        axios.get(base_url + `/menu/${ccid}`)
+            .then(response =>{
+            this.setState({
+                menulist: response.data
+            });
+            });
+        };
+
 
     render() {
-
-        const menuList = [
-            {
-                mmid: '1',
-                mname: '딸기 쥬스1',
-                mprice: '3000',
-                mpic: 'https://previews.123rf.com/images/violetkaipa/violetkaipa1110/violetkaipa111000160/10850112-%EB%94%B8%EA%B8%B0-%EC%A5%AC%EC%8A%A4.jpg'
-            },
-            {
-                mmid: '1',
-                mname: '딸기 쥬스2',
-                mprice: '3000',
-                mpic: 'https://previews.123rf.com/images/violetkaipa/violetkaipa1110/violetkaipa111000160/10850112-%EB%94%B8%EA%B8%B0-%EC%A5%AC%EC%8A%A4.jpg'
-            },
-            {
-                mmid: '1',
-                mname: '딸기 쥬스3',
-                mprice: '3000',
-                mpic: 'https://previews.123rf.com/images/violetkaipa/violetkaipa1110/violetkaipa111000160/10850112-%EB%94%B8%EA%B8%B0-%EC%A5%AC%EC%8A%A4.jpg'
-            },
-            {
-                mmid: '1',
-                mname: '딸기 쥬스4',
-                mprice: '3000',
-                mpic: 'https://previews.123rf.com/images/violetkaipa/violetkaipa1110/violetkaipa111000160/10850112-%EB%94%B8%EA%B8%B0-%EC%A5%AC%EC%8A%A4.jpg'
-            },
-            {
-                mmid: '1',
-                mname: '딸기 쥬스5',
-                mprice: '3000',
-                mpic: 'https://previews.123rf.com/images/violetkaipa/violetkaipa1110/violetkaipa111000160/10850112-%EB%94%B8%EA%B8%B0-%EC%A5%AC%EC%8A%A4.jpg'
-            },
-            {
-                mmid: '1',
-                mname: '딸기 쥬스6',
-                mprice: '3000',
-                mpic: 'https://previews.123rf.com/images/violetkaipa/violetkaipa1110/violetkaipa111000160/10850112-%EB%94%B8%EA%B8%B0-%EC%A5%AC%EC%8A%A4.jpg'
-            },
-            {
-                mmid: '1',
-                mname: '딸기 쥬스7',
-                mprice: '3000',
-                mpic: 'https://previews.123rf.com/images/violetkaipa/violetkaipa1110/violetkaipa111000160/10850112-%EB%94%B8%EA%B8%B0-%EC%A5%AC%EC%8A%A4.jpg'
-            },
-            {
-                mmid: '1',
-                mname: '딸기 쥬스8',
-                mprice: '3000',
-                mpic: 'https://previews.123rf.com/images/violetkaipa/violetkaipa1110/violetkaipa111000160/10850112-%EB%94%B8%EA%B8%B0-%EC%A5%AC%EC%8A%A4.jpg'
-            },
-            {
-                mmid: '1',
-                mname: '딸기 쥬스9',
-                mprice: '3000',
-                mpic: 'https://previews.123rf.com/images/violetkaipa/violetkaipa1110/violetkaipa111000160/10850112-%EB%94%B8%EA%B8%B0-%EC%A5%AC%EC%8A%A4.jpg'
-            },
-            {
-                mmid: '1',
-                mname: '딸기 쥬스10',
-                mprice: '3000',
-                mpic: 'https://previews.123rf.com/images/violetkaipa/violetkaipa1110/violetkaipa111000160/10850112-%EB%94%B8%EA%B8%B0-%EC%A5%AC%EC%8A%A4.jpg'
-            },
-            {
-                mmid: '1',
-                mname: '딸기 쥬스11',
-                mprice: '3000',
-                mpic: 'https://previews.123rf.com/images/violetkaipa/violetkaipa1110/violetkaipa111000160/10850112-%EB%94%B8%EA%B8%B0-%EC%A5%AC%EC%8A%A4.jpg'
-            }
-        ];
+        if (this.state.menulist === undefined) {
+            return null;
+        }
+        const menulist = this.state.menulist
 
         // 옵션 받아와야 함 -> 수정하기
         const options = [
@@ -127,7 +73,7 @@ class Order extends React.Component {
             { label: '샷 추가', value: '2' },
             { label: '휘핑 추가', value: '3' },
         ];
-
+        console.log(this.state.menulist)
 
         return (
             <Row>
@@ -151,12 +97,12 @@ class Order extends React.Component {
                                 itemLayout="vertical"
                                 size="large"
                                 grid={{ column: 3 }}
-                                dataSource={menuList}
+                                dataSource={menulist}
                                 renderItem={menu => (
                                     <List.Item
                                         key={menu.mmid}>
                                         <Card style={{ width: '70%', textAlign: 'center' }} onClick={this.showModal}>
-                                            <Card.Img variant="top" src="https://previews.123rf.com/images/violetkaipa/violetkaipa1110/violetkaipa111000160/10850112-%EB%94%B8%EA%B8%B0-%EC%A5%AC%EC%8A%A4.jpg" />
+                                            <Card.Img variant="top" src={menu.mpic} alt={menu.mname} />
                                             <Card.Body>
                                                 <Card.Text>
                                                     {menu.mname}

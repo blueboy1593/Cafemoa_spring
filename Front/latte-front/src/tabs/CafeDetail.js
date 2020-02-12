@@ -11,10 +11,32 @@ import { Link } from 'react-router-dom';
 import { Card, Carousel } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Review from '../components/Review';
+import axios from 'axios';
+import store from '../store';
 
 class CafeDetail extends React.Component {
+    state = {}
+    componentDidMount(){
+        const base_url = process.env.REACT_APP_SERVER_IP
+        const ccid = this.props.location.cafe.ccid
+        axios.get(base_url + `/cafe/${ccid}`)
+            .then(response =>{
+            this.setState({
+                cafe: response.data,
+                ccid: ccid
+            });
+            });
+        };
 
     render() {
+        if (this.state.cafe === undefined) {
+            return null;
+        }
+        console.log('여기 오는데 성공 했니?')
+        const cafe = this.state.cafe
+        const ccid = this.state.ccid
+        const menus = cafe.menus
+        const role = store.getState().user_info.role
         return (
             <Row>
                 <Col span={1} />
@@ -23,12 +45,12 @@ class CafeDetail extends React.Component {
                         <Card.Body>
                             <Row>
                                 <Col span={10}>
-                                    <Card.Img src="https://www.jeongdong.or.kr/static/portal/img/HKPU_04_04_pic3.jpg" />
+                                    <Card.Img src={cafe.cpic} alt={cafe.cname}/>
                                 </Col>
                                 <Col span={1} />
                                 <Col span={13}>
                                     <Card.Title>카페 이름</Card.Title>
-                                    <Card.Subtitle className="mb-2 text-muted">카페 위치 - 역삼동</Card.Subtitle>
+                                    <Card.Subtitle className="mb-2 text-muted">카페 위치 - {cafe.cloc}</Card.Subtitle>
                                     <Card.Subtitle className="mb-2 text-muted">평점 <Rate disabled allowHalf defaultValue={2.5} /></Card.Subtitle>
                                     <Card.Text>
                                         Some quick example text to build on the card title and make up the bulk
@@ -38,51 +60,49 @@ class CafeDetail extends React.Component {
                                         of the card's content.Some quick example text to build on the card title and make up the bulk
                                         of the card's content.
                                     </Card.Text>
-                                    <Link to='/visitor/order'>
-                                    <Button type="primary">주문하기</Button>
-                                    </Link>
+                                    {function() {
+                                        if (role === 'HOST' || role === 'GUEST') return (
+                                            <Link to={{
+                                                pathname:'/visitor/order',
+                                                ccid:ccid,
+                                                }}>
+                                            <Button type="primary">주문하기</Button>
+                                            </Link>
+                                         );
+                                         else return (
+                                            <Link to={{
+                                                pathname:'/visitor/login',
+                                                }}>
+                                            <Button type="primary">로그인하고 주문하기</Button>
+                                            </Link>
+                                         );
+                                    }()}
                                 </Col>
                             </Row>
                         </Card.Body>
                     </Card>
-
+                    
                     <Divider>대표 메뉴</Divider>
                     <div style={{ textAlign: 'center' }}>
                         <Carousel style={{ width: '25rem', display: 'inline-block' }}>
-                            <Carousel.Item>
+                            {menus.map(menu => (
+                                <Carousel.Item 
+                                    key = {menu.mmid}
+                                    mname = {menu.mname}
+                                    mpic = {menu.mpic}
+                                >
                                 <img
                                     className="d-block w-100"
-                                    src="https://img.danawa.com/prod_img/500000/055/563/img/3563055_1.jpg?shrink=500:500&_v=20191022163646"
-                                    alt="First slide"
+                                    src={menu.mpic}
+                                    alt={menu.mname}
                                 />
                                 <Carousel.Caption>
-                                    <h5>음료 이름1</h5>
+                                    <h5>{menu.mname}</h5>
                                     <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
                                 </Carousel.Caption>
-                            </Carousel.Item>
-                            <Carousel.Item>
-                                <img
-                                    className="d-block w-100"
-                                    src="https://img.danawa.com/prod_img/500000/055/563/img/3563055_1.jpg?shrink=500:500&_v=20191022163646"
-                                    alt="Third slide"
-                                />
-                                <Carousel.Caption>
-                                    <h5>음료 이름2</h5>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                </Carousel.Caption>
-                            </Carousel.Item>
-                            <Carousel.Item>
-                                <img
-                                    className="d-block w-100"
-                                    src="https://img.danawa.com/prod_img/500000/055/563/img/3563055_1.jpg?shrink=500:500&_v=20191022163646"
-                                    alt="Third slide"
-                                />
+                                </Carousel.Item>
 
-                                <Carousel.Caption>
-                                    <h5>음료 이름3</h5>
-                                    <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-                                </Carousel.Caption>
-                            </Carousel.Item>
+                            ))}
                         </Carousel>
                     </div>
                
@@ -99,6 +119,24 @@ class CafeDetail extends React.Component {
 export default CafeDetail;
 
 
+// 여기 만드는거 일단 보류
+// const CarouselItem = () => {
+//     return(
+//         <>
+//         <Carousel.Item>
+//             <img
+//                 className="d-block w-100"
+//                 src="https://img.danawa.com/prod_img/500000/055/563/img/3563055_1.jpg?shrink=500:500&_v=20191022163646"
+//                 alt="First slide"
+//             />
+//             <Carousel.Caption>
+//                 <h5>음료 이름1</h5>
+//                 <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+//             </Carousel.Caption>
+//         </Carousel.Item>
+//         </>
+//     )
+// }
 
 
 // import React from 'react';

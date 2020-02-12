@@ -17,7 +17,7 @@ class App extends Component{
   }
 
   render(){
-    console.log('여기는 App 렌더링')
+    // console.log('여기는 App 렌더링')
     // const urll = process.env.REACT_APP_SERVER_IP
     return (
       <div className="App">

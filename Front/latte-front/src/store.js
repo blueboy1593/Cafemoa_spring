@@ -3,8 +3,8 @@ import jwtDecode from 'jwt-decode';
 // import {} from 'react-router-dom';
 
 export default createStore(function(state, action){
-    console.log('store에 접근')
-    console.log('로그인 상태 관리하는 곳.')
+    // console.log('store에 접근')
+    // console.log('로그인 상태 관리하는 곳.')
     if(state === undefined){
         const token = localStorage.getItem("login_token")
         if(token){
@@ -16,7 +16,7 @@ export default createStore(function(state, action){
         }
         else return {
             user_info:  {
-                role: 'visitor',
+                role: 'VISITOR',
                 uid: '',
                 uname: '',
                 uphone: '',
@@ -36,7 +36,7 @@ export default createStore(function(state, action){
 
     if (action.type === 'LOGOUT'){
         state.user_info = {
-            role: 'visitor',
+            role: 'VISITOR',
             uid: '',
             uname: '',
             uphone: '',
