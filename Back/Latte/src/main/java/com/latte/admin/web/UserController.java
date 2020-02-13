@@ -1,6 +1,7 @@
 package com.latte.admin.web;
 
 import com.latte.admin.domain.user.User;
+import com.latte.admin.service.FileUploadDownloadService;
 import com.latte.admin.service.KakaoAPI;
 import com.latte.admin.service.UserService;
 import com.latte.admin.service.jwt.CookieManage;
@@ -10,12 +11,16 @@ import com.latte.admin.web.dto.user.*;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +33,9 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
     private final JwtService jwtService;
+
+    @Autowired
+    private final FileUploadDownloadService fileUploadDownloadService;
 
     @Autowired
     private final KakaoAPI kakaoAPI;
@@ -233,11 +241,46 @@ public class UserController {
         //셋다 아니라면 회원가입 페이지에 우리가 보내준 정보들을 readOnly로 뿌리고 회원가입을 시키면 된다.
     }
 
+    // 카카오 로그아웃
     @GetMapping(value="/kakaologout")
     public String logout() {
         System.out.println("카카오톡 로그아웃!!!!!!!!!!!");
         kakaoAPI.kakaoLogout(Static_access_Token);
         Static_access_Token=null;
         return "카카오톡 로그아웃~아웃~ 아웃~ 아~ 아웃이에요 어차피 안써요";
+    }
+
+    private ResponseEntity<Map<String, Object>> response(Object data, HttpStatus httpstatus, boolean status) {
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("status", status);
+        resultMap.put("data", data);
+        return new ResponseEntity<Map<String, Object>>(resultMap, httpstatus);
+    }
+
+
+
+    // 사진 입력
+    @PostMapping("/upload")
+    public ResponseEntity<Map<String, Object>> uploadFile(@RequestParam(value = "file", required = false) MultipartFile file,
+                                                          @RequestParam("email") String email) throws Exception {
+        Map<String, Object> resultMap = new HashMap<>();
+        User user = userService.findByEmail(email);
+        if(file == null){
+            return response(resultMap, HttpStatus.ACCEPTED, false);//이부분 모르겠는데 영연이형한테 물어봐야함 실패했을때 뭐리턴함?
+        }
+        File root = new File("./uploads");
+        if(root.exists() && !user.getUpic().equals("default.png")){ //파일존재여부
+            File[] files = root.listFiles();
+            for(File f : files){
+                if(f.getName().equals(user.getUpic())){
+                    f.delete();
+                }
+            }
+        }
+
+        String fileName = fileUploadDownloadService.storeFile(file);
+        user.setUpic(fileName);
+//        userService.uploadFile(user);
+        return response(resultMap, HttpStatus.ACCEPTED, true);
     }
 }

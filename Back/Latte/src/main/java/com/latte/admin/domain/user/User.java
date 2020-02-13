@@ -79,4 +79,8 @@ public class User extends BaseTimeEntity {
        this.upic=upic;
     }
 
+    // setter
+    public void setUpic(String upic) {
+        this.upic = upic;
+    }
 }

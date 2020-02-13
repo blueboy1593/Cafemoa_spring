@@ -184,6 +184,21 @@ public class UserService {
         }
     }
 
+    // 파일 업로드
+    @Transactional
+    public void uploadFile(){}
+
+
+
+
+
+
+
+
+
+
+
+
 //    private final static String K_CLIENT_ID = "f19ae1c386503f9082e85e5431870f4f"; //이런식으로 REDIRECT_URI를 써넣는다.// //
 //    private final static String K_REDIRECT_URI = "http://70.12.246.69:8080/latte/user/kakaologin";
 //    public static String getAuthorizationUrl(HttpSession session) {
