@@ -47,22 +47,23 @@ class SignUp extends React.Component {
             if (!err) {
               console.log('Received values of form: ', values);
               const role = this.state.role;
-              const data = {
+              const user_data = {
                 uid: values.uid,
                 upass: values.upass,
                 role: role,
                 uemail: values.uemail,
-                uname: "아무거나",
-                unickname: "ssafy",
+                uname: values.uname,
+                unickname: values.uname,
                 uphone: values.uphone,
-                upic: "nop"
+                upic: "https://pbs.twimg.com/profile_images/1116329667147919360/4-lamrzL_400x400.jpg",
               }
               if (role === "GUEST") {
                 const base_url = process.env.REACT_APP_SERVER_IP
-                axios.post(base_url + '/user/signup', data)
+                axios.post(base_url + '/user/signup', user_data)
                 .then(response => {
                     console.log('회원가입')
                     this.props.history.push('/');
+                    console.log(response)
                 })
                 .catch(error => {
                     console.log('error')
@@ -70,15 +71,14 @@ class SignUp extends React.Component {
                 })    
               } else {
                 const location = {
-                    pathname: '/visitor/signup/host',
+                    pathname: '/latte/signup/host',
                     state: {
-                        data: data,
+                        user_data: user_data,
                     }
                 }
                 const history = this.props.history;
                 history.push(location)                
               }
-              
             }
         });
     };
@@ -224,6 +224,22 @@ class SignUp extends React.Component {
                                             },
                                         ],
                                     })(<Input.Password onBlur={this.handleConfirmBlur} />)}
+                                </Col>
+                                <Col span={4} />
+                            </Row>
+                        </Form.Item>
+
+                        <Form.Item label="이름">
+                            <Row gutter={8}>
+                                <Col span={20}>
+                                    {getFieldDecorator('uname', {
+                                        rules: [
+                                            { 
+                                                required: true, 
+                                                message: '이름을 입력해 주세요!' 
+                                            }
+                                        ],
+                                    })(<Input />)}
                                 </Col>
                                 <Col span={4} />
                             </Row>

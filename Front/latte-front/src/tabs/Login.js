@@ -10,7 +10,6 @@ export default class Login extends Component{
         pass: ''
     }
     handleChange = (e) => {
-        // console.log(e)
         this.setState({
           [e.target.name]: e.target.value
         })
@@ -36,13 +35,6 @@ export default class Login extends Component{
                 "login_token",
                 JSON.stringify(response.data.token)
             );
-            // let token = localStorage.getItem("login_token")
-            // console.log(token)
-            // 여기는 확인하는 코드!
-
-            // 여기서 이제 보내줄 곳 정해버린다. 근데 딱히 안해줘도 될듯 일단은.
-            // const user_state = store.getState().user_info
-            // console.log(user_state)
             this.props.history.push('/');
         }) 
         .catch(error => {

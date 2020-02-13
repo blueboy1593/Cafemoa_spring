@@ -34,18 +34,9 @@ class CafeReg extends React.Component {
       this.props.form.validateFieldsAndScroll((err, values) => {
           if (!err) {
             console.log('Received values of form: ', values);
-            console.log(this.props.history.location.state.data)
-            // const role = this.state.role;
-            // const data = {
-            //   uid: values.uid,
-            //   upass: values.upass,
-            //   role: role,
-            //   uemail: values.uemail,
-            //   uname: "아무거나",
-            //   unickname: "ssafy",
-            //   uphone: values.uphone,
-            //   upic: "nop"
-            // }
+            // const user_data = this.props.location.state.user_data
+
+            
             // if (role === "GUEST") {
             //   const base_url = process.env.REACT_APP_SERVER_IP
             //   axios.post(base_url + '/user/signup', data)
@@ -67,7 +58,6 @@ class CafeReg extends React.Component {
             //   const history = this.props.history;
             //   history.push(location)                
             // }
-            
           }
       });
   };
