@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import store from '../store';
 
 export default class Logout extends Component {
@@ -8,8 +8,9 @@ export default class Logout extends Component {
     store.dispatch({type:'LOGOUT'})
     return (
       <div>
-        <h1>로그아웃 되었습니다.</h1>
-        <Link to='/' >홈으로 가기</Link>
+        {
+          <Redirect to="/"/>
+        }
       </div>
     )
   }

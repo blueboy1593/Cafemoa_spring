@@ -6,19 +6,15 @@ import {
     Form,
     Input,
     Button,
-    List,
-    Modal,
-    InputNumber,
-    Select,
-    Checkbox
+    List
 } from 'antd';
 import 'antd/dist/antd.css';
-import { Card } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
+import MenuModal from "../components/MenuModal";
+import { Link } from 'react-router-dom';
 
 const { Panel } = Collapse;
-const { Option } = Select;
 
 const text = `
   A dog is a type of domesticated animal.
@@ -30,28 +26,10 @@ class Order extends React.Component {
 
     state = { visible: false };
 
-    // 메뉴 번호 같이 넘겨줘야 함 -> 수정!!!!!!!!
-    showModal = () => {
-        this.setState({
-            visible: true
-        });
-    };
-
-    handleOk = e => {
-        this.setState({
-            visible: false,
-        });
-    };
-
-    handleCancel = e => {
-        this.setState({
-            visible: false,
-        });
-    };
-
     componentDidMount(){
         const base_url = process.env.REACT_APP_SERVER_IP
         const ccid = this.props.location.ccid
+
         axios.get(base_url + `/menu/${ccid}`)
             .then(response =>{
             this.setState({
@@ -67,14 +45,6 @@ class Order extends React.Component {
         }
         const menulist = this.state.menulist
 
-        // 옵션 받아와야 함 -> 수정하기
-        const options = [
-            { label: '헤이즐넛 시럽 추가', value: '1' },
-            { label: '샷 추가', value: '2' },
-            { label: '휘핑 추가', value: '3' },
-        ];
-        console.log(this.state.menulist)
-
         return (
             <Row>
                 <Col span={1} />
@@ -84,7 +54,7 @@ class Order extends React.Component {
                         <Col span={8} >
                             <Form layout="inline" onSubmit={this.handleSearch}>
                                 <Form.Item>
-                                    <Input type="text" style={{ width: '70%', marginRight: '3%' }} />
+                                    <Input type="text" />
                                     <Button type="primary" htmlType="submit">검색</Button>
                                 </Form.Item>
                             </Form>
@@ -92,29 +62,22 @@ class Order extends React.Component {
                         <Col span={8} />
                     </Row>
                     <Collapse accordion defaultActiveKey={['1']}>
+                        
                         <Panel header="모든 메뉴" key="1">
                             <List
                                 itemLayout="vertical"
                                 size="large"
-                                grid={{ column: 3 }}
+                                grid={{ column: 4 }}
                                 dataSource={menulist}
                                 renderItem={menu => (
-                                    <List.Item
-                                        key={menu.mmid}>
-                                        <Card style={{ width: '70%', textAlign: 'center' }} onClick={this.showModal}>
-                                            <Card.Img variant="top" src={menu.mpic} alt={menu.mname} />
-                                            <Card.Body>
-                                                <Card.Text>
-                                                    {menu.mname}
-                                                </Card.Text>
-                                                {/* <Button variant="primary" size="sm">장바구니 담기</Button> */}
-                                            </Card.Body>
-
-                                        </Card>
+                                    <List.Item key={menu.mmid} >
+                                        <MenuModal menu={menu}></MenuModal>
                                     </List.Item>
+                                    
                                 )}
                             />
                         </Panel>
+
                         <Panel header="커피" key="2">
                             <p>{text}</p>
                         </Panel>
@@ -126,42 +89,19 @@ class Order extends React.Component {
                         </Panel>
 
                     </Collapse>
-                    <Modal
-                        title="메뉴 이름"
-                        visible={this.state.visible}
-                        onOk={this.handleOk}
-                        onCancel={this.handleCancel}
-                        okText="장바구니 담기"
-                        cancelText="취소"
-                    >
-                        <div style={{ textAlign: 'center' }}>
-                            <img src="https://previews.123rf.com/images/violetkaipa/violetkaipa1110/violetkaipa111000160/10850112-%EB%94%B8%EA%B8%B0-%EC%A5%AC%EC%8A%A4.jpg" alt="메뉴이미지" width="70%" />
-                        </div>
-                        <Form labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
-                            <Form.Item label="수량">
-                                <InputNumber id="quan" min={1} max={10} defaultValue={1} />
-                            </Form.Item>
-                            <Form.Item label="얼음">
-                                <Select>
-                                    <Option value="1">기본</Option>
-                                    <Option value="2">얼음많이</Option>
-                                    <Option value="3">얼음적게</Option>
-                                </Select>
-                            </Form.Item>
-                            <Form.Item label="옵션">
-                                <Checkbox.Group options={options} />
-                            </Form.Item>
-                        </Form>
-                    </Modal>
+                  
                     <br />
                     <div style={{ textAlign: 'center' }}>
                         <Button>초기화</Button>{'   '}
+                        <Link to='/customer/shoppinglist'>
                         <Button type="primary">장바구니로 가기</Button>
+                        </Link>
                     </div>
 
                 </Col>
                 <Col span={1} />
             </Row>
+
         );
     }
 }

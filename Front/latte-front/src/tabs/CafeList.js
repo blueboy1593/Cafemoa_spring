@@ -7,15 +7,12 @@ import {
     List,
     Card,
     Rate,
-    Select,
-    Form,
-    Button
 } from 'antd';
 import 'antd/dist/antd.css';
 import { Link } from "react-router-dom";
 import axios from 'axios';
 
-const { Option } = Select;
+const { Search } = Input;
 
 class CafeList extends React.Component {
     state = {}
@@ -30,20 +27,28 @@ class CafeList extends React.Component {
             });
         };
 
-    handleSearch = e => {
-        e.preventDefault();
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                console.log('Received values of form: ', values);
-            }
-        });
+    handleSearch = (value) => {
+        console.log('Received values of Search: ', value);
+        this.setState({
+            keyword:value.toUpperCase()
+        })
     };
 
     render() {
         if (this.state.cafeList === undefined) {
             return null;
         }
-        const {cafeList} = this.state;
+        let {cafeList} = this.state;
+        if (this.state.keyword) {
+            cafeList = cafeList.filter(cafe => {
+                const keyword = this.state.keyword
+                if (cafe.cname.toUpperCase().includes(keyword)) {
+                    return cafe
+                };
+                return null;
+            });
+        };
+        
         return (
             <Row>
                 <Col span={1} />
@@ -51,18 +56,12 @@ class CafeList extends React.Component {
                     <Row>
                         <Col span={8} />
                         <Col span={8} >
-                            <Form layout="inline" onSubmit={this.handleSearch}>
-                                <Form.Item>
-                                    <Select style={{ width: '30%', marginRight: '3%' }}>
-                                        {/* 옵션 선택 -> 바꾸기 */}
-                                        <Option value="1">인기순</Option>
-                                        <Option value="2">평점순</Option>
-                                        <Option value="3">리뷰 많은 순</Option>
-                                    </Select>
-                                    <Input type="text" style={{ width: '40%', marginRight: '3%' }} />
-                                    <Button type="primary" htmlType="submit">검색</Button>
-                                </Form.Item>
-                            </Form>
+                            <Search
+                                placeholder="카페명을 검색해 주세요."
+                                enterButton="Search"
+                                size="large"
+                                onSearch={value => this.handleSearch(value)}
+                            />
                         </Col>
                         <Col span={8} />
                     </Row>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 
+
 export default class NearCafe extends Component {
   constructor(props){
     super(props);
@@ -21,11 +22,6 @@ export default class NearCafe extends Component {
       latitude: crd.latitude,
       longitude: crd.longitude
     })
-
-    // console.log('Your current position is:');
-    // console.log('Latitude : ' + crd.latitude);
-    // console.log('Longitude: ' + crd.longitude);
-    // console.log('More or less ' + crd.accuracy + ' meters.');
     return crd
   }
 

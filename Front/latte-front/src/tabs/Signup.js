@@ -6,8 +6,8 @@ export default class Signup extends Component {
   render() {
     return (
       <div>
-        <Route exact path='/visitor/signup' component={SignupBasic}/>
-        <Route path='/visitor/signup/host' component={SignupHost}/>
+        <Route exact path='/latte/signup' component={SignupBasic}/>
+        <Route path='/latte/signup/host' component={SignupHost}/>
       </div>
     )
   }

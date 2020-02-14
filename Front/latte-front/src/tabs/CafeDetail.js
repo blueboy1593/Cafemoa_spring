@@ -5,6 +5,7 @@ import {
     Rate,
     Button,
     Divider,
+    Modal
 } from 'antd';
 import 'antd/dist/antd.css';
 import { Link } from 'react-router-dom';
@@ -13,9 +14,33 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Review from '../components/Review';
 import axios from 'axios';
 import store from '../store';
+import Login from '../tabs/Login';
 
 class CafeDetail extends React.Component {
-    state = {}
+    state = { visible: false
+    };
+  
+    showModal = () => {
+      this.setState({
+        visible: true,
+      });
+    };
+  
+    handleOk = e => {
+      console.log(e);
+      this.setState({
+        visible: false,
+      });
+      
+    };
+  
+    handleCancel = e => {
+      console.log(e);
+      this.setState({
+        visible: false,
+      });
+    };
+    
     componentDidMount(){
         const base_url = process.env.REACT_APP_SERVER_IP
         const ccid = this.props.location.cafe.ccid
@@ -70,13 +95,25 @@ class CafeDetail extends React.Component {
                                             </Link>
                                          );
                                          else return (
-                                            <Link to={{
-                                                pathname:'/latte/login',
-                                                }}>
-                                            <Button type="primary">로그인하고 주문하기</Button>
-                                            </Link>
+                                            // <Link to={{
+                                            //     pathname:'/latte/login',
+                                            //     }}>
+                                            // <Button type="primary">로그인하고 주문하기</Button>
+                                            // </Link>
+                                            <div>
+                                                <Button type="primary" onClick={this.showModal}>로그인하고 주문하기</Button>
+                                                    <Modal
+                                                    title="로 그 인"
+                                                    visible={this.state.visible}
+                                                    onOk={this.handleOk}
+                                                    onCancel={this.handleCancel}
+                                                    footer={null}
+                                                    >
+                                                    <Login ></Login>
+                                                </Modal>
+                                            </div>
                                          );
-                                    }()}
+                                    }.bind(this)()}
                                 </Col>
                             </Row>
                         </Card.Body>
