@@ -18,6 +18,9 @@ public class CafeListResponseDto {
     private int cstatus;
     private int coperation;
     private LocalDateTime createdDate;
+    private String latitude;
+    private String longitude;
+
 
     public CafeListResponseDto(Cafe entity) {
         this.ccid=entity.getCcid();
@@ -31,5 +34,7 @@ public class CafeListResponseDto {
         this.cstatus=entity.getCstatus();
         this.coperation=entity.getCoperation();
         this.createdDate=entity.getCreatedDate();
+        this.latitude=entity.getLatitude();
+        this.longitude=entity.getLongitude();
     }
 }

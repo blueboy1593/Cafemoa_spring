@@ -17,15 +17,22 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -50,7 +57,7 @@ public class UserService {
 
     // 회원 가입
     @Transactional
-    public boolean signUp(UserSaveRequestDto userSaveRequestDto) {
+    public boolean signUp(UserSaveRequestDto userSaveRequestDto, MultipartFile multipartFile) {
         System.out.println(userSaveRequestDto);
         // insert 전에 테이블을 검색해서 중복된 이메일이 있는지 확인한다.
 
@@ -183,15 +190,6 @@ public class UserService {
             return null;
         }
     }
-
-    // 파일 업로드
-    @Transactional
-    public void uploadFile(){}
-
-
-
-
-
 
 
 
