@@ -4,8 +4,6 @@ import com.latte.admin.domain.menu.Menu;
 import com.latte.admin.domain.options.Option;
 import com.latte.admin.domain.order.Ordered;
 import com.latte.admin.domain.order.OrderDetail;
-import com.latte.admin.web.dto.menu.MenuOptionRequestDto;
-import com.latte.admin.web.dto.menu.MenuSizeRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
