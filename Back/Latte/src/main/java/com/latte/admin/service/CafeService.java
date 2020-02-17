@@ -64,12 +64,14 @@ public class CafeService {
                 -> new IllegalArgumentException("해당 사용자가 없습니다."));
 
         cafe.CafeUpdate(cafeUpdateRequestDto.getCname(),
-                    cafeUpdateRequestDto.getCloc(),
-                    cafeUpdateRequestDto.getCphone(),
-                    cafeUpdateRequestDto.getCpic(),
-                    cafeUpdateRequestDto.getCopen(),
+                cafeUpdateRequestDto.getCloc(),
+                cafeUpdateRequestDto.getCphone(),
+                cafeUpdateRequestDto.getCpic(),
+                cafeUpdateRequestDto.getCopen(),
                 cafeUpdateRequestDto.getCclose(),
-                    cafeUpdateRequestDto.getCdesc());
+                cafeUpdateRequestDto.getCdesc(),
+                cafeUpdateRequestDto.getLatitude(),
+                cafeUpdateRequestDto.getLongitude());
         return ccid;
     }
 
