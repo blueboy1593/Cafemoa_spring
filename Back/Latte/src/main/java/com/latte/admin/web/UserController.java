@@ -1,6 +1,7 @@
 package com.latte.admin.web;
 
 import com.latte.admin.domain.user.User;
+import com.latte.admin.service.FileUploadDownloadService;
 import com.latte.admin.service.KakaoAPI;
 import com.latte.admin.service.UserService;
 import com.latte.admin.service.jwt.CookieManage;
@@ -10,6 +11,8 @@ import com.latte.admin.web.dto.user.*;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.List;
@@ -31,21 +35,23 @@ public class UserController {
     private final JwtService jwtService;
 
     @Autowired
+    private final FileUploadDownloadService fileUploadDownloadService;
+
+    @Autowired
     private final KakaoAPI kakaoAPI;
 
-    private CookieManage cm=new CookieManage();
+    private CookieManage cm = new CookieManage();
 
     //모든 유저의 정보를 드린다.
     @ApiOperation("모든 유저의 정보를 출력합니다.")
     @GetMapping("/all")
-    public List<User> selectAll(){
+    public List<User> selectAll() {
         return userService.selectAll();
     }
 
 
-
     // 회원 가입
-    @PostMapping("/signup")
+    @PostMapping(value = "/signup", consumes = "application/json")
     public void signUp(@RequestBody UserSaveRequestDto userSaveRequestDto, @RequestParam("upic") MultipartFile multipartFile) {
         System.out.println(multipartFile.getName());
         System.out.println(multipartFile.getOriginalFilename());
@@ -85,20 +91,20 @@ public class UserController {
     @PutMapping("/update")
     public void update(HttpServletResponse response, HttpServletRequest request, @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
         String jwt = request.getHeader("Authorization");
-        System.out.println("jwt가 뭡니까? :"+jwt);
-        if (!jwtService.isUsable(jwt))  return;
-        UserJwtResponsetDto user=jwtService.getUser(jwt);
-        System.out.println("현재 유저 : "+user.getUid());
+        System.out.println("jwt가 뭡니까? :" + jwt);
+        if (!jwtService.isUsable(jwt)) return;
+        UserJwtResponsetDto user = jwtService.getUser(jwt);
+        System.out.println("현재 유저 : " + user.getUid());
         userService.update(user.getUid(), userUpdateRequestDto);
         // 기존 토큰 죽이기
         System.out.println("기존 토큰을 삭제합니다.");
 
-        cm.CookieDelete(request,response);
-        System.out.println("지금 쿠키수 : "+request.getCookies().length);
+        cm.CookieDelete(request, response);
+        System.out.println("지금 쿠키수 : " + request.getCookies().length);
         //토큰 재발행
         System.out.println("토큰을 재발행합니다.");
         String token = jwtService.create(new UserJwtResponsetDto(userService.findByuid(user.getUid())));
-        cm.CookieMake(request,response,token);
+        cm.CookieMake(request, response, token);
     }
 
     // 삭제
@@ -107,32 +113,32 @@ public class UserController {
         String jwt = request.getHeader("Authorization");
         //유효성 검사
         if (!jwtService.isUsable(jwt)) throw new UnauthorizedException(); // 예외
-        UserJwtResponsetDto user=jwtService.getUser(jwt);
+        UserJwtResponsetDto user = jwtService.getUser(jwt);
 
-        if(user.getUid().equals(userDeleteRequestDto.getUid())){
+        if (user.getUid().equals(userDeleteRequestDto.getUid())) {
             userService.delete(user.getUid());
             Cookie cookie = request.getCookies()[0];
             cookie.setValue(null);
             cookie.setPath("/"); // <- 여기 잘 모르겠음
             cookie.setMaxAge(0);//나이 0살 - 죽은거야
             response.addCookie(cookie);
-        }else throw new UnauthorizedException(); // 예외
+        } else throw new UnauthorizedException(); // 예외
     }
 
     // 로그인
     @ApiOperation("로그인하면서 토큰을 발행")
     @PostMapping("/signin")
     public Map signIn(@RequestBody UserJwtRequestDto userJwtRequestDto, HttpServletResponse response, HttpServletRequest request) {
-        Map<String,String> map=new HashMap<>();
-        String secPass=encrypt(userJwtRequestDto.getUpass());
-        UserJwtResponsetDto userJwtResponsetDto = userService.signIn(userJwtRequestDto.getUid(),secPass);
+        Map<String, String> map = new HashMap<>();
+        String secPass = encrypt(userJwtRequestDto.getUpass());
+        UserJwtResponsetDto userJwtResponsetDto = userService.signIn(userJwtRequestDto.getUid(), secPass);
         if (userJwtResponsetDto != null && request.getCookies() == null) {
             String token = jwtService.create(userJwtResponsetDto);
-            cm.CookieMake(request,response,token);
-            map.put("token",token);
+            cm.CookieMake(request, response, token);
+            map.put("token", token);
             return map;
         }
-        map.put("token",request.getCookies()[0].getValue());
+        map.put("token", request.getCookies()[0].getValue());
         return map;
     }
 
@@ -155,7 +161,7 @@ public class UserController {
 
     @GetMapping("/logout")
     public void logOut(HttpServletResponse response, HttpServletRequest request) {
-            cm.CookieDelete(request,response);
+        cm.CookieDelete(request, response);
     }
 
 
@@ -183,49 +189,50 @@ public class UserController {
         }
     }
 
-    static String Static_access_Token=null;
+    static String Static_access_Token = null;
+
     @GetMapping(value = "/kakaologin")
-    public Map login(@RequestBody RequestKakaoCodeDto requestKakaoCodeDto ,HttpServletRequest request,HttpServletResponse response) {
-        Map<String,String> map=new HashMap<>();
+    public Map login(@RequestBody RequestKakaoCodeDto requestKakaoCodeDto, HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String> map = new HashMap<>();
         String access_Token = kakaoAPI.getAccessToken(requestKakaoCodeDto.getCode());
-        Static_access_Token=access_Token;
+        Static_access_Token = access_Token;
         HashMap<String, String> userInfo = kakaoAPI.getUserInfo(access_Token);
 
 
-        if(userInfo.get("email")==null){
-            map.put("email",null); //동의를 구하는 Component
-            map.put("message","이메일 동의가 필요합니다.");
+        if (userInfo.get("email") == null) {
+            map.put("email", null); //동의를 구하는 Component
+            map.put("message", "이메일 동의가 필요합니다.");
             System.out.println(map);
             return map;
         }
 //        System.out.println("login Controller : " + userInfo);
         //여기서는 값얻어옴
-        String curEmail=userInfo.get("email");
-        if(!userService.checkEmail(curEmail)){ //이메일 가능함
+        String curEmail = userInfo.get("email");
+        if (!userService.checkEmail(curEmail)) { //이메일 가능함
             System.out.println("가능합니다!!!!!!!!!!!당장 회원가입시키세요!!!!!!!!!!!!!!");
             System.out.println(userInfo);
             return userInfo;
-        }else{ //이미 존재하는 이메일이면
-            User user=userService.findByEmail(curEmail);
-            if(user.getUpass().equals(userInfo.get("Id"))){
+        } else { //이미 존재하는 이메일이면
+            User user = userService.findByEmail(curEmail);
+            if (user.getUpass().equals(userInfo.get("Id"))) {
                 //이미 카카오톡으로 회원가입을 한 사람.
-                String secPass=encrypt(userInfo.get("Id"));
-                UserJwtResponsetDto userJwtResponsetDto = userService.signIn(user.getUid(),secPass);
+                String secPass = encrypt(userInfo.get("Id"));
+                UserJwtResponsetDto userJwtResponsetDto = userService.signIn(user.getUid(), secPass);
                 if (userJwtResponsetDto != null && request.getCookies() == null) {
                     String token = jwtService.create(userJwtResponsetDto);
-                    cm.CookieMake(request,response,token);
-                    map.put("token",token);
-                    map.put("message","이미 카카오로 회원가입이 된 이메일입니다.");
+                    cm.CookieMake(request, response, token);
+                    map.put("token", token);
+                    map.put("message", "이미 카카오로 회원가입이 된 이메일입니다.");
                     System.out.println(map);
                     return map;
                 }
-                map.put("token",request.getCookies()[0].getValue());
-                map.put("message","이미 카카오로 회원가입이 된 이메일입니다.");
+                map.put("token", request.getCookies()[0].getValue());
+                map.put("message", "이미 카카오로 회원가입이 된 이메일입니다.");
                 System.out.println(map);
                 return map;
-            }else{
-                map.put("email","false");
-                map.put("message","이미 존재하는 이메일입니다.");
+            } else {
+                map.put("email", "false");
+                map.put("message", "이미 존재하는 이메일입니다.");
                 System.out.println(map);
                 return map;
             }
@@ -239,12 +246,44 @@ public class UserController {
     }
 
     // 카카오 로그아웃
-    @GetMapping(value="/kakaologout")
+    @GetMapping(value = "/kakaologout")
     public String logout() {
         System.out.println("카카오톡 로그아웃!!!!!!!!!!!");
         kakaoAPI.kakaoLogout(Static_access_Token);
-        Static_access_Token=null;
+        Static_access_Token = null;
         return "카카오톡 로그아웃~아웃~ 아웃~ 아~ 아웃이에요 어차피 안써요";
     }
 
+    private ResponseEntity<Map<String, Object>> response(Object data, HttpStatus httpstatus, boolean status) {
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("status", status);
+        resultMap.put("data", data);
+        return new ResponseEntity<Map<String, Object>>(resultMap, httpstatus);
+    }
+
+
+    // 사진 입력
+    @PostMapping("/upload")
+    public ResponseEntity<Map<String, Object>> uploadFile(@RequestParam(value = "file", required = false) MultipartFile file,
+                                                          @RequestParam("email") String email) throws Exception {
+        Map<String, Object> resultMap = new HashMap<>();
+        User user = userService.findByEmail(email);
+        if (file == null) {
+            return response(resultMap, HttpStatus.ACCEPTED, false);//이부분 모르겠는데 영연이형한테 물어봐야함 실패했을때 뭐리턴함?
+        }
+        File root = new File("./uploads");
+        if (root.exists() && !user.getUpic().equals("default.png")) { //파일존재여부
+            File[] files = root.listFiles();
+            for (File f : files) {
+                if (f.getName().equals(user.getUpic())) {
+                    f.delete();
+                }
+            }
+        }
+
+        String fileName = fileUploadDownloadService.storeFile(file);
+        user.setUpic(fileName);
+//        userService.uploadFile(user);
+        return response(resultMap, HttpStatus.ACCEPTED, true);
+    }
 }

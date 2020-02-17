@@ -14,8 +14,6 @@ public class CafeResponseDto {
     private String cdesc;
     private int cstatus;
     private int coperation;
-    private String latitude;
-    private String longitude;
 
     public CafeResponseDto(Cafe entity) {
         this.ccid = entity.getCcid();
@@ -28,7 +26,5 @@ public class CafeResponseDto {
         this.cdesc = entity.getCdesc();
         this.cstatus = entity.getCstatus();
         this.coperation=entity.getCoperation();
-        this.latitude=entity.getLatitude();
-        this.longitude=entity.getLongitude();
     }
 }

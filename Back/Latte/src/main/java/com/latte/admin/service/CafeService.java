@@ -69,9 +69,7 @@ public class CafeService {
                     cafeUpdateRequestDto.getCpic(),
                     cafeUpdateRequestDto.getCopen(),
                 cafeUpdateRequestDto.getCclose(),
-                    cafeUpdateRequestDto.getCdesc(),
-                cafeUpdateRequestDto.getLatitude(),
-                cafeUpdateRequestDto.getLongitude());
+                    cafeUpdateRequestDto.getCdesc());
         return ccid;
     }
 

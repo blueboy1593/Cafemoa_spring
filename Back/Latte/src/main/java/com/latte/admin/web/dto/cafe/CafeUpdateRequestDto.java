@@ -15,12 +15,9 @@ public class CafeUpdateRequestDto {
     private String copen;
     private String cclose;
     private String cdesc;
-    private String latitude;
-    private String longitude;
 
     @Builder
-    public CafeUpdateRequestDto(String uid,String cname,String cloc,String cphone,String cpic,
-                                String copen,String cclose,String cdesc,String latitude,String longitude){
+    public CafeUpdateRequestDto(String uid,String cname,String cloc,String cphone,String cpic,String copen,String cclose,String cdesc){
         this.uid=uid;
         this.cname=cname;
         this.cloc=cloc;
@@ -29,7 +26,5 @@ public class CafeUpdateRequestDto {
         this.copen=copen;
         this.cclose=cclose;
         this.cdesc=cdesc;
-        this.latitude=latitude;
-        this.longitude=longitude;
     }
 }

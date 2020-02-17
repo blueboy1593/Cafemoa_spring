@@ -18,12 +18,10 @@ public class CafeSaveRequestDto {
     private String cdesc;
 //    private int cstatus;
 //    private int coperation;
-    private String latitude;
-    private String longitude;
 
     @Builder
     public CafeSaveRequestDto(String cname, String cloc, String cphone, String cpic,String copen,
-                              String cclose, String cdesc,String latitude,String longitude) {
+                              String cclose, String cdesc) {
         this.cname = cname;
         this.cloc = cloc;
         this.cphone = cphone;
@@ -33,8 +31,6 @@ public class CafeSaveRequestDto {
         this.cdesc=cdesc;
 //        this.cstatus = cstatus;
 //        this.coperation=coperation;
-        this.latitude=latitude;
-        this.longitude=longitude;
     }
 
     public Cafe toEntity(String uid) {
@@ -46,8 +42,6 @@ public class CafeSaveRequestDto {
                 .copen(copen)
                 .cclose(cclose)
                 .cdesc(cdesc)
-                .latitude(latitude)
-                .longitude(longitude)
 //                .cstatus(cstatus)
                 .uid(uid)
 //                .coperation(coperation)
