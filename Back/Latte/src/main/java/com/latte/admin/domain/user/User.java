@@ -8,6 +8,7 @@ import com.latte.admin.domain.review.Review;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @Entity
 public class User extends BaseTimeEntity {
@@ -67,8 +69,7 @@ public class User extends BaseTimeEntity {
         this.uemail = uemail;
         this.unickname = unickname;
         this.role = role;
-        if(upic!=null) this.upic=upic;
-        else this.upic="./src/userimg/user.jpg";
+        this.upic=upic;
     }
 
     // 수정
@@ -79,8 +80,4 @@ public class User extends BaseTimeEntity {
        this.upic=upic;
     }
 
-    // setter
-    public void setUpic(String upic) {
-        this.upic = upic;
-    }
 }
