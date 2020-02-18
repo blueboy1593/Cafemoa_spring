@@ -3,6 +3,7 @@ package com.latte.admin.domain.cafe;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.latte.admin.domain.BaseTimeEntity;
 import com.latte.admin.domain.menu.Menu;
+import com.latte.admin.domain.order.Ordered;
 import com.latte.admin.domain.review.Review;
 import lombok.Builder;
 import lombok.Getter;
@@ -64,6 +65,11 @@ public class Cafe extends BaseTimeEntity {
     @OneToMany(cascade=CascadeType.ALL, mappedBy = "cafereview")
     @JsonManagedReference
     private List<Review> reviews=new ArrayList<>();
+
+    // fk -> 1:N = cafe:order
+    @OneToMany(cascade=CascadeType.ALL, mappedBy = "ordercafe")
+    @JsonManagedReference
+    private List<Ordered> ordered=new ArrayList<>();
 
 
     public Cafe(Long ccid){

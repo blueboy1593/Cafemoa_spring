@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-
 @Getter
 @NoArgsConstructor
 public class OrderedRequestDto {
