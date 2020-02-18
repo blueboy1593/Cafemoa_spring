@@ -51,7 +51,7 @@ public class UserService {
 
     // 회원 가입
     @Transactional
-    public boolean signUp(UserSaveRequestDto userSaveRequestDto, MultipartFile multipartFile) {
+    public boolean signUp(UserSaveRequestDto userSaveRequestDto) {
         System.out.println(userSaveRequestDto);
         // insert 전에 테이블을 검색해서 중복된 이메일이 있는지 확인한다.
 
@@ -60,17 +60,17 @@ public class UserService {
             return false;
 
         // 프사
-        String path = "C:/Temp/upic/";
-        File dir = new File(path);
-        if (!dir.exists()) dir.mkdirs();
-        String fileName = multipartFile.getOriginalFilename();
-        File attachFile = new File(path + fileName);
-        try {
-            multipartFile.transferTo(attachFile);
-            userSaveRequestDto.setUpic(fileName);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        String path = "C:/Temp/upic/";
+//        File dir = new File(path);
+//        if (!dir.exists()) dir.mkdirs();
+//        String fileName = multipartFile.getOriginalFilename();
+//        File attachFile = new File(path + fileName);
+//        try {
+//            multipartFile.transferTo(attachFile);
+//            userSaveRequestDto.setUpic(fileName);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         // 회원가입완료하면 이메일로 ghld 보내준다.
         // 2번일 경우 테이블에 승인 상태 추가해야 됨

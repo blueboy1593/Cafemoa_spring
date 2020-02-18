@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import java.util.List;
 
 @NoArgsConstructor
@@ -11,14 +12,16 @@ import java.util.List;
 public class MenuUpdateRequestDto {
     private String mname;
     private String mpic;
-    private List<MenuSizeUpdateDto> menuSizeUpdateDtoList;
-    private List<MenuOptionUpdateRequestDto> menuOptionUpdateRequestDtoList;
+    private int isMain;
+    private int mtype;
+    private int mprice;
 
     @Builder
-    public MenuUpdateRequestDto(String mname,String mpic,List<MenuSizeUpdateDto> menuSizeUpdateDtoList,List<MenuOptionUpdateRequestDto> menuOptionUpdateRequestDtoList) {
+    public MenuUpdateRequestDto(String mname,String mpic,int isMain,int mtype,int mprice) {
         this.mname = mname;
         this.mpic = mpic;
-        this.menuSizeUpdateDtoList=menuSizeUpdateDtoList;
-        this.menuOptionUpdateRequestDtoList=menuOptionUpdateRequestDtoList;
+        this.isMain=isMain;
+        this.mtype=mtype;
+        this.mprice=mprice;
     }
 }

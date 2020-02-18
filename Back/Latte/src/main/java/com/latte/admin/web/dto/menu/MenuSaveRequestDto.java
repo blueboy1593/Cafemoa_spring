@@ -2,7 +2,6 @@ package com.latte.admin.web.dto.menu;
 
 import com.latte.admin.domain.cafe.Cafe;
 import com.latte.admin.domain.menu.Menu;
-import com.latte.admin.domain.menu.MenuSize;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,16 +13,16 @@ import java.util.List;
 public class MenuSaveRequestDto {
 
     private String mname;
-    private List<MenuSizeRequestDto> menuSizeRequestDtos;
     private String mpic;
     private int mtype;
+    private int mprice;
 
     @Builder
-    public MenuSaveRequestDto(String mname,List<MenuSizeRequestDto> menuSizeRequestDtos,String mpic,int mtype) {
+    public MenuSaveRequestDto(String mname,String mpic,int mtype,int mprice) {
         this.mname = mname;
-        this.menuSizeRequestDtos = menuSizeRequestDtos;
         this.mpic = mpic;
         this.mtype=mtype;
+        this.mprice=mprice;
     }
 
     public Menu toEntity(Cafe cafe) {
@@ -33,6 +32,7 @@ public class MenuSaveRequestDto {
                 .mpic(mpic)
                 .isMain(0)
                 .mtype(0)
+                .mprice(mprice)
                 .build();
     }
 

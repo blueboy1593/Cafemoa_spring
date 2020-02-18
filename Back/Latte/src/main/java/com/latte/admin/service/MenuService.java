@@ -4,10 +4,6 @@ import com.latte.admin.domain.cafe.Cafe;
 import com.latte.admin.domain.cafe.CafeRepository;
 import com.latte.admin.domain.menu.Menu;
 import com.latte.admin.domain.menu.MenuRepository;
-import com.latte.admin.domain.menu.MenuSize;
-import com.latte.admin.domain.menu.MenuSizeRepository;
-import com.latte.admin.domain.options.Option;
-import com.latte.admin.domain.options.OptionRepository;
 import com.latte.admin.web.dto.menu.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,8 +16,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MenuService {
     private final MenuRepository menuRepository;
-    private final MenuSizeRepository menuSizeRepository;
-    private final OptionRepository optionRepository;
     private final CafeRepository cafeRepository;
 
     // 메뉴 저장
@@ -29,19 +23,6 @@ public class MenuService {
     public Long save(MenuSaveRequestDto menuSaveRequestDto,Long ccid) {
         Cafe cafe=cafeRepository.findByCcid(ccid);
         return menuRepository.save(menuSaveRequestDto.toEntity(cafe)).getMmid();
-    }
-
-    //메뉴사이즈를 저장합니다.
-    @Transactional
-    public void MenuSizesave(MenuSize menuSize){
-        menuSizeRepository.save(menuSize);
-    }
-
-
-    //옵션을 저장합니다.
-    @Transactional
-    public void Optionsave(MenuOptionRequestDto menuOptionRequestDto,Menu menu){
-        optionRepository.save(menuOptionRequestDto.toEntity(menu));
     }
 
 
@@ -82,28 +63,11 @@ public class MenuService {
     public Long update(Long mmid, MenuUpdateRequestDto menuUpdateRequestDto) {
         Menu menu = menuRepository.findById(mmid).get();
         //메뉴명, 메뉴사진 업데이트
-        menu.update(menuUpdateRequestDto.getMname(),menuUpdateRequestDto.getMpic());
+        menu.update(menuUpdateRequestDto.getMname(),menuUpdateRequestDto.getMpic(),menuUpdateRequestDto.getIsMain(),
+                menuUpdateRequestDto.getMtype(),menuUpdateRequestDto.getMprice());
+
         return mmid;
     }
-
-    // 각 메뉴별 사이즈 업데이트
-    @Transactional
-    public Long updateSize(Long mmid, MenuSizeUpdateDto menuSizeUpdateDto) {
-        Menu menu = menuRepository.findById(mmid).get();
-        MenuSize menuSize= menuSizeRepository.findById(menuSizeUpdateDto.getMsid()).get();
-        menuSize.update(menuSizeUpdateDto.getMsname(),menuSizeUpdateDto.getMsprice());
-        return menuSize.getMsid();
-    }
-
-    // 각 메뉴별 옵션 업데이트
-    @Transactional
-    public Long updateOption(Long mmid, MenuOptionUpdateRequestDto menuOptionUpdateRequestDto) {
-        Menu menu = menuRepository.findById(mmid).get();
-        Option option=optionRepository.findById(menuOptionUpdateRequestDto.getOpid()).get();
-        option.update(menuOptionUpdateRequestDto.getOptionName(),menuOptionUpdateRequestDto.getOptionPrice());
-        return option.getOpid();
-    }
-
 
     // 메뉴 삭제
     @Transactional
@@ -112,19 +76,6 @@ public class MenuService {
         menuRepository.delete(menu);
     }
 
-    // 사이즈 삭제
-    @Transactional
-    public void deleteSize(Long msid){
-        MenuSize menuSize = menuSizeRepository.findById(msid).get();
-        menuSizeRepository.delete(menuSize);
-    }
-
-    // 옵션 삭제
-    @Transactional
-    public void deleteOption(Long opid){
-        Option option=optionRepository.findById(opid).get();
-        optionRepository.delete(option);
-    }
 
     // Toogle Main Menu
     @Transactional

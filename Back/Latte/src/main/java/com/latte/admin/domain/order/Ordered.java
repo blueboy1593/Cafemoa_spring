@@ -36,7 +36,8 @@ public class Ordered extends BaseTimeEntity {
     @JsonBackReference
     private User orderuser;
 
-    //Pay관련 정보는 추후에 추가 예정
+    // Pay관련 정보는 추후에 추가 예정
+    // Pay는 어떤페이지 사용?
 
     @Builder
     public Ordered(User orderuser){

@@ -1,11 +1,7 @@
 package com.latte.admin.web.dto.menu;
 
 import com.latte.admin.domain.menu.Menu;
-import com.latte.admin.domain.menu.MenuSize;
-import com.latte.admin.domain.options.Option;
 import lombok.Getter;
-
-import java.util.List;
 
 @Getter
 public class MenuResponseDto {
@@ -14,8 +10,7 @@ public class MenuResponseDto {
     private String mname;
     private String mpic;
     private int mtype;
-    private List<MenuSize> menuSize;
-    private List<Option> menuOption;
+    private int mprice;
 
     public MenuResponseDto(Menu entity) {
         this.mmid=entity.getMmid();
@@ -23,8 +18,7 @@ public class MenuResponseDto {
         this.mname=entity.getMname();
         this.mpic=entity.getMpic();
         this.mtype=entity.getMtype();
-        this.menuSize=entity.getMenuSizes();
-        this.menuOption=entity.getOptionList();
+        this.mprice=entity.getMprice();
     }
 
 }
