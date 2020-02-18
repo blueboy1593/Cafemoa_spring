@@ -33,7 +33,7 @@ public class Menu extends BaseTimeEntity {
     private int mtype;
 
     @Column
-    private int mprice;
+    private Long mprice;
 
     // fk -> 1:N = cafe:menu
     @ManyToOne(optional = false)
@@ -44,9 +44,22 @@ public class Menu extends BaseTimeEntity {
     @JsonBackReference
     private List<OrderDetail> orderDetail;
 
+//    //getter
+//    public int getMprice() {
+//        return mprice;
+//    }
+//
+//    //setter
+//    public void setMprice(int mprice) {
+//        if (mprice != null)
+//            this.mprice=mprice;
+//        else
+//            this.ex
+//    }
+
 
     @Builder
-    public Menu(Cafe cafemenu,String mname,String mpic,int isMain,int mtype,int mprice) {
+    public Menu(Cafe cafemenu,String mname,String mpic,int isMain,int mtype,Long mprice) {
         this.cafemenu=cafemenu;
         this.mname=mname;
         this.mpic=mpic;
@@ -56,7 +69,7 @@ public class Menu extends BaseTimeEntity {
     }
 
 
-    public void update(String mname,String mpic,int isMain,int mtype,int mprice) {
+    public void update(String mname,String mpic,int isMain,int mtype,Long mprice) {
         this.mname=mname;
         this.mpic=mpic;
         this.isMain=isMain;

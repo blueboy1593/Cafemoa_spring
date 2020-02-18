@@ -3,13 +3,11 @@ package com.latte.admin.domain.order;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.latte.admin.domain.BaseTimeEntity;
 import com.latte.admin.domain.menu.Menu;
-import com.latte.admin.domain.options.Option;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor

@@ -14,10 +14,10 @@ public class MenuUpdateRequestDto {
     private String mpic;
     private int isMain;
     private int mtype;
-    private int mprice;
+    private Long mprice;
 
     @Builder
-    public MenuUpdateRequestDto(String mname,String mpic,int isMain,int mtype,int mprice) {
+    public MenuUpdateRequestDto(String mname,String mpic,int isMain,int mtype,Long mprice) {
         this.mname = mname;
         this.mpic = mpic;
         this.isMain=isMain;

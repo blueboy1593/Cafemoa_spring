@@ -65,6 +65,16 @@ public class OrderController {
         return orderedService.findById(ooid).getOstatus();
     }
 
+    // 개별 user에 대한 모든 orderlist보여줌 -> 손님인 경우 -> 지금까지 주문 내역 history
+    @ApiOperation("개별 user에 대한 모든 orderlist보여줌 -> 손님인 경우 -> 지금까지 주문 내역 history")
+    @GetMapping("/latte/ordered/{uuid}")
+    public void showForGuest() {}
+
+
+    // 개별 cafe에 대한 모든 orderlist보여줌 -> 카페 주문 내역 확인 및 매출관리(?)
+    @ApiOperation("개별 cafe에 대한 모든 orderlist보여줌 -> 카페 주문 내역 확인 및 매출관리(?)")
+    @GetMapping("/latte/ordered/{ccid}")
+    public void showForHost() {}
 
     // ordered table을 보여주는 이유
     // 1. 손님: 마이페이지에서 history보여줌

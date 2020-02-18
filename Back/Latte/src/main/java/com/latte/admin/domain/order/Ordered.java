@@ -24,6 +24,12 @@ public class Ordered extends BaseTimeEntity {
     @Column(nullable = true)
     private int ostatus;  // 주문상태: -1=취소, 0=대기, 1=사장님확인, 2=완료
 
+    @Column
+    private String ocontent;
+
+    @Column(nullable = false)
+    private Long oprice;
+
     // fk -> 1:N = order:orderDetail (받는 쪽 표시)
     //ordered-orderdetail 관계에서 ordered가 연관관계의 대상이므로 mappedby로 표시해주자.
     @OneToMany(cascade=CascadeType.ALL, mappedBy = "ordered")
@@ -37,10 +43,13 @@ public class Ordered extends BaseTimeEntity {
     private User orderuser;
 
     // Pay관련 정보는 추후에 추가 예정
-    // Pay는 어떤페이지 사용?
 
     @Builder
-    public Ordered(User orderuser){
+    public Ordered(User orderuser,int ostatus,String ocontent,Long oprice){
         this.orderuser=orderuser;
+        this.ostatus=ostatus;
+        this.ocontent=ocontent;
+        this.oprice=oprice;
     }
+
 }

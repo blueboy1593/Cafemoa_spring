@@ -15,10 +15,10 @@ public class MenuSaveRequestDto {
     private String mname;
     private String mpic;
     private int mtype;
-    private int mprice;
+    private Long mprice;
 
     @Builder
-    public MenuSaveRequestDto(String mname,String mpic,int mtype,int mprice) {
+    public MenuSaveRequestDto(String mname,String mpic,int mtype,Long mprice) {
         this.mname = mname;
         this.mpic = mpic;
         this.mtype=mtype;

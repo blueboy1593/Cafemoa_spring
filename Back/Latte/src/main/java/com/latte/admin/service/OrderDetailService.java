@@ -1,10 +1,7 @@
 package com.latte.admin.service;
 
-import com.latte.admin.domain.menu.Menu;
 import com.latte.admin.domain.order.OrderDetail;
 import com.latte.admin.domain.order.OrderDetailRepository;
-import com.latte.admin.domain.order.Ordered;
-import com.latte.admin.web.dto.order.OrderDetailRequestDto;
 import com.latte.admin.web.dto.order.OrderDetailResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

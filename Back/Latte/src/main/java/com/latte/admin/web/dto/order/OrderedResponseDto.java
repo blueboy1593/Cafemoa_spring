@@ -5,13 +5,25 @@ import com.latte.admin.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.Column;
+
 @Getter
 @NoArgsConstructor
 public class OrderedResponseDto {
+
+    private Long ooid;
+    private int ostatus;  // 주문상태: -1=취소, 0=대기, 1=사장님확인, 2=완료
+    private String ocontent;
+    private Long oprice;
     private User orderuser;
 
     @Builder
     public OrderedResponseDto(Ordered entity){
+        this.ooid=entity.getOoid();
+        this.ostatus=entity.getOstatus();
+        this.ocontent=entity.getOcontent();
+        this.oprice=entity.getOprice();
         this.orderuser=entity.getOrderuser();
     }
 }
