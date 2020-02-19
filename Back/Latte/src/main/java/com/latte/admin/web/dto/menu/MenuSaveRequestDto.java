@@ -31,7 +31,7 @@ public class MenuSaveRequestDto {
                 .mname(mname)
                 .mpic(mpic)
                 .isMain(0)
-                .mtype(0)
+                .mtype(mtype)
                 .mprice(mprice)
                 .build();
     }

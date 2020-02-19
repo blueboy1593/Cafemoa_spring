@@ -1,6 +1,6 @@
 package com.latte.admin.web;
 
-import com.latte.admin.domain.menu.Menu;
+import com.latte.admin.domain.cafe.Cafe;
 import com.latte.admin.domain.order.Ordered;
 import com.latte.admin.domain.user.User;
 import com.latte.admin.service.*;
@@ -8,6 +8,7 @@ import com.latte.admin.service.jwt.JwtService;
 import com.latte.admin.service.jwt.UnauthorizedException;
 import com.latte.admin.web.dto.order.OrderListResponseDto;
 import com.latte.admin.web.dto.order.OrderStatusRequestDto;
+import com.latte.admin.web.dto.order.OrderedRequestDto;
 import com.latte.admin.web.dto.order.OrderedResponseDto;
 import com.latte.admin.web.dto.user.UserJwtResponsetDto;
 import io.swagger.annotations.ApiOperation;
@@ -27,6 +28,7 @@ import lombok.extern.java.Log;
 public class OrderController {
 
     private final OrderedService orderedService;
+    private final CafeService cafeService;
 //    private final OrderDetailService orderDetailService;
     private final MenuService menuService;
     private final JwtService jwtService;
@@ -61,12 +63,11 @@ public class OrderController {
     }
 
     // ccid기준으로 보여주기
-    @ApiOperation("ooid기준으로 보여주기")
+    @ApiOperation("ccid기준으로 보여주기")
     @GetMapping("/latte/ordered/{ccid}")
     public List<OrderedResponseDto> selectAllByCcid(@PathVariable Long ccid) {
         return orderedService.selectAllByCcid(ccid);
     }
-
 
 
     // jwt 필요
@@ -87,7 +88,7 @@ public class OrderController {
     // if 손님이 한번에 여러개 카페에서 주문한다면, 그 카페마다 주문이 들어왔다고 알려야함.
     @ApiOperation("유저가 카페에서 메뉴를 주문하는 기능입니다.")
     @PostMapping("/latte/order")
-    public Map save(@RequestBody OrderListResponseDto orderListResponseDto, HttpServletRequest httpServletRequest){
+    public Map save(@RequestBody OrderedRequestDto orderedRequestDto, HttpServletRequest httpServletRequest){
         //요청할 때 들어오는 값 :메뉴번호(1개 필수),사이즈번호(1개 필수),옵션번호들(0개~여러개),총 가격- 이 모든게 리스트형태로 들어옴
         String jwt = httpServletRequest.getHeader("Authorization");
         //유효성 검사
@@ -98,9 +99,14 @@ public class OrderController {
         Map<String,String> map=new HashMap<>();
         //현재 orderDetailRequestDtos에는 메뉴, 옵션 등의 정보가 담겨 있다.
         //현재 초기 코드는 메뉴만 있다고 가정.
+
+        // 사용자확인
         User orderuser=userService.findByuid(user.getUid());
+        // 카페확인
+        Cafe ordercafe=cafeService.findByCcId();
         System.out.println("현재 주문하는 유저는 : "+orderuser.getUname()+"님 입니다.");
-        Ordered ordered=orderedService.findById(orderedService.save(orderuser));
+
+        Ordered ordered=orderedService.save(orderuser.getUuid(),ordercafe.getCcid());
 //        //Ordered 테이블에 먼저 만들어지고나서 orderDetail이 존재할 수 있다.
 //        int TotalPay=0;
 //        int Totalcnt=0;
