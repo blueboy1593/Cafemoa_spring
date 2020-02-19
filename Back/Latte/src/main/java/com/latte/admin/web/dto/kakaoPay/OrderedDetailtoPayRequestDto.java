@@ -1,7 +1,6 @@
 package com.latte.admin.web.dto.kakaoPay;
 
 
-import com.latte.admin.domain.order.OrderDetail;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

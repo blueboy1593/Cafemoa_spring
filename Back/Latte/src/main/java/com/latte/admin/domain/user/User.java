@@ -2,17 +2,13 @@ package com.latte.admin.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.latte.admin.domain.BaseTimeEntity;
-import com.latte.admin.domain.cafe.Cafe;
 import com.latte.admin.domain.order.Ordered;
-import com.latte.admin.domain.review.Review;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Getter

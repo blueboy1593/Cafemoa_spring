@@ -160,6 +160,11 @@ public class UserService {
         return userRepository.findByuid(uid);
     }
 
+    @Transactional
+    public User findByUuid(Long uuid) {
+        return userRepository.findByUuid(uuid);
+    }
+
 
     // 회원 정보 수정
     @Transactional

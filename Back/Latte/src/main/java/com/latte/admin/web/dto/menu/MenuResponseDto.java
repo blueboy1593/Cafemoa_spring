@@ -10,7 +10,7 @@ public class MenuResponseDto {
     private String mname;
     private String mpic;
     private int mtype;
-    private int mprice;
+    private Long mprice;
 
     public MenuResponseDto(Menu entity) {
         this.mmid=entity.getMmid();
