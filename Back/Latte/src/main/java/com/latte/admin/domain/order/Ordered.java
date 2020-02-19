@@ -28,6 +28,9 @@ public class Ordered extends BaseTimeEntity {
     @Column(nullable = true)
     private Long oprice;
 
+    @Column
+    private Long ccid;
+
 //    // fk -> 1:N = cafe:order
 //    @ManyToOne(optional = false)
 //    @JsonBackReference
@@ -42,11 +45,12 @@ public class Ordered extends BaseTimeEntity {
     // Pay관련 정보는 추후에 추가 예정
 
     @Builder
-    public Ordered(User orderuser,int ostatus,String ocontent,Long oprice){
+    public Ordered(User orderuser,int ostatus,String ocontent,Long oprice,Long ccid){
         this.orderuser=orderuser;
         this.ostatus=ostatus;
         this.ocontent=ocontent;
         this.oprice=oprice;
+        this.ccid=ccid;
     }
 
 }

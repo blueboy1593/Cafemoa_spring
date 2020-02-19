@@ -14,13 +14,15 @@ public class OrderedRequestDto {
     private Long oprice;
     private int ostatus;
     private Long orderuser;
+    private Long ccid;
 
     @Builder
-    public OrderedRequestDto(String ocontent,Long oprice,int ostatus,Long orderuser) {
+    public OrderedRequestDto(String ocontent,Long oprice,int ostatus,Long orderuser,Long ccid) {
         this.ocontent=ocontent;
         this.oprice=oprice;
         this.ostatus=ostatus;
         this.orderuser=orderuser;
+        this.ccid=ccid;
     }
 
     public Ordered toEntity(User user) {
@@ -28,6 +30,7 @@ public class OrderedRequestDto {
                 .orderuser(user)
                 .ocontent(ocontent)
                 .oprice(oprice)
+                .ccid(ccid)
                 .build();
     }
 }

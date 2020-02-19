@@ -1,14 +1,11 @@
 package com.latte.admin.web;
 
-import com.latte.admin.domain.cafe.Cafe;
 import com.latte.admin.domain.order.Ordered;
 import com.latte.admin.domain.user.User;
 import com.latte.admin.service.*;
 import com.latte.admin.service.jwt.JwtService;
 import com.latte.admin.service.jwt.UnauthorizedException;
-import com.latte.admin.web.dto.order.OrderListResponseDto;
 import com.latte.admin.web.dto.order.OrderStatusRequestDto;
-import com.latte.admin.web.dto.order.OrderedRequestDto;
 import com.latte.admin.web.dto.order.OrderedResponseDto;
 import com.latte.admin.web.dto.user.UserJwtResponsetDto;
 import io.swagger.annotations.ApiOperation;
@@ -62,12 +59,12 @@ public class OrderController {
         return orderedService.selectAllByUuid(uuid);
     }
 
-//    // ccid기준으로 보여주기
-//    @ApiOperation("ccid기준으로 보여주기")
-//    @GetMapping("/latte/ordered/{ccid}")
-//    public List<OrderedResponseDto> selectAllByCcid(@PathVariable Long ccid) {
-//        return orderedService.selectAllByCcid(ccid);
-//    }
+    // ccid기준으로 보여주기
+    @ApiOperation("ccid기준으로 보여주기")
+    @GetMapping("/latte/ordered/{ccid}")
+    public List<OrderedResponseDto> selectAllByCcid(@PathVariable Long ccid) {
+        return orderedService.selectAllByCcid(ccid);
+    }
 
 
     // jwt 필요

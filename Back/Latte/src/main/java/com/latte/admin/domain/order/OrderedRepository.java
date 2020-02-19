@@ -20,8 +20,8 @@ public interface OrderedRepository extends JpaRepository<Ordered, Long> {
     List<Ordered> findByUuid(@Param("uuid") Long uuid);
 
     // ccid기준으로 보여주기
-//    @Query("select o from Ordered o where o.ordercafe.ccid=ccid")
-//    List<Ordered> findByCcid(@Param("ccid") Long ccid);
+    @Query("select o from Ordered o where o.ccid=ccid")
+    List<Ordered> findByCcid(@Param("ccid") Long ccid);
 
     // ostatus변경
     @Modifying

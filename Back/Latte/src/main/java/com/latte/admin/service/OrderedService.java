@@ -40,12 +40,12 @@ public class OrderedService {
 
 
     // cafe마다 알려주기
-//    @Transactional
-//    public List<OrderedResponseDto> selectAllByCcid(Long ccid){
-//        return orderedRepository.findByCcid(ccid).stream()
-//                .map(OrderedResponseDto::new)
-//                .collect(Collectors.toList());
-//    }
+    @Transactional
+    public List<OrderedResponseDto> selectAllByCcid(Long ccid){
+        return orderedRepository.findByCcid(ccid).stream()
+                .map(OrderedResponseDto::new)
+                .collect(Collectors.toList());
+    }
 
 
 
@@ -55,7 +55,8 @@ public class OrderedService {
         User orderuser=userRepository.findById(uuid).get();
 //        Cafe ordercafe=cafeRepository.findById(ccid).get();
 
-        OrderedRequestDto orderedRequestDto=new OrderedRequestDto(orderedResponseDto.getOcontent(),orderedResponseDto.getOprice(),orderedResponseDto.getOstatus(),orderedResponseDto.getUserid());
+        OrderedRequestDto orderedRequestDto=new OrderedRequestDto(orderedResponseDto.getOcontent(),orderedResponseDto.getOprice(),
+                orderedResponseDto.getOstatus(),orderedResponseDto.getUserid(),orderedResponseDto.getCcid());
         return orderedRepository.save(orderedRequestDto.toEntity(orderuser)).getOoid();
     }
 
