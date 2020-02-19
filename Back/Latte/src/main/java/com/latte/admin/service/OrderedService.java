@@ -1,5 +1,6 @@
 package com.latte.admin.service;
 
+import com.google.gson.internal.$Gson$Preconditions;
 import com.latte.admin.domain.cafe.Cafe;
 import com.latte.admin.domain.cafe.CafeRepository;
 import com.latte.admin.domain.order.Ordered;
@@ -39,23 +40,23 @@ public class OrderedService {
 
 
     // cafe마다 알려주기
-    @Transactional
-    public List<OrderedResponseDto> selectAllByCcid(Long ccid){
-        return orderedRepository.findByCcid(ccid).stream()
-                .map(OrderedResponseDto::new)
-                .collect(Collectors.toList());
-    }
+//    @Transactional
+//    public List<OrderedResponseDto> selectAllByCcid(Long ccid){
+//        return orderedRepository.findByCcid(ccid).stream()
+//                .map(OrderedResponseDto::new)
+//                .collect(Collectors.toList());
+//    }
 
 
 
     // 저장
     @Transactional
-    public Long save(Long uuid, Long ccid) {
+    public Long save(Long uuid,OrderedResponseDto orderedResponseDto) {
         User orderuser=userRepository.findById(uuid).get();
-        Cafe ordercafe=cafeRepository.findById(ccid).get();
+//        Cafe ordercafe=cafeRepository.findById(ccid).get();
 
-        OrderedRequestDto orderedRequestDto=new OrderedRequestDto();
-        return orderedRepository.save(orderedRequestDto.toEntity(orderuser,ordercafe)).getOoid();
+        OrderedRequestDto orderedRequestDto=new OrderedRequestDto(orderedResponseDto.getOcontent(),orderedResponseDto.getOprice(),orderedResponseDto.getOstatus(),orderedResponseDto.getUserid());
+        return orderedRepository.save(orderedRequestDto.toEntity(orderuser)).getOoid();
     }
 
     // 주문~메뉴나올때까지 상태 변경

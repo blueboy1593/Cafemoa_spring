@@ -1,6 +1,5 @@
 package com.latte.admin.web.dto.order;
 
-import com.latte.admin.domain.cafe.Cafe;
 import com.latte.admin.domain.order.Ordered;
 import com.latte.admin.domain.user.User;
 import lombok.Builder;
@@ -13,19 +12,20 @@ public class OrderedRequestDto {
 
     private String ocontent;
     private Long oprice;
-//    private Long ordercafe;
-//    private Long orderuser;
+    private int ostatus;
+    private Long orderuser;
 
     @Builder
-    public OrderedRequestDto(String ocontent,Long oprice) {
+    public OrderedRequestDto(String ocontent,Long oprice,int ostatus,Long orderuser) {
         this.ocontent=ocontent;
         this.oprice=oprice;
+        this.ostatus=ostatus;
+        this.orderuser=orderuser;
     }
 
-    public Ordered toEntity(User user, Cafe cafe) {
+    public Ordered toEntity(User user) {
         return Ordered.builder()
                 .orderuser(user)
-                .ordercafe(cafe)
                 .ocontent(ocontent)
                 .oprice(oprice)
                 .build();

@@ -25,13 +25,13 @@ public class Ordered extends BaseTimeEntity {
     @Column
     private String ocontent;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Long oprice;
 
-    // fk -> 1:N = cafe:order
-    @ManyToOne(optional = false)
-    @JsonBackReference
-    private Cafe ordercafe;
+//    // fk -> 1:N = cafe:order
+//    @ManyToOne(optional = false)
+//    @JsonBackReference
+//    private Cafe ordercafe;
 
     // fk -> 1:N = user:order -> if role=1(손님)
     //user-ordered의 관계는 ordered가 연관관계의 주인
@@ -42,8 +42,7 @@ public class Ordered extends BaseTimeEntity {
     // Pay관련 정보는 추후에 추가 예정
 
     @Builder
-    public Ordered(Cafe ordercafe,User orderuser,int ostatus,String ocontent,Long oprice){
-        this.ordercafe=ordercafe;
+    public Ordered(User orderuser,int ostatus,String ocontent,Long oprice){
         this.orderuser=orderuser;
         this.ostatus=ostatus;
         this.ocontent=ocontent;

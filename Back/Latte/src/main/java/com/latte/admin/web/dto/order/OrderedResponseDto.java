@@ -14,15 +14,15 @@ public class OrderedResponseDto {
     private int ostatus;  // 주문상태: -1=취소, 0=대기, 1=사장님확인, 2=완료
     private String ocontent;
     private Long oprice;
-    private Cafe ordercafe;
-    private User orderuser;
+//    private Long cafeid;
+    private Long userid;
 
     @Builder
     public OrderedResponseDto(Ordered entity){
         this.ostatus=entity.getOstatus();
         this.ocontent=entity.getOcontent();
         this.oprice=entity.getOprice();
-        this.ordercafe=entity.getOrdercafe();
-        this.orderuser=entity.getOrderuser();
+        this.userid=entity.getOrderuser().getUuid();
+//        this.userid=entity.getOrderuser().getUuid();
     }
 }

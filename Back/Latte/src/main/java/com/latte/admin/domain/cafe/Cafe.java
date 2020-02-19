@@ -66,10 +66,10 @@ public class Cafe extends BaseTimeEntity {
     @JsonManagedReference
     private List<Review> reviews=new ArrayList<>();
 
-    // fk -> 1:N = cafe:order
-    @OneToMany(cascade=CascadeType.ALL, mappedBy = "ordercafe")
-    @JsonManagedReference
-    private List<Ordered> ordered=new ArrayList<>();
+//    // fk -> 1:N = cafe:order
+//    @OneToMany(cascade=CascadeType.ALL, mappedBy = "ordercafe")
+//    @JsonManagedReference
+//    private List<Ordered> ordered=new ArrayList<>();
 
 
     public Cafe(Long ccid){
