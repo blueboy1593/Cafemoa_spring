@@ -6,8 +6,10 @@ import com.latte.admin.service.SHA256Util;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class UserSaveRequestDto {
     private String uid;

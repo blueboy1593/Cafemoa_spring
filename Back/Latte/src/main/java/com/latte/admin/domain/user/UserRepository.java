@@ -9,9 +9,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User,Long> {
-
     @Query("select u from User u where u.uid=:uid")
     User findByuid(@Param("uid") String uid);
+
+    @Query("select u from User u where u.uuid=:uuid")
+    User findByUuid(@Param("uuid") Long uuid);
 
     // 회원가입시 이메일 중복 확인
     @Query("select u from User u where u.uemail=:uemail")

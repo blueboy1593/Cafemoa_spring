@@ -3,6 +3,7 @@ package com.latte.admin.domain.cafe;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.latte.admin.domain.BaseTimeEntity;
 import com.latte.admin.domain.menu.Menu;
+import com.latte.admin.domain.order.Ordered;
 import com.latte.admin.domain.review.Review;
 import lombok.Builder;
 import lombok.Getter;
@@ -51,6 +52,10 @@ public class Cafe extends BaseTimeEntity {
     @Column(nullable = false)
     private int coperation;  // 1:운영중, 0:끝
 
+    private String latitude;
+
+    private String longitude;
+
     // fk -> 1:N = cafe:menu
     @OneToMany(cascade=CascadeType.ALL, mappedBy = "cafemenu")
     @JsonManagedReference
@@ -61,13 +66,19 @@ public class Cafe extends BaseTimeEntity {
     @JsonManagedReference
     private List<Review> reviews=new ArrayList<>();
 
+//    // fk -> 1:N = cafe:order
+//    @OneToMany(cascade=CascadeType.ALL, mappedBy = "ordercafe")
+//    @JsonManagedReference
+//    private List<Ordered> ordered=new ArrayList<>();
+
 
     public Cafe(Long ccid){
         this.ccid=ccid;
     }
 
     @Builder
-    public Cafe(String uid,String cname, String cloc, String cphone, String cpic, String copen, String cdesc, String cclose, int cstatus,int coperation) {
+    public Cafe(String uid,String cname, String cloc, String cphone, String cpic, String copen, String cdesc,
+                String cclose, int cstatus,int coperation,String latitude,String longitude) {
         this.uid=uid;
         this.cname = cname;
         this.cloc = cloc;
@@ -78,9 +89,12 @@ public class Cafe extends BaseTimeEntity {
         this.cdesc=cdesc;
         this.cstatus = cstatus;
         this.coperation=coperation;
+        this.latitude=latitude;
+        this.longitude=longitude;
     }
 
-    public void CafeUpdate(String cname,String cloc,String cphone,String cpic,String copen, String cclose,String cdesc) {
+    public void CafeUpdate(String cname,String cloc,String cphone,String cpic,String copen,
+                           String cclose,String cdesc,String latitude,String longitude) {
         this.cname=cname;
         this.cloc=cloc;
         this.cphone=cphone;
@@ -88,11 +102,12 @@ public class Cafe extends BaseTimeEntity {
         this.copen=copen;
         this.cclose=cclose;
         this.cdesc=cdesc;
+        this.latitude=latitude;
+        this.longitude=longitude;
     }
     public void setStatus(int cstatus){
         this.cstatus=cstatus;
     }
 
     public void setCoperation(int coperation) {this.coperation=coperation;}
-
 }

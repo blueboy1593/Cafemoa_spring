@@ -11,6 +11,9 @@
             {{^userName}}
                 <a href="/oauth2/authorization/google" class="btn btn-success active" role="button">Google Login</a>
                 <a href="/oauth2/authorization/naver" class="btn btn-secondary active" role="button">Naver Login</a>
+
+                <a href="https://kauth.kakao.com/oauth/authorize?client_id=f19ae1c386503f9082e85e5431870f4f&redirect_uri=http://70.12.246.69:8080/latte/user/kakaologin&response_type=code">카카오로 로그인</a>
+                <input type="button" value="로그아웃" onclick="location.href='/latte/user/kakaologout'">
             {{/userName}}
         </div>
     </div>

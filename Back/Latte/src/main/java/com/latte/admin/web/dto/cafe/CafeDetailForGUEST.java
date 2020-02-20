@@ -22,7 +22,10 @@ public class CafeDetailForGUEST {
     private String cdesc;
     private int cstatus;
     private int coperation;
+    private String latitude;
+    private String longitude;
     private List<MenuResponseDto> menus=new ArrayList<>();
+
     @Builder
     public CafeDetailForGUEST(Cafe entity) {
         this.cname = entity.getCname();
@@ -34,6 +37,8 @@ public class CafeDetailForGUEST {
         this.cdesc = entity.getCdesc();
         this.cstatus = entity.getCstatus();
         this.coperation=entity.getCoperation();
+        this.latitude=entity.getLatitude();
+        this.longitude=entity.getLongitude();
         for(Menu m:entity.getMenus()){
             menus.add(new MenuResponseDto(m));
         }
