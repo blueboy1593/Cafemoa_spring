@@ -26,7 +26,7 @@ public class Ordered extends BaseTimeEntity {
     private String ocontent;
 
     @Column(nullable = true)
-    private Long oprice;
+    private int oprice;
 
     @Column
     private Long ccid;
@@ -45,7 +45,7 @@ public class Ordered extends BaseTimeEntity {
     // Pay관련 정보는 추후에 추가 예정
 
     @Builder
-    public Ordered(User orderuser,int ostatus,String ocontent,Long oprice,Long ccid){
+    public Ordered(User orderuser,int ostatus,String ocontent,int oprice,Long ccid){
         this.orderuser=orderuser;
         this.ostatus=ostatus;
         this.ocontent=ocontent;

@@ -4,8 +4,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import com.latte.admin.domain.order.Ordered;
+import com.latte.admin.domain.user.User;
 import com.latte.admin.web.dto.kakaoPay.KakaoPayApprovalRequestDto;
 import com.latte.admin.web.dto.kakaoPay.KakaoPayReadyVO;
+import com.latte.admin.web.dto.order.OrderedRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -30,7 +32,7 @@ public class KakaoPayService {
 
 
     @Transactional
-    public String kakaoPayReady(Long ooid,String orderuser,String mainMenu,int Totalcnt, int TotalPay) {
+    public KakaoPayReadyVO kakaoPayReady(User user,Long ooid,OrderedRequestDto orderedRequestDto) {
         System.out.println("카카오 페이 결제를 위한 준비 단계입니다.");
         RestTemplate restTemplate = new RestTemplate();
         // 서버로 요청할 Header
@@ -40,16 +42,14 @@ public class KakaoPayService {
         headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
         System.out.println("요청 헤더 : "+headers);
         // 서버로 요청할 Body
-        String item_name=mainMenu;
-        if(Totalcnt-1>0) item_name=item_name+"외 "+(Totalcnt-1)+"건";
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
         params.add("cid", "TC0ONETIME");
         params.add("partner_order_id", ooid+"");
-        params.add("partner_user_id", orderuser);
-        params.add("item_name",item_name); //맨 위에거 기준으로만 결제로 넘김
-        params.add("quantity",Totalcnt+"");
-        params.add("total_amount", TotalPay+"");
+        params.add("partner_user_id", user.getUid());
+        params.add("item_name",orderedRequestDto.getOcontent()); //맨 위에거 기준으로만 결제로 넘김
+        params.add("quantity","1");
+        params.add("total_amount", orderedRequestDto.getOprice()+"");
         params.add("tax_free_amount", "100");
         params.add("approval_url", "http://localhost:8080/kakaoPaySuccess");
         params.add("cancel_url", "http://localhost:8080/kakaoPayCancel");
@@ -64,14 +64,14 @@ public class KakaoPayService {
             System.out.println("" + kakaoPayReadyVO);
 
 
-            return kakaoPayReadyVO.getNext_redirect_pc_url();
+            return kakaoPayReadyVO;
 
         } catch (RestClientException e) {
             e.printStackTrace();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        return "/pay";
+        return kakaoPayReadyVO;
     }
 
 
@@ -113,7 +113,7 @@ public class KakaoPayService {
             e.printStackTrace();
         }
 
-        return null;
+        return kakaoPayApprovalRequestDto;
     }
 
 

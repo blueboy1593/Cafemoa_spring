@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class UserJwtResponsetDto {
+    private Long uuid;
     private String uid;
     private String uname;
     private String uphone;
@@ -18,6 +19,7 @@ public class UserJwtResponsetDto {
 
 
     public UserJwtResponsetDto(User entity) {
+        this.uuid=entity.getUuid();
         this.uid = entity.getUid();
         this.uname = entity.getUname();
         this.uphone = entity.getUphone();

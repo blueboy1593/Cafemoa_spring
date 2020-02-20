@@ -50,11 +50,7 @@ public class OrderedService {
 
     // 저장
     @Transactional
-    public Long save(Long uuid,OrderedResponseDto orderedResponseDto) {
-        User orderuser=userRepository.findById(uuid).get();
-
-        OrderedRequestDto orderedRequestDto=new OrderedRequestDto(orderedResponseDto.getOcontent(),orderedResponseDto.getOprice(),
-                orderedResponseDto.getOstatus(),orderedResponseDto.getUserid(),orderedResponseDto.getCcid());
+    public Long save(User orderuser,OrderedRequestDto orderedRequestDto) {
         return orderedRepository.save(orderedRequestDto.toEntity(orderuser)).getOoid();
     }
 
