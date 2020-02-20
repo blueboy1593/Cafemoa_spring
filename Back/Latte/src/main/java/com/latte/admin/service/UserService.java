@@ -8,25 +8,16 @@ import com.latte.admin.web.dto.user.UserJwtResponsetDto;
 import com.latte.admin.web.dto.user.UserSaveRequestDto;
 import com.latte.admin.web.dto.user.UserUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 
 @Service
@@ -37,9 +28,43 @@ public class UserService {
     @Autowired
     JavaMailSender javaMailSender;
 
+
+    @Transactional
+    public String getUserInfo(String access_token) {
+        String header = "Bearer " + access_token;
+        try {
+            String apiURL = "https://openapi.naver.com/v1/nid/me";
+            URL url = new URL(apiURL);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Authorization", header);
+            int responseCode = con.getResponseCode();
+            BufferedReader br;
+            if (responseCode == 200) { // 정상 호출
+                br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            } else {
+                br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+            }
+            String inputLine;
+            StringBuffer res = new StringBuffer();
+            while ((inputLine = br.readLine()) != null) {
+                res.append(inputLine);
+            }
+            br.close();
+            return res.toString();
+        } catch (Exception e) {
+            System.err.println(e);
+            return "Err";
+        }
+    }
+
+
+
     public List<User> selectAll() {
         return userRepository.findAll();
     }
+
+
 
 
     //이메일로 엔티티 가져오기

@@ -1,5 +1,7 @@
 package com.latte.admin.web;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.latte.admin.domain.user.User;
 import com.latte.admin.service.KakaoAPI;
 import com.latte.admin.service.UserService;
@@ -10,6 +12,8 @@ import com.latte.admin.web.dto.user.*;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +22,16 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@PropertySource("classpath:config.properties")
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/latte/user")
@@ -30,6 +39,10 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
     private final JwtService jwtService;
+
+    @Value("${client_secret}")
+    private String client_secret;
+
 
     @Autowired
     private final KakaoAPI kakaoAPI;
@@ -86,16 +99,12 @@ public class UserController {
     @PutMapping("/update")
     public void update(HttpServletResponse response, HttpServletRequest request, @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
         String jwt = request.getHeader("Authorization");
-        System.out.println("jwt가 뭡니까? :" + jwt);
         if (!jwtService.isUsable(jwt)) return;
         UserJwtResponsetDto user = jwtService.getUser(jwt);
-        System.out.println("현재 유저 : " + user.getUid());
         userService.update(user.getUid(), userUpdateRequestDto);
         // 기존 토큰 죽이기
-        System.out.println("기존 토큰을 삭제합니다.");
 
         cm.CookieDelete(request, response);
-        System.out.println("지금 쿠키수 : " + request.getCookies().length);
         //토큰 재발행
         System.out.println("토큰을 재발행합니다.");
         String token = jwtService.create(new UserJwtResponsetDto(userService.findByuid(user.getUid())));
@@ -186,67 +195,123 @@ public class UserController {
 
     static String Static_access_Token = null;
 
-    @GetMapping(value = "/kakaologin")
-    public Map login(@RequestBody RequestKakaoCodeDto requestKakaoCodeDto, HttpServletRequest request, HttpServletResponse response) {
-        Map<String, String> map = new HashMap<>();
+    @ApiOperation("카카오 로그인")
+    @PostMapping("/Kakaologin")
+    public Map login(@RequestBody RequestKakaoCodeDto requestKakaoCodeDto ,HttpServletRequest request,HttpServletResponse response) {
+        System.out.println("날라온 코드 : "+requestKakaoCodeDto.getCode());
         String access_Token = kakaoAPI.getAccessToken(requestKakaoCodeDto.getCode());
-        Static_access_Token = access_Token;
         HashMap<String, String> userInfo = kakaoAPI.getUserInfo(access_Token);
-
-
-        if (userInfo.get("email") == null) {
-            map.put("email", null); //동의를 구하는 Component
-            map.put("message", "이메일 동의가 필요합니다.");
-            System.out.println(map);
-            return map;
+        Map<String,String> map=new HashMap<>();
+        if(userInfo.get("email")==null){
+            userInfo.put("status","0"); //동의를 구하는 Component
+            userInfo.put("message","이메일 동의가 필요합니다.");
+            return userInfo;
         }
 //        System.out.println("login Controller : " + userInfo);
         //여기서는 값얻어옴
-        String curEmail = userInfo.get("email");
-        if (!userService.checkEmail(curEmail)) { //이메일 가능함
-            System.out.println("가능합니다!!!!!!!!!!!당장 회원가입시키세요!!!!!!!!!!!!!!");
+        String curEmail=userInfo.get("email");
+        if(!userService.checkEmail(curEmail)){ //이메일 가능함
             System.out.println(userInfo);
+            userInfo.put("status","3");
             return userInfo;
-        } else { //이미 존재하는 이메일이면
-            User user = userService.findByEmail(curEmail);
-            if (user.getUpass().equals(userInfo.get("Id"))) {
-                //이미 카카오톡으로 회원가입을 한 사람.
-                String secPass = encrypt(userInfo.get("Id"));
+        }else{ //이미 존재하는 이메일이면
+            User user=userService.findByEmail(curEmail);
+            String secPass=encrypt(userInfo.get("Id"));
+            UserJwtResponsetDto userJwtResponsetDto = userService.signIn(user.getUid(),secPass);
+            if (userJwtResponsetDto != null && request.getCookies() == null) {
+                String token = jwtService.create(userJwtResponsetDto);
+                cm.CookieMake(request,response,token);
+                map.put("token",token);//이미 회원가입이 됨.
+                map.put("status","1");
+                System.out.println(map);
+                return map;
+            }
+            map.put("token",request.getCookies()[0].getValue());
+            map.put("status","1");
+            System.out.println(map);
+            return map;
+        }
+    }
+
+    @ApiOperation("네이버 로그인")
+    @PostMapping("/Naverlogin")
+    public Map userSigninNaver(HttpServletRequest request,HttpServletResponse response, @RequestBody NaverResponseDto naverResponseDto) throws Exception {
+        System.out.println("지금 들어온 코드 :" + naverResponseDto.getNcode());
+
+        Map<String, String> map = new HashMap<>();
+        HttpStatus status = null;
+        // client_id, client_sercret, code, state를 가지고 네이버에 token 요청
+        String cline_id = "FA7itQNNdqjv2zVuS9_R";
+        String apiURL;
+        apiURL = "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code";
+        apiURL += "&client_id=" + cline_id;
+        apiURL += "&client_secret=" + client_secret;
+        apiURL += "&code=" + naverResponseDto.getNcode();
+        apiURL += "&state=" + naverResponseDto.getNstate();
+        String access_token = "";
+        URL url = new URL(apiURL);
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        int responseCode = con.getResponseCode();
+        BufferedReader br;
+        if (responseCode == 200) { // 정상호출
+            br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        } else {
+            br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+        }
+        String inputLine;
+        StringBuffer res = new StringBuffer();
+        while ((inputLine = br.readLine()) != null) {
+            res.append(inputLine);
+        }
+        br.close();
+        if (responseCode == 200) { // 성공적으로 토큰을 가져오면
+            int id;
+            String nickname, email, tmp;
+            JsonParser parser = new JsonParser();
+            JsonElement accessElement = parser.parse(res.toString());
+            access_token = accessElement.getAsJsonObject().get("access_token").getAsString();
+            tmp = userService.getUserInfo(access_token);
+            JsonElement userInfoElement = parser.parse(tmp);
+            id = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("id").getAsInt();
+            nickname = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("nickname").getAsString();
+            email = userInfoElement.getAsJsonObject().get("response").getAsJsonObject().get("email").getAsString();
+
+            if (email == null) {
+                map.put("status", "0"); //동의를 구하는 Component
+                map.put("message", "이메일 동의가 필요합니다.");
+                return map;
+            }
+
+            boolean b_find = userService.checkEmail(email);
+
+            if (!b_find) { // 없으면 추가폼 받으러 ㄱㄱ
+                map.put("status", "3"); //가입시키라는 폼.
+                map.put("email", email);
+                map.put("nickname", nickname);
+                return map;
+            } else { //이미 있으면 토큰발급
+                User user = userService.findByEmail(email);
+                String secPass = encrypt(id + ""); //아이디당 하나 고유값인거셈.
                 UserJwtResponsetDto userJwtResponsetDto = userService.signIn(user.getUid(), secPass);
                 if (userJwtResponsetDto != null && request.getCookies() == null) {
                     String token = jwtService.create(userJwtResponsetDto);
                     cm.CookieMake(request, response, token);
-                    map.put("token", token);
-                    map.put("message", "이미 카카오로 회원가입이 된 이메일입니다.");
+                    map.put("token", token);//이미 회원가입이 됨.
+                    map.put("status", "1");
                     System.out.println(map);
                     return map;
                 }
                 map.put("token", request.getCookies()[0].getValue());
-                map.put("message", "이미 카카오로 회원가입이 된 이메일입니다.");
-                System.out.println(map);
-                return map;
-            } else {
-                map.put("email", "false");
-                map.put("message", "이미 존재하는 이메일입니다.");
+                map.put("status", "1");
                 System.out.println(map);
                 return map;
             }
+        } else {
+            map.put("status", "-1");
+            map.put("message", "에러가 발생하였습니다.");
+            return map;
         }
-        //프론트는 가입 요청을 보낸다음에 (KakaoLogin이나 , NaverLogin이나)
-        //그런다음 돌아오는 return 값을 get("email")로 확인하여 null이면 이메일 동의가 필요하다는 Component로
-        //get("email")이 false이면 이메일이 이미 존재한다는 Component로
-        //get("token")이 null이 아니면 이미 이 이메일로 가입했기에 우리의 JWT를 주고 로그인 다음 화면으로 넘김
-        //token을 받으려면 get("token")으로 받으시면 됨.
-        //셋다 아니라면 회원가입 페이지에 우리가 보내준 정보들을 readOnly로 뿌리고 회원가입을 시키면 된다.
-    }
-
-    // 카카오 로그아웃
-    @GetMapping(value = "/kakaologout")
-    public String logout() {
-        System.out.println("카카오톡 로그아웃!!!!!!!!!!!");
-        kakaoAPI.kakaoLogout(Static_access_Token);
-        Static_access_Token = null;
-        return "카카오톡 로그아웃~아웃~ 아웃~ 아~ 아웃이에요 어차피 안써요";
     }
 
     private ResponseEntity<Map<String, Object>> response(Object data, HttpStatus httpstatus, boolean status) {
