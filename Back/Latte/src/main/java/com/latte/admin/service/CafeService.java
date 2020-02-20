@@ -2,6 +2,7 @@ package com.latte.admin.service;
 
 import com.latte.admin.domain.cafe.Cafe;
 import com.latte.admin.domain.cafe.CafeRepository;
+import com.latte.admin.web.dto.cafe.CafeDetailForHOST;
 import com.latte.admin.web.dto.cafe.CafeListResponseDto;
 import com.latte.admin.web.dto.cafe.CafeUpdateRequestDto;
 import com.latte.admin.web.dto.cafe.CafeSaveRequestDto;
@@ -64,18 +65,20 @@ public class CafeService {
                 -> new IllegalArgumentException("해당 사용자가 없습니다."));
 
         cafe.CafeUpdate(cafeUpdateRequestDto.getCname(),
-                    cafeUpdateRequestDto.getCloc(),
-                    cafeUpdateRequestDto.getCphone(),
-                    cafeUpdateRequestDto.getCpic(),
-                    cafeUpdateRequestDto.getCopen(),
+                cafeUpdateRequestDto.getCloc(),
+                cafeUpdateRequestDto.getCphone(),
+                cafeUpdateRequestDto.getCpic(),
+                cafeUpdateRequestDto.getCopen(),
                 cafeUpdateRequestDto.getCclose(),
-                    cafeUpdateRequestDto.getCdesc());
+                cafeUpdateRequestDto.getCdesc(),
+                cafeUpdateRequestDto.getLatitude(),
+                cafeUpdateRequestDto.getLongitude());
         return ccid;
     }
 
     // 사장님 아이디로 카페 불러오기
     @Transactional
-    public Long findCcidByUid(String uid) {
+    public CafeDetailForHOST findCcidByUid(String uid) {
         return cafeRepository.findCcidByUid(uid);
     }
 

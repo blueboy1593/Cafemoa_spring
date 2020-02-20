@@ -1,12 +1,12 @@
 package com.latte.admin.domain.cafe;
 
+import com.latte.admin.web.dto.cafe.CafeDetailForHOST;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CafeRepository extends JpaRepository<Cafe,Long> {
 
@@ -31,6 +31,6 @@ public interface CafeRepository extends JpaRepository<Cafe,Long> {
     @Query("update Cafe c set c.coperation=:coperation")
     void setOperation(@Param("coperation") int coperation);
 
-    @Query("select c.ccid from Cafe c where c.uid=:uid")
-    Long findCcidByUid(@Param("uid") String uid);
+    @Query("select c from Cafe c where c.uid=:uid")
+    CafeDetailForHOST findCcidByUid(@Param("uid") String uid);
 }

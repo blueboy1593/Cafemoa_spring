@@ -29,7 +29,7 @@ public class KakaoAPI {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             //    POST 요청을 위해 기본값이 false인 setDoOutput을 true로
-            conn.setRequestMethod("POST");
+            conn.setRequestMethod("GET");
             conn.setDoOutput(true);
 
             //    POST 요청에 필요로 요구하는 파라미터 스트림을 통해 전송

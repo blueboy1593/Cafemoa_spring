@@ -8,23 +8,16 @@ import com.latte.admin.web.dto.user.UserJwtResponsetDto;
 import com.latte.admin.web.dto.user.UserSaveRequestDto;
 import com.latte.admin.web.dto.user.UserUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 
 @Service
@@ -35,20 +28,74 @@ public class UserService {
     @Autowired
     JavaMailSender javaMailSender;
 
-    //이메일로 엔티티 가져오기
+
     @Transactional
-    public User findByEmail(String email){
-        return userRepository.findByEmail(email).get(0);
+    public String getUserInfo(String access_token) {
+        String header = "Bearer " + access_token;
+        try {
+            String apiURL = "https://openapi.naver.com/v1/nid/me";
+            URL url = new URL(apiURL);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Authorization", header);
+            int responseCode = con.getResponseCode();
+            BufferedReader br;
+            if (responseCode == 200) { // 정상 호출
+                br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            } else {
+                br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+            }
+            String inputLine;
+            StringBuffer res = new StringBuffer();
+            while ((inputLine = br.readLine()) != null) {
+                res.append(inputLine);
+            }
+            br.close();
+            return res.toString();
+        } catch (Exception e) {
+            System.err.println(e);
+            return "Err";
+        }
     }
 
+
+
+    public List<User> selectAll() {
+        return userRepository.findAll();
+    }
+
+
+
+
+    //이메일로 엔티티 가져오기
+    @Transactional
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).get(0);
+    }
 
 
     // 회원 가입
     @Transactional
     public boolean signUp(UserSaveRequestDto userSaveRequestDto) {
+        System.out.println(userSaveRequestDto);
         // insert 전에 테이블을 검색해서 중복된 이메일이 있는지 확인한다.
-        if (!checkEmail(userSaveRequestDto.getUemail()))
+
+        //우리 회원가입 로직은 이메일로만 중복검사를 실행합니다.!!!
+        if (checkEmail(userSaveRequestDto.getUemail())) //이미 이메일이 있으면
             return false;
+
+        // 프사
+//        String path = "C:/Temp/upic/";
+//        File dir = new File(path);
+//        if (!dir.exists()) dir.mkdirs();
+//        String fileName = multipartFile.getOriginalFilename();
+//        File attachFile = new File(path + fileName);
+//        try {
+//            multipartFile.transferTo(attachFile);
+//            userSaveRequestDto.setUpic(fileName);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         // 회원가입완료하면 이메일로 ghld 보내준다.
         // 2번일 경우 테이블에 승인 상태 추가해야 됨
@@ -56,7 +103,7 @@ public class UserService {
         mailService.setJavaMailSender(javaMailSender);
         mailService.sendSimpleMessage(userSaveRequestDto.getUemail(), "[라떼는 말이야] 회원가입 완료", "ㅎㅇㅎㅇ");
 
-        userRepository.save(userSaveRequestDto.toEntity()).getUid();
+        userRepository.save(userSaveRequestDto.toEntity());
         return true;
     }
 
@@ -65,7 +112,7 @@ public class UserService {
     @Transactional
     public boolean checkEmail(String uemail) {
         List<User> user = userRepository.findByEmail(uemail);
-        if(user.size()>0) return true; //있으면 1
+        if (user.size() > 0) return true; //있으면 1
         else return false; //없으면 0
     }
 
@@ -73,7 +120,7 @@ public class UserService {
     @Transactional
     public boolean checkId(String uid) {
         List<User> user = userRepository.checkByUid(uid);
-        if(user.size()>0) return true;
+        if (user.size() > 0) return true;
         else return false;
     }
 
@@ -81,9 +128,9 @@ public class UserService {
     @Transactional
     public String findId(String uname, String uemail) {
         List<User> user = userRepository.findByNameEmail(uname, uemail);
-        if(user.size()==1){
+        if (user.size() == 1) {
             return user.get(0).getUid();
-        }else{
+        } else {
             return "해당하는 정보가 없습니다.";
         }
 
@@ -92,9 +139,9 @@ public class UserService {
     // 비밀번호 찾기
     @Transactional
     public String findPass(String uid, String uemail) {
-        if(!checkId(uid)) return "존재하지 않는 ID 입니다.";
+        if (!checkId(uid)) return "존재하지 않는 ID 입니다.";
 
-        User user=userRepository.findByuid(uid);
+        User user = userRepository.findByuid(uid);
 
         if (user.getUemail().equals(uemail)) {
             // 비밀번호 생성
@@ -134,27 +181,32 @@ public class UserService {
     //JwtUserRequest를 만들기 위한 작업으로 필요함.
     //DB까지 가지않고 서비스를 이용하여 끌고옴
     @Transactional
-    public User findByuid(String uid){
+    public User findByuid(String uid) {
         return userRepository.findByuid(uid);
+    }
+
+    @Transactional
+    public User findByUuid(Long uuid) {
+        return userRepository.findByUuid(uuid);
     }
 
 
     // 회원 정보 수정
     @Transactional
     public String update(String uid, UserUpdateRequestDto userUpdateRequestDto) {
-        User user=userRepository.findByuid(uid);
-        if(user==null)
+        User user = userRepository.findByuid(uid);
+        if (user == null)
             new IllegalArgumentException("해당 사용자가 없습니다.");
 
-        user.update(userUpdateRequestDto.getUpass(), userUpdateRequestDto.getUphone(), userUpdateRequestDto.getUnickname(),userUpdateRequestDto.getUpic());
+        user.update(userUpdateRequestDto.getUpass(), userUpdateRequestDto.getUphone(), userUpdateRequestDto.getUnickname(), userUpdateRequestDto.getUpic());
         return uid;
     }
 
     // 탈퇴(삭제)
     @Transactional
     public void delete(String uid) {
-        User user=userRepository.findByuid(uid);
-        if(user==null)
+        User user = userRepository.findByuid(uid);
+        if (user == null)
             new IllegalArgumentException("해당 사용자가 없습니다.");
 
         userRepository.delete(user);
@@ -163,8 +215,8 @@ public class UserService {
     // 로그인
     @Transactional
     public UserJwtResponsetDto signIn(String uid, String upass) {
-        User user=userRepository.findByuid(uid);
-        if(user==null)
+        User user = userRepository.findByuid(uid);
+        if (user == null)
             new IllegalArgumentException("해당 사용자가 없습니다.");
 
 
@@ -175,6 +227,7 @@ public class UserService {
             return null;
         }
     }
+
 
 //    private final static String K_CLIENT_ID = "f19ae1c386503f9082e85e5431870f4f"; //이런식으로 REDIRECT_URI를 써넣는다.// //
 //    private final static String K_REDIRECT_URI = "http://70.12.246.69:8080/latte/user/kakaologin";
