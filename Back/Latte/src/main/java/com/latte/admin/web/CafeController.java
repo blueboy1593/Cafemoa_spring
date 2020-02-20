@@ -45,13 +45,13 @@ public class CafeController {
 
     @ApiOperation("[사장님 회원가입페이지]: 회원가입 시 카페 내용 저장")
     @PostMapping("/create")
-    public Map save(@RequestBody CafeSaveRequestDto cafeSaveRequestDto,HttpServletRequest httpServletRequest){
+    public Map save(@RequestBody CafeSaveRequestDto cafeSaveRequestDto, HttpServletRequest httpServletRequest) {
         String jwt = httpServletRequest.getHeader("Authorization");
         //유효성 검사
         if (!jwtService.isUsable(jwt)) throw new UnauthorizedException(); // 예외
-        UserJwtResponsetDto user=jwtService.getUser(jwt);
-        Map<String,Long> map=new HashMap<>();
-        map.put("result",cafeService.save(user.getUid(), cafeSaveRequestDto));
+        UserJwtResponsetDto user = jwtService.getUser(jwt);
+        Map<String, Long> map = new HashMap<>();
+        map.put("result", cafeService.save(user.getUid(), cafeSaveRequestDto));
         return map;
     }
 
@@ -80,20 +80,19 @@ public class CafeController {
         String jwt = httpServletRequest.getHeader("Authorization");
         //유효성 검사
         if (!jwtService.isUsable(jwt)) throw new UnauthorizedException(); // 예외
-        UserJwtResponsetDto user=jwtService.getUser(jwt);
+        UserJwtResponsetDto user = jwtService.getUser(jwt);
 
+        Long ccid = cafeOpenRequestDto.getCcid();
+        int coperation = cafeOpenRequestDto.getCoperation();
+        Cafe curCafe = cafeService.findByCcId(ccid);
 
-        Long ccid=cafeOpenRequestDto.getCcid();
-        int coperation=cafeOpenRequestDto.getCoperation();
-        Cafe curCafe=cafeService.findByCcId(ccid);
-
-        if(user.getUid().equals(curCafe.getUid())){
+        if (user.getUid().equals(curCafe.getUid())) {
             curCafe.setCoperation(coperation);
-            Map<String,Integer> map=new HashMap<>();
-            map.put("변경 후 상태",cafeService.findByCcId(ccid).getCoperation());
+            Map<String, Integer> map = new HashMap<>();
+            map.put("변경 후 상태", cafeService.findByCcId(ccid).getCoperation());
             return map;
-        }else throw new UnauthorizedException(); // 예외
-}
+        } else throw new UnauthorizedException(); // 예외
+    }
 
     // 카페 리스트 보여주기
     @ApiOperation("[손님 카페소개페이지]:카페 리스트를 손님들에게 보여줌-> 실제로 영업중인 것들을 우선적으로 보여줌")
@@ -106,7 +105,7 @@ public class CafeController {
     // 카페 정보 수정
     @ApiOperation("[사장님 카페 정보 관리페이지]:특정 카페 정보 수정")
     @PutMapping("/update/{ccid}")
-    public void cafeUpdate(HttpServletRequest httpServletRequest,@PathVariable Long ccid, @RequestBody CafeUpdateRequestDto cafeUpdateRequestDto) {
+    public void cafeUpdate(HttpServletRequest httpServletRequest, @PathVariable Long ccid, @RequestBody CafeUpdateRequestDto cafeUpdateRequestDto) {
         String jwt = httpServletRequest.getHeader("Authorization");
 
 //        System.out.println("현재 토큰 : "+jwt);
@@ -114,11 +113,11 @@ public class CafeController {
         //유효성 검사
         if (!jwtService.isUsable(jwt)) throw new UnauthorizedException(); // 예외
 
-        UserJwtResponsetDto user=jwtService.getUser(jwt);
+        UserJwtResponsetDto user = jwtService.getUser(jwt);
 
-       if(cafeUpdateRequestDto.getUid().equals(user.getUid())){ //수정할 권한이 있으면
-           cafeService.cafeUpdate(ccid,cafeUpdateRequestDto);
-       }else throw new UnauthorizedException(); // 예외
+        if (cafeUpdateRequestDto.getUid().equals(user.getUid())) { //수정할 권한이 있으면
+            cafeService.cafeUpdate(ccid, cafeUpdateRequestDto);
+        } else throw new UnauthorizedException(); // 예외
     }
 
     // ccid로 카페 하나 찾기 -> cafe + menu
@@ -136,4 +135,23 @@ public class CafeController {
 //        cafeService.delete(ccid);
 //    }
 
+
+    // 사장님이 로그인했을 때 그 로그인정보가지고 카페찾기
+    @ApiOperation("사장님이 로그인했을 때 그 로그인정보가지고 카페찾기")
+    @GetMapping("/searchMyCafe")
+    public CafeDetailForHOST searchMyCafe(HttpServletRequest httpServletRequest) {
+        String jwt = httpServletRequest.getHeader("Authorization");
+
+        //유효성 검사
+        if (!jwtService.isUsable(jwt)) throw new UnauthorizedException(); // 예외
+
+        UserJwtResponsetDto user = jwtService.getUser(jwt);
+
+        return cafeService.findCcidByUid(user.getUid());
+
+
+//        if (cafeDetailForHOST.getUid().equals(user.getUid())) { //카페user랑 지금 user랑 같으면
+//            cafeService.findCcidByUid(user.getUid());
+//        } else throw new UnauthorizedException();
+    }
 }

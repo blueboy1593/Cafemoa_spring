@@ -16,8 +16,8 @@ public interface OrderedRepository extends JpaRepository<Ordered, Long> {
     Ordered findByOoid(@Param("ooid") Long ooid);
 
     // uid기준으로 보여주기
-    @Query("select o from Ordered o where o.orderuser.uuid=uuid")
-    List<Ordered> findByUuid(@Param("uuid") Long uuid);
+    @Query("select o from Ordered o where o.orderuser.uid=uid")
+    List<Ordered> findByUid(@Param("uid") String uid);
 
     // ccid기준으로 보여주기
     @Query("select o from Ordered o where o.ccid=ccid")

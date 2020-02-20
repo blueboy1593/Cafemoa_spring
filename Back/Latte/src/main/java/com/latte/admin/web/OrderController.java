@@ -6,7 +6,9 @@ import com.latte.admin.service.*;
 import com.latte.admin.service.jwt.JwtService;
 import com.latte.admin.service.jwt.UnauthorizedException;
 import com.latte.admin.web.dto.order.OrderStatusRequestDto;
+import com.latte.admin.web.dto.order.OrderedCcidResponseDto;
 import com.latte.admin.web.dto.order.OrderedResponseDto;
+import com.latte.admin.web.dto.order.OrderedUuidResponseDto;
 import com.latte.admin.web.dto.user.UserJwtResponsetDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -46,23 +48,31 @@ public class OrderController {
 
     // ooid기준으로 보여주기
     @ApiOperation("ooid기준으로 보여주기")
-    @GetMapping("/latte/ordered/{ooid}")
+    @GetMapping("/latte/ordered/ooid/{ooid}")
     public Ordered selectAllByOoid(@PathVariable Long ooid) {
         return orderedService.findById(ooid);
     }
 
 
     // uuid기준으로 보여주기
-    @ApiOperation("uuid기준으로 보여주기")
-    @GetMapping("/latte/ordered/{uuid}")
-    public List<OrderedResponseDto> selectAllByUuid(@PathVariable Long uuid) {
-        return orderedService.selectAllByUuid(uuid);
+    @ApiOperation("uid기준으로 보여주기")
+    @GetMapping("/latte/ordered/uid")
+    public List<OrderedUuidResponseDto> selectAllByUuid(HttpServletRequest httpServletRequest) {
+        //요청할 때 들어오는 값 :메뉴번호(1개 필수),사이즈번호(1개 필수),옵션번호들(0개~여러개),총 가격- 이 모든게 리스트형태로 들어옴
+        String jwt = httpServletRequest.getHeader("Authorization");
+        //유효성 검사
+        if (!jwtService.isUsable(jwt)) throw new UnauthorizedException(); // 예외
+
+        UserJwtResponsetDto user=jwtService.getUser(jwt);
+
+        User uid=userService.findByuid(user.getUid());
+        return orderedService.selectAllByUid(uid.getUid());
     }
 
     // ccid기준으로 보여주기
     @ApiOperation("ccid기준으로 보여주기")
-    @GetMapping("/latte/ordered/{ccid}")
-    public List<OrderedResponseDto> selectAllByCcid(@PathVariable Long ccid) {
+    @GetMapping("/latte/ordered/ccid/{ccid}")
+    public List<OrderedCcidResponseDto> selectAllByCcid(@PathVariable Long ccid) {
         return orderedService.selectAllByCcid(ccid);
     }
 

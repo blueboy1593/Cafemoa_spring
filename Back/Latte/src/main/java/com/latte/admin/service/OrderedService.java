@@ -7,8 +7,10 @@ import com.latte.admin.domain.order.Ordered;
 import com.latte.admin.domain.order.OrderedRepository;
 import com.latte.admin.domain.user.User;
 import com.latte.admin.domain.user.UserRepository;
+import com.latte.admin.web.dto.order.OrderedCcidResponseDto;
 import com.latte.admin.web.dto.order.OrderedRequestDto;
 import com.latte.admin.web.dto.order.OrderedResponseDto;
+import com.latte.admin.web.dto.order.OrderedUuidResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,28 +34,24 @@ public class OrderedService {
 
     // user마다 알려주기
     @Transactional
-    public List<OrderedResponseDto> selectAllByUuid(Long uuid){
-        return orderedRepository.findByUuid(uuid).stream()
-                .map(OrderedResponseDto::new)
+    public List<OrderedUuidResponseDto> selectAllByUid(String uid){
+        return orderedRepository.findByUid(uid).stream()
+                .map(OrderedUuidResponseDto::new)
                 .collect(Collectors.toList());
     }
-
 
     // cafe마다 알려주기
     @Transactional
-    public List<OrderedResponseDto> selectAllByCcid(Long ccid){
+    public List<OrderedCcidResponseDto> selectAllByCcid(Long ccid){
         return orderedRepository.findByCcid(ccid).stream()
-                .map(OrderedResponseDto::new)
+                .map(OrderedCcidResponseDto::new)
                 .collect(Collectors.toList());
     }
-
-
 
     // 저장
     @Transactional
     public Long save(Long uuid,OrderedResponseDto orderedResponseDto) {
         User orderuser=userRepository.findById(uuid).get();
-//        Cafe ordercafe=cafeRepository.findById(ccid).get();
 
         OrderedRequestDto orderedRequestDto=new OrderedRequestDto(orderedResponseDto.getOcontent(),orderedResponseDto.getOprice(),
                 orderedResponseDto.getOstatus(),orderedResponseDto.getUserid(),orderedResponseDto.getCcid());
@@ -65,5 +63,9 @@ public class OrderedService {
     public void setStatus(int ostatus){
         orderedRepository.setStatus(ostatus);
     }
+
+    //
+    @Transactional
+    public void searchMyCafe() {}
 
 }
