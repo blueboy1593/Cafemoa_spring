@@ -1,37 +1,83 @@
 body {
-    font-family: arial, helvetica;
-  }
-  
-  h3 {
-    font-size: 5em;
-    text-align: center;
-    color: #fff;
-    font-weight: 700;
-  }
-  
-  #section1 {
-    color: #fff;
-  }
-  
-  .fp-section {
-    text-align: center;
-  }
-  
-  button {
-    padding: 0.93em 1.87em;
-    background: #35495e;
-    border-radius: 5px;
-    border-color: transparent;
-    display: block;
-    color: #fff;
-    margin: 0 auto;
-    cursor: pointer;
-    font-size: 0.85em;
-  }
+  font-family: arial, helvetica;
+}
 
-  .top-fixed {
-    position: fixed;
-    width: 100%;
-    text-align: right;
-    z-index: 10;
-  }
+h3 {
+  font-size: 5em;
+  text-align: center;
+  color: #fff;
+  font-weight: 700;
+}
+
+#section1 {
+  color: #fff;
+}
+
+.fp-section {
+  text-align: center;
+}
+
+button {
+  padding: 0.93em 1.87em;
+  background: #35495e;
+  border-radius: 5px;
+  border-color: transparent;
+  display: block;
+  color: #fff;
+  margin: 0 auto;
+  cursor: pointer;
+  font-size: 0.85em;
+}
+
+.top-fixed {
+  position: fixed;
+  width: 100%;
+  text-align: right;
+  z-index: 10;
+}
+
+
+/**************** hyejune css *************************/
+
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+KR');
+*{ margin: 0; padding: 0; font-size: 12px; color: #282f39; font-family: 'Noto Sans KR', sans-serif; }
+
+
+/* .section1, .section2, .section3{ background-color: #fff; } */
+
+
+.App { width: 100%; height: 100%; background-color: #f0853f; }
+.Latte{ width: 100%; height: 100%; background-color: #fff; }
+/* .ant-row { background-color: #f0853f; } */
+
+/* index page */
+.main_indexPage{ width: 100%; height: 100%; background-color: #f0853f; margin: 0 auto; background-image: url(./imgs/background_02.png); background-size: 120%; background-position: center; background-repeat: no-repeat;}
+
+
+/*  */
+.ant-input{ border: 0.5px solid #f0853f; border-radius: 0; }
+/* .ant-card{ height: 150px !important; } */
+.ant-list-item-meta-content{ height: 36px; }
+.ant-list-item-meta-title{ font-size: 14px !important; height: 36px; margin-bottom: 0 !important; }
+.ant-card-body{ padding: 10px;}
+
+.ant-pagination{ text-align: center; }
+/* .ant-input-suffix{ width: 24px; height: 24px; background-image: url(./menuBtn_icon_after.png); background-size: contain;} */
+
+
+
+/* *****************************************************Login************************************************************* */
+.mainBtn{ border: none; border-radius: 0; background-color: #f0853f; }
+.mainBtn *{ color: #fff; font-size: 14px; }
+
+.subBtn{ border: none; border-radius: 0; background-color: #777;}
+.subBtn *{ color: #fff; font-size: 14px; }
+
+
+
+
+.signupForm *{ text-align: center !important; }
+
+/* 모달 */
+.ant-modal-footer .ant-btn { background-color: #777; }
+.ant-modal-footer .ant-btn-primary { background-color: #f0853f; }
