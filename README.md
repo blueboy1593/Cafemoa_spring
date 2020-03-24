@@ -1,9 +1,10 @@
-# 라떼는 말이야
-개인카페를 위한 예약 주문 시스템
+# 카페모아
 
-spring boot, react and jwt을 사용한 Token기반의 예약 홈페이지
+소규모 카페 활성화를 위한 웹 서비스 -> 주문, 결제 가능 및 카페 홍보
 
-아직 개발중 ...
+개인카페도 경험할 수 있는 주문앱 서비스
+<br>
+<br>
 
 ![version](https://img.shields.io/badge/version-0.0.1-yellow?)
 ![ubuntu](https://img.shields.io/badge/ubuntu-19.04-brown?logo=ubuntu)
@@ -16,53 +17,60 @@ spring boot, react and jwt을 사용한 Token기반의 예약 홈페이지
 ![spring](https://img.shields.io/badge/spring-5.2.2-green?logo=spring)
 ![react](https://img.shields.io/badge/react-16.12.0-blue?logo=react)
 ![redux](https://img.shields.io/badge/redux-4.0.5-blue?logo=redux)
+![MariaDB](https://img.shields.io/badge/mariadb-10.4.12-orange?logo=MariaDB)
+![java](https://img.shields.io/badge/java-11+-green?logo=java)
+![intellij](https://img.shields.io/badge/intellij-2019.3.1-green?logo=intellij_IDEA)
+![Docker](https://img.shields.io/badge/docker-docker-purple?logo=Docker)
+![Firebase](https://img.shields.io/badge/firebase-firebase-purple?logo=Firebase)
 
 ------
+## 목차
 
-## Table of Contents
+- [카페모아](#카페모아)
+- [소개](#소개)
+- [기술스택](#기술스택)
+- 시작해보기
+    - [필수요소](#필수요소)
+    - [설치](#설치)
+    - [테스트](#테스트)
+- [데이터베이스모델링](#데이터베이스모델링)
+- [핵심기능](#핵심기능)
 
-- [Introduction](#introduction)
-- [Technology_stack](#technology_stack)
-- Getting Started
-    - [Prerequisites](#prerequisites)
-    - [Install](#install)
-    - [Testing](#testing)
-- [Screenshots](#screenshots)
-- [Team](#team)
-- [About](#about)
 
-## Introduction
+
+
+## 소개
 
 ```
 ssafy
-|-- LatteisHorse
+|-- cafemoa
 |     -- Back-End
 |       `-- doha
 |       `-- sumin
 |       `-- gayoung
 |     -- Front-End
-|       `-- doha
 |       `-- sihyo
 |       `-- kanghyun
+|       `-- sumin
 ```
 
 
-### Technology_stack
-Component         | Technology
----               | ---
-Frontend          | React 
-Backend           | Spring Boot 2.1+, Java 11+
-Database          | Maria Database 
-Persistence       | JPA 
-API Documentation | Swagger-UI
-Client Build      | npm, yarn
-Server Build      | Gradle
+### 기술스택
+| Component         | Technology                 |
+| ----------------- | -------------------------- |
+| Frontend          | React                      |
+| Backend           | Spring Boot 2.1+, Java 11+ |
+| Database          | Maria Database             |
+| Persistence       | JPA                        |
+| API Documentation | Swagger-UI                 |
+| Client Build      | npm, yarn                  |
+| Server Build      | Gradle                     |
 
 
 
-## Getting Started
+## 시작해보기
 
-### Prerequisites
+### 필수요소
 
 - Install Java 11 from the OpenJDK
 - Install Node.js from the Node.js website
@@ -70,7 +78,7 @@ Server Build      | Gradle
 - [Git Flow](https://github.com/nvie/gitflow/wiki/Installation): We are following Git Flow for maintaining software versions.
 
 
-### Install
+### 설치
 
   ```
   $ git clone https://lab.ssafy.com/webmobile1-sub2/s02p12a301.git
@@ -84,29 +92,62 @@ Server Build      | Gradle
 - It will open your browser([http://localhost:3000](http://localhost:3000/))
 
 
-### Testing
+### 테스트
 
   ```
   $ yarn run test
   ```
 
 
+## 데이터베이스모델링
 
 
-## Screenshots
+- 그림
+  <br>
 
-### Main
+## 배포 서버 URL
+​
+- Docker
+​
+- Firebase
+<br>
 
-![lattemain](/uploads/00ee7f2023c01217d208760ca3075cd8/lattemain.PNG)
+## 핵심기능
+
+### 손님
+ **1)  카페 추천 페이지**
+- 카페 정보 페이지에서 인기순, 거리순으로 open한 카페 기반으로 BEST 카페 추천
+- 
 
 
-## Team
+**2)  카페 Detail페이지**
 
-- doha
-- kanghyun
-- sumin
-- gayoung
-- sihyo
+- 카페에 대한 정보 및 대표메뉴 소개
+- 
 
-## About
-Authored and maintained by ssafy
+
+**3)  주문 페이지**
+
+
+- 메뉴 별 옵션 선택 이후 결제
+- 
+
+
+**4)  카페 별 후기 기능**
+- 카페 별 손님들이 후기 작성
+- 
+
+
+### [ 사장님 ]
+
+
+**1)  카페 정보수정 및 메뉴 수정**
+- 카페 정보 수정 및 메뉴 수정
+- 대표메뉴 설정
+
+
+**2)  카페에 달린 댓글 확인 후 대댓글 달기**
+
+
+### [ 관리자]
+**1)  카페 승인 **
