@@ -1,31 +1,28 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import Kakaomap from '../components/Kakaomap';
+import NearCafeList from '../components/NearCafeList';
+import { Divider } from 'antd';
+import LatteNavbar from '../headers/LatteNavbar';
+import store from '../store';
 
 export default class NearCafe extends Component {
   constructor(props){
     super(props);
     this.state = {
-      latitude: 'a',
+      latitude: '',
       longitude: '',
     }
     this.success = this.success.bind(this)
-    // 어제 이거 못해가지고 시간 쓴거 생각하면....ㅎ
   }
-  // state = {
-  //   latitude: '',
-  //   longitude: '',
-  // }
 
   success(pos) {
     const crd = pos.coords;
+    console.log(crd)
+    store.dispatch({type:'pos', crd: crd})
     this.setState({
       latitude: crd.latitude,
       longitude: crd.longitude
     })
-
-    // console.log('Your current position is:');
-    // console.log('Latitude : ' + crd.latitude);
-    // console.log('Longitude: ' + crd.longitude);
-    // console.log('More or less ' + crd.accuracy + ' meters.');
     return crd
   }
 
@@ -33,15 +30,35 @@ export default class NearCafe extends Component {
     navigator.geolocation.getCurrentPosition(this.success);
     return
   }
+  componentDidMount(){
+    const pos = store.getState().pos
+    if (pos === undefined) {
+      this.geolocation()
+    }
+    else {
+      this.setState({
+        latitude: pos.latitude,
+        longitude: pos.longitude
+      })
+    }
+  }
 
   render() {
-    this.geolocation()
+    // this.geolocation()
     return (
       <div>
-        <h1>주변 매장 찾는 게시판</h1>
-        <p>현재 위치의</p>
-        <p>위도는 {this.state.latitude}</p>
-        <p>경도는 {this.state.longitude}</p>
+        <LatteNavbar></LatteNavbar>
+        <Divider orientation="center"><h5>현재 위치</h5></Divider>
+        {function () {
+          if (this.state.latitude !== '') {
+            return (
+              <>
+              <Kakaomap latitude={this.state.latitude} longitude={this.state.longitude}></Kakaomap>
+              <NearCafeList latitude={this.state.latitude} longitude={this.state.longitude}></NearCafeList>
+              </>
+            )
+          }
+        }.bind(this)()}
       </div>
     )
   }

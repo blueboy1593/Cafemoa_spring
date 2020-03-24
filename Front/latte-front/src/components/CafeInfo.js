@@ -1,23 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from "react-router-dom";
-import './Cafe.css';
 import { Button } from 'reactstrap';
 import { MdExtension } from "react-icons/md";
 
 function CafeInfo({ id , name,  picture}){
-    // console.log(name);
     return(
         <div className="Cafe">
             <div className="Cafe__Column">
-                {/* <img src={picture} alt={name} name={name}/> */}
                 <CafePicture picture={picture}/>
             </div>
             <div className="Cafe__Column">
                 <h1>{name}</h1>
             </div>
             <Link to ={{
-                pathname: '/visitor/cafedetail',
+                pathname: '/latte/cafedetail',
                 state:{
                     id,
                     name,

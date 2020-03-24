@@ -1,35 +1,46 @@
 import React, { Component } from 'react'
-// import { Toast, ToastBody, ToastHeader } from 'reactstrap';
-
+import LatteNavbar from '../headers/LatteNavbar';
+import axios from 'axios';
+import store from '../store';
 
 export default class Mypage extends Component {
-    state = {
-        token: '아이디',
-    }
-    render() {
-        const storage = localStorage
-        console.log(storage)
-        localStorage.setItem(
-            "user3",
-            JSON.stringify({
-                token: this.state.id,
+    componentDidMount(){
+        const uuid = store.getState().user_info.uuid
+        const base_url = process.env.REACT_APP_SERVER_IP
+        axios.get(base_url + `/cafes/getuserorder/${uuid}`)
+            .then(response => {
+                this.setState({
+                    orderrecord:response.data.length
+                })
             })
-        );
-        console.log(storage)
-        let token = localStorage.getItem("userInfo")
-        console.log(token)
-        
-        localStorage.removeItem("userInfo");
-        console.log('삭제 되었나?')
+            .catch(error => {
+                console.log('error')
+                console.error(error)
+            })
+    }
 
-        console.log(localStorage)
-
+    render() {
+        const unickname = store.getState().user_info.unickname
+        var iconnum = 1
+        if (this.state) {
+            var orderrecord = this.state.orderrecord
+            if (orderrecord >= 5) {
+                iconnum = 2
+            }
+            if (orderrecord >= 10) {
+                iconnum = 3
+            }
+        }
         return (
-            <div>
-                <h1>여기는 마이페이지! 여기서 작업하면 됨!</h1>
-                
-                {/* <UserInfo /> */}
-
+            <div style = {{textAlign:'center'}}>
+                <LatteNavbar></LatteNavbar>
+                <img className="mypagelevels" src="/img/levels3.png" alt="레벨"/>
+                <h4>{unickname}님의 주문 횟수: {orderrecord} | {unickname}님의 레벨</h4>
+                <br></br>
+                <img className="mypagelevel" src={`/img/level${iconnum}.png`} alt="레벨아이콘"/>
+                <img className="mypageicons" src="/img/icon_grad_03.png" alt="mypageicon"/>
+                <img className="mypageicons" src="/img/icon_grad_04.png" alt="mypageicon"/>
+                <img className="mypageicons" src="/img/icon_grad_05.png" alt="mypageicon"/>
             </div>
         )
     }

@@ -1,25 +1,28 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
-import { Owner, Customer, Visitor } from './pages';
-import './App.css';
+import Latte from './pages/Latte';
 import FullpageWrapper from './pages/FullpageWrapper';
-// import HeaderVisitor from './headers/HeaderVisitor';
-// import HeaderLogin from './headers/HeaderLogin'
+/* global screen */
+/* eslint no-restricted-globals: ["off"] */
 
 class App extends Component{
   render(){
-    return (
-      // <Router>
-      <div className="App">
-        {/* <HeaderLogin></HeaderLogin> */}
-        <Route exact path='/' component={FullpageWrapper}/>
-        {/* <Route exact path='/' component={Visitor}/> */}
-        <Route path='/visitor' component={Visitor}/>
-        <Route path='/customer' component={Customer}/>
-        <Route path='/owner' component={Owner}/>
-      </div>
-      // </Router>
-    );
+    // console.log(this)
+    const width = screen.width
+    if (width > 500) {
+      return (
+        <div className="App">
+          <Route exact path='/' component={FullpageWrapper}/>
+          <Route path='/' component={Latte}/>
+        </div>
+      )
+    } else {
+      return (
+        <div className="App">
+          <Route path='/' component={Latte}/>
+        </div>
+      );
+    }
   }
 }
 

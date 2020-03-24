@@ -1,80 +1,117 @@
-import React, { Component } from 'react'
-import CafeInfo from '../components/CafeInfo';
-import './CafeList.css';
+import React from "react";
+import {
+    Row,
+    Col,
+    Input,
+    Divider,
+    List,
+    Card,
+} from 'antd';
+import 'antd/dist/antd.css';
+import { Link } from "react-router-dom";
 import axios from 'axios';
-// import axios_url from '../axios_url';
+import LatteNavbar from '../headers/LatteNavbar';
 
 
-export default class CafeList extends Component {
-    state = {
-        cafes: [
-            // 이부분은 axios로 받아오더라도 굳이 지우지 말고 주석으로 남겨놓자.!!
-            {
-                ccid: 1,
-                cname: "Twosome Place",
-                cpic: "http://www.newsgn.com/imgdata/newsgn_com/201709/2017092554155245.jpg",
-            },
-            {
-                ccid: 2,
-                cname: "Starbucks",
-                cpic: "https://t1.daumcdn.net/cfile/tistory/236B503C5961BE5536",
-            },
-            {
-                ccid: 3,
-                cname: "Coffeebean",
-                cpic: "http://www.mirae-biz.com/news/photo/201803/37567_30810_4718.jpg",
-            },
-            {
-                ccid: 4,
-                cname: "Banapresso",
-                cpic: "http://mblogthumb1.phinf.naver.net/MjAxOTAzMjJfMjM4/MDAxNTUzMjIzNjAwMDU4.jUAy36LFmP88TJk1On4VNol4xYeMPXrEOyMqI83VXOYg.wWNmxoaAUtzUHJ-xSsN48Oif-856lcTlGJCSwBImLE8g.JPEG.lovenonsul/IMG_2529.JPG?type=w800",
-            },
-            {
-                ccid: 5,
-                cname: "Idiya Coffee",
-                cpic: "http://danmee.chosun.com/site/data/img_dir/2017/08/18/2017081801938_0.jpg",
-            },
-            {
-                ccid: 6,
-                cname: "Hollys Coffee",
-                cpic: "http://admin.hollys.co.kr/upload/branch/store_201609210824422010.jpg",
-            },
-        ]
-    }
+const { Search } = Input;
 
-  
-    // axios.post(gsdakla,askldjasjkl,headers)
-
+class CafeList extends React.Component {
+    state = {}
+    
     componentDidMount(){
-        axios.get('http://i02a301.p.ssafy.io:8080/latte/cafe/all')
+        const base_url = process.env.REACT_APP_SERVER_IP
+        axios.get(base_url + '/cafe/all')
             .then(response =>{
             this.setState({
-                cafes:response.data
+                cafeList: response.data
             });
-            // console.log(this.state);
             });
         };
-        // 일단 이 부분은 해보려다가 실패.
-        // axios_url.get('latte/cafe/all')
+
+    handleSearch = (value) => {
+        console.log('Received values of Search: ', value);
+        this.setState({
+            keyword:value.toUpperCase()
+        })
+    };
 
     render() {
-        const {cafes} = this.state;
-        // console.log(cafes)
+        if (this.state.cafeList === undefined) {
+            return null;
+        }
+        let {cafeList} = this.state;
+        if (this.state.keyword) {
+            cafeList = cafeList.filter(cafe => {
+                const keyword = this.state.keyword
+                if (cafe.cname.toUpperCase().includes(keyword)) {
+                    return cafe
+                };
+                return null;
+            });
+        };
+        
         return (
-            <div>
-                <br></br>
-                <div className="cafes">
-                    {cafes.map(cafe => (
-                        <CafeInfo
-                            key={cafe.ccid}
-                            id={cafe.ccid}
-                            name={cafe.cname}
-                            picture={cafe.cpic}
+            <>
+            <LatteNavbar></LatteNavbar>
+            <Row>
+                <Col span={1} />
+                <Col span={22}>
+                    <Row>
+                        <Col span={4} />
+                        <Col span={16} >
+                            <Search 
+                                size="large"
+                                onSearch={value => this.handleSearch(value)}
                             />
-                    ))}
-                </div>
-            </div>
-        )
+                        </Col>
+                        <Col span={4} />
+                    </Row>
+                    <Divider orientation="center">영업중인 카페</Divider>
+                    
+                    <List
+                        itemLayout="vertical"
+                        size="large"
+                        pagination={{
+                            pageSize: 4
+                        }}
+                        grid={{ gutter: 36, column: 2 }}
+                        dataSource={cafeList}
+                        
+                        renderItem={ cafe =>(
+                            <Link to={{
+                                pathname:`/latte/cafedetail/${cafe.ccid}`,
+                                cafe:cafe,
+                            }}>
+                            <List.Item
+                                key={cafe.ccid}>
+                                <Card 
+                                style={{  width: '100%', textAlign: 'center', padding: '5%', height: '150px' }}
+                                cover={
+                                    <img
+                                        alt={cafe.cname}
+                                        src={cafe.cpic}
+                                        style={{  width: '100%', textAlign: 'center', height: "100px" }}
+                                    />
+                                }>
+                                    {/* <Card.Body style={{  padding: '10%' }}> */}
+                                        {/* <Card.Text>
+                                            {cafe.cname}
+                                        </Card.Text> */}
+                                    <List.Item.Meta
+                                        title={cafe.cname}
+                                    />
+                                    {/* </Card.Body> */}
+                                </Card>
+                            </List.Item>
+                            </Link> 
+                        )}
+                    />
+                </Col>
+                <Col span={8} />
+            </Row>
+            </>
+        );
     }
 }
 
+export default CafeList;
